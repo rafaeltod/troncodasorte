@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# 🎲 Tronco da Sorte - Comandos Disponíveis
+# Execute a partir da raiz do projeto
+
+echo "╔════════════════════════════════════════════════════════════╗"
+echo "║          🎲 Tronco da Sorte - Comandos Úteis             ║"
+echo "╚════════════════════════════════════════════════════════════╝"
+echo ""
+
+echo "📦 SETUP INICIAL"
+echo "  npm install                    # Instalar dependências"
+echo "  npx prisma dev                 # Iniciar BD local"
+echo ""
+
+echo "💾 BANCO DE DADOS"
+echo "  npx prisma migrate dev --name NOME  # Criar migração"
+echo "  npx prisma migrate deploy           # Aplicar migrações prod"
+echo "  npx prisma migrate reset            # ⚠️ Resetar BD completo"
+echo "  npm run prisma:seed                 # Carregar dados teste"
+echo "  npm run prisma:studio               # Abrir Prisma Studio"
+echo "  npm run prisma:generate             # Gerar tipos"
+echo ""
+
+echo "🚀 DESENVOLVIMENTO"
+echo "  npm run dev                    # Iniciar dev server"
+echo "  npm run build                  # Build para produção"
+echo "  npm run start                  # Iniciar servidor prod"
+echo "  npm run lint                   # Verificar lint"
+echo ""
+
+echo "🔗 URLS DE ACESSO"
+echo "  Frontend:       http://localhost:3000"
+echo "  Prisma Studio: http://localhost:5555"
+echo "  API Base:       http://localhost:3000/api"
+echo ""
+
+echo "📚 DOCUMENTAÇÃO"
+echo "  README.md              # Guia principal"
+echo "  docs/QUICKSTART.md     # Setup rápido"
+echo "  docs/API.md            # Endpoints da API"
+echo "  docs/ROADMAP.md        # Futuro do projeto"
+echo "  SUMMARY.md             # Resumo executivo"
+echo ""
+
+echo "🧪 TESTE RÁPIDO"
+echo "  curl http://localhost:3000/api/rifas"
+echo "  curl http://localhost:3000/api/top-buyers"
+echo ""
+
+echo "📁 ESTRUTURA"
+echo "  src/app/       - Páginas Next.js"
+echo "  src/components/ - Componentes React"
+echo "  src/lib/       - Utilities e helpers"
+echo "  prisma/        - Schema do BD"
+echo "  docs/          - Documentação"
+echo ""
+
+echo "✅ CHECKLIST INICIAL"
+echo "  1. npm install"
+echo "  2. npx prisma dev (copiar URL)"
+echo "  3. Editar .env com DATABASE_URL"
+echo "  4. npx prisma migrate dev --name init"
+echo "  5. npm run prisma:seed"
+echo "  6. npm run dev"
+echo "  7. Abrir http://localhost:3000"
+echo ""
+
+echo "❓ PROBLEMAS?"
+echo "  Ver docs/QUICKSTART.md seção 'Problemas Comuns'"
+echo ""
+
+echo "🌍 DEPLOY (Hostinger + Coolify)"
+echo "  1. VPS KVM 1 (4GB RAM)"
+echo "  2. fallocate -l 4G /swapfile"
+echo "  3. curl -fsSL https://cdn.coollabs.io/coolify/install.sh | bash"
+echo "  4. Coolify: Add PostgreSQL + Git Repository"
+echo "  5. Set DATABASE_URL env var"
+echo "  6. Deploy automático"
+echo ""
