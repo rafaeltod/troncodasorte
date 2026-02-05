@@ -24,7 +24,7 @@ export function Navbar() {
         </Link>
 
         <div className="hidden md:flex gap-8 items-center">
-          <Link href="/" className="text-slate-700 font-semibold hover:text-indigo-600 transition">
+          <Link href="/dashboard" className="text-slate-700 font-semibold hover:text-indigo-600 transition">
             Home
           </Link>
           <Link href="/rifas" className="text-slate-700 font-semibold hover:text-indigo-600 transition">

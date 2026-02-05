@@ -90,7 +90,7 @@ export default function HistoricoPage() {
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
           <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg shadow-lg p-4 text-white">
             <p className="text-indigo-100 text-sm font-semibold">Total Gasto</p>
-            <p className="text-2xl font-black mt-1">R$ {totalSpent.toFixed(2)}</p>
+            <p className="text-2xl font-black mt-1">R$ {Number(totalSpent).toFixed(2)}</p>
           </div>
           <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-4 text-white">
             <p className="text-purple-100 text-sm font-semibold">Cotas</p>
@@ -115,7 +115,7 @@ export default function HistoricoPage() {
                   </div>
                   <div className="text-right">
                     <div className="text-2xl font-black text-indigo-600">
-                      R$ {purchase.amount.toFixed(2)}
+                      R$ {Number(purchase.amount).toFixed(2)}
                     </div>
                   </div>
                 </div>

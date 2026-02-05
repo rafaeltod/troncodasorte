@@ -1,33 +1,25 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { queryOne, queryMany, query } from '@/lib/db'
+import { queryOne, queryMany } from '@/lib/db'
 import { createRaffleSchema } from '@/lib/validations'
 
 export async function POST(req: NextRequest) {
   try {
+    // Pega o userId do cookie autenticado
+    const token = req.cookies.get('token')?.value
+
+    if (!token) {
+      return NextResponse.json(
+        { error: 'Não autenticado' },
+        { status: 401 }
+      )
+    }
+
     const body = await req.json()
 
     // Validate
     const validatedData = createRaffleSchema.parse(body)
 
-    // TODO: Get userId from session/auth
-    const userId = body.creatorId || 'default-user'
-
-    // Check if user exists, if not create it
-    let user = await queryOne(
-      'SELECT * FROM "user" WHERE id = $1',
-      [userId]
-    )
-
-    if (!user) {
-      user = await queryOne(
-        `INSERT INTO "user" (id, cpf, name, email, "createdAt", "updatedAt")
-         VALUES ($1, $2, $3, $4, NOW(), NOW())
-         RETURNING *`,
-        [userId, body.cpf || '000.000.000-00', body.name || 'Criador', body.email || `user-${userId}@tronco.com`]
-      )
-    }
-
-    // Create raffle
+    // Create raffle com o userId do token
     const raffle = await queryOne(
       `INSERT INTO raffle (title, description, "prizeAmount", "totalQuotas", "quotaPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
@@ -38,17 +30,30 @@ export async function POST(req: NextRequest) {
         validatedData.prizeAmount,
         validatedData.totalQuotas,
         validatedData.quotaPrice,
-        user.id,
+        token, // userId do token autenticado
         validatedData.images?.[0] || null,
-        JSON.stringify(validatedData.images || []),
+        validatedData.images || [], // Enviar como array de strings
       ]
     )
 
     return NextResponse.json(raffle, { status: 201 })
   } catch (error) {
     console.error('Error creating raffle:', error)
+    
+    // Log mais detalhado do erro
+    let errorMessage = 'Erro ao criar rifa'
+    
+    if (error instanceof Error) {
+      console.error('Error details:', error.message)
+      if (error.message.includes('validation')) {
+        errorMessage = error.message
+      } else if (error.message.includes('query')) {
+        errorMessage = 'Erro ao salvar no banco de dados'
+      }
+    }
+    
     return NextResponse.json(
-      { error: 'Erro ao criar rifa' },
+      { error: errorMessage },
       { status: 400 }
     )
   }

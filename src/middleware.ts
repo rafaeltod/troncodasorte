@@ -1,21 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('token')?.value || 
-                (typeof window !== 'undefined' ? localStorage.getItem('token') : null)
-  
-  const protectedRoutes = ['/historico', '/criar-rifa', '/account', '/top-compradores']
-  const isProtectedRoute = protectedRoutes.some(route => 
-    request.nextUrl.pathname.startsWith(route)
-  )
+  const token = request.cookies.get('token')?.value
 
-  if (isProtectedRoute && !token) {
-    return NextResponse.redirect(new URL('/auth/login', request.url))
+  const publicRoutes = ['/', '/auth/login', '/auth/register']
+  const isPublicRoute = publicRoutes.includes(request.nextUrl.pathname)
+
+  // Se não tem token e está tentando acessar rota protegida, redireciona para home
+  if (!token && !isPublicRoute) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
+  // Se tem token e está na home, vai direto para rifas
+  if (token && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/rifas', request.url))
   }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/historico/:path*', '/criar-rifa/:path*', '/account/:path*', '/top-compradores/:path*'],
+  matcher: ['/((?!_next|api|public).*)'],
 }

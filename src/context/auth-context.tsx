@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState, useCallback } from 'react'
 
 interface User {
   id: string
@@ -15,8 +15,8 @@ interface AuthContextType {
   user: User | null
   isAuthenticated: boolean
   loading: boolean
-  login: (userData: User, token: string) => void
   logout: () => void
+  refetch: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -25,50 +25,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    // Verificar sessão ao montar
-    const checkSession = async () => {
-      try {
-        const response = await fetch('/api/auth/me', {
-          credentials: 'include', // Enviar cookies com a requisição
-        })
-        if (response.ok) {
-          const data = await response.json()
-          setUser(data.user)
-        } else {
-          setUser(null)
-        }
-      } catch (error) {
-        console.error('Error checking session:', error)
+  const checkSession = useCallback(async () => {
+    try {
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+      } else {
         setUser(null)
-      } finally {
-        setLoading(false)
       }
+    } catch (error) {
+      console.error('Error checking session:', error)
+      setUser(null)
+    } finally {
+      setLoading(false)
     }
-
-    checkSession()
   }, [])
 
-  const login = (userData: User, token: string) => {
-    setUser(userData)
-    setLoading(false)
-    // O token é salvo como cookie HTTP-only pelo servidor
-  }
+  useEffect(() => {
+    // Verificar sessão ao montar
+    checkSession()
+  }, [checkSession])
 
   const logout = async () => {
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
-        credentials: 'include', // Enviar cookies
+        credentials: 'include',
       })
       setUser(null)
     } catch (error) {
       console.error('Error logging out:', error)
+      setUser(null)
     }
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, logout, refetch: checkSession }}>
       {children}
     </AuthContext.Provider>
   )

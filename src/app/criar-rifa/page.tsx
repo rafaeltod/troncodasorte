@@ -79,17 +79,20 @@ export default function CreateRafflePageContent() {
       })
 
       if (!response.ok) {
-        throw new Error('Erro ao criar rifa')
+        const errorData = await response.json()
+        throw new Error(errorData.error || `Erro ao criar rifa (${response.status})`)
       }
 
       const data = await response.json()
       setSuccess(true)
+      setIsSubmitting(false)
+      
       setTimeout(() => {
-        window.location.href = `/rifas/${data.id}`
+        router.push(`/rifas/${data.id}`)
       }, 1500)
     } catch (err) {
+      console.error('Error creating raffle:', err)
       setError(err instanceof Error ? err.message : 'Erro ao criar rifa')
-    } finally {
       setIsSubmitting(false)
     }
   }
@@ -186,16 +189,19 @@ export default function CreateRafflePageContent() {
           </div>
 
           <div>
-            <label className="block text-slate-900 font-bold text-lg mb-3">🖼️ Imagens da Rifa</label>
-            <ImageUpload onImagesChange={handleImagesChange} maxImages={20} />
+            <label className="block text-slate-900 font-bold text-lg mb-3">🖼️ Imagens da Rifa (Opcional)</label>
+            <p className="text-slate-600 text-sm mb-3">
+              ⚠️ Imagens de base64 podem causar problemas. Use ImageKit.io ou URLs diretas para melhor performance.
+            </p>
+            <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
           </div>
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={isSubmitting}
             className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-black text-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
-            {loading ? '⏳ Criando sua rifa...' : '✨ Criar Rifa Agora'}
+            {isSubmitting ? '⏳ Criando sua rifa...' : '✨ Criar Rifa Agora'}
           </button>
 
           <p className="text-center text-slate-600 text-sm">

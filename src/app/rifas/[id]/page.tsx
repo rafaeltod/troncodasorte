@@ -2,13 +2,14 @@ import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
 
 interface DetailProps {
-  params: {
+  params: Promise<{
     id: string
-  }
+  }>
 }
 
 export default async function RaffleDetailPage({ params }: DetailProps) {
-  const raffle = await getRaffleById(params.id)
+  const { id } = await params
+  const raffle = await getRaffleById(id)
 
   if (!raffle) {
     return (
@@ -27,9 +28,9 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
   const isOpen = raffle.status === 'open'
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-8">
       <div className="max-w-6xl mx-auto px-4">
-        <a href="/rifas" className="text-blue-600 hover:underline mb-6 inline-block">
+        <a href="/rifas" className="text-indigo-600 hover:text-indigo-700 font-bold mb-6 inline-block transition">
           ← Voltar
         </a>
 
@@ -73,7 +74,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
           </div>
 
           {/* Info */}
-          <div className="bg-white rounded-lg shadow-lg p-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
             <div className="mb-6">
               {raffle.status === 'drawn' && (
                 <span className="inline-block bg-green-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">
@@ -91,71 +92,71 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </span>
               )}
 
-              <h1 className="text-4xl font-bold mt-4">{raffle.title}</h1>
+              <h1 className="text-4xl font-black text-slate-900 mt-4">{raffle.title}</h1>
             </div>
 
             {raffle.description && (
-              <p className="text-gray-600 mb-6">{raffle.description}</p>
+              <p className="text-slate-700 mb-6 text-lg">{raffle.description}</p>
             )}
 
             <div className="space-y-4 mb-8">
-              <div className="bg-blue-50 p-4 rounded-lg">
-                <div className="text-sm text-gray-600">Prêmio</div>
-                <div className="text-3xl font-bold text-blue-600">
-                  R$ {raffle.prizeAmount.toFixed(2)}
+              <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-600">
+                <div className="text-sm text-slate-600 font-semibold">Prêmio</div>
+                <div className="text-3xl font-black text-blue-700">
+                  R$ {Number(raffle.prizeAmount).toFixed(2)}
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <div className="text-sm text-gray-600">Cota</div>
-                  <div className="text-2xl font-bold">
-                    R$ {raffle.quotaPrice.toFixed(2)}
+                <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                  <div className="text-sm text-slate-600 font-semibold">Cota</div>
+                  <div className="text-2xl font-black text-slate-900">
+                    R$ {Number(raffle.quotaPrice).toFixed(2)}
                   </div>
                 </div>
-                <div className="bg-gray-100 p-4 rounded-lg">
-                  <div className="text-sm text-gray-600">Total de Cotas</div>
-                  <div className="text-2xl font-bold">{raffle.totalQuotas}</div>
+                <div className="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                  <div className="text-sm text-slate-600 font-semibold">Total de Cotas</div>
+                  <div className="text-2xl font-black text-slate-900">{raffle.totalQuotas}</div>
                 </div>
               </div>
 
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-medium">Progresso</span>
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm font-bold text-slate-900">Progresso</span>
+                  <span className="text-sm font-bold text-slate-700">
                     {raffle.soldQuotas} de {raffle.totalQuotas}
                   </span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-3">
+                <div className="w-full bg-slate-200 rounded-full h-4 border border-slate-300">
                   <div
-                    className="bg-blue-600 h-3 rounded-full transition-all"
+                    className="bg-gradient-to-r from-blue-600 to-blue-500 h-4 rounded-full transition-all"
                     style={{ width: `${progress}%` }}
                   ></div>
                 </div>
               </div>
 
               {raffle.status === 'drawn' && raffle.winner && (
-                <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-                  <div className="text-sm text-green-600 font-medium">Vencedor</div>
-                  <div className="text-lg font-bold text-green-700">{raffle.winner}</div>
+                <div className="bg-green-50 p-4 rounded-lg border-2 border-green-300">
+                  <div className="text-sm text-green-700 font-bold">🏆 Vencedor</div>
+                  <div className="text-lg font-black text-green-900 mt-1">{raffle.winner}</div>
                 </div>
               )}
             </div>
 
             {isOpen && progress < 100 && (
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">
-                Comprar Cotas
+              <button className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-4 rounded-lg font-black text-lg hover:from-blue-700 hover:to-blue-600 transition transform hover:scale-105 shadow-lg">
+                💳 Comprar Cotas
               </button>
             )}
 
             {progress >= 100 && isOpen && (
-              <div className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold text-center">
-                Todas as Cotas Vendidas
+              <div className="w-full bg-slate-200 text-slate-900 py-4 rounded-lg font-black text-center">
+                ✅ Todas as Cotas Vendidas
               </div>
             )}
 
             {!isOpen && (
-              <div className="w-full bg-gray-200 text-gray-700 py-3 rounded-lg font-bold text-center">
+              <div className="w-full bg-slate-200 text-slate-900 py-4 rounded-lg font-black text-center">
                 Rifa {raffle.status === 'drawn' ? 'Sorteada' : 'Fechada'}
               </div>
             )}
@@ -164,18 +165,18 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
         {/* Purchases */}
         {raffle.purchases.length > 0 && (
-          <div className="mt-12 bg-white rounded-lg shadow-lg p-8">
-            <h2 className="text-2xl font-bold mb-6">Últimas Compras</h2>
+          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-slate-100">
+            <h2 className="text-3xl font-black text-slate-900 mb-6">📋 Últimas Compras</h2>
             <div className="space-y-3">
               {raffle.purchases.slice(0, 10).map((purchase: any) => (
-                <div key={purchase.id} className="flex justify-between items-center p-3 bg-gray-50 rounded">
+                <div key={purchase.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-slate-50 to-slate-100 rounded-lg border border-slate-200 hover:border-blue-300 transition">
                   <div>
-                    <div className="font-medium">{purchase.user.name}</div>
-                    <div className="text-sm text-gray-600">{purchase.quotas} cotas</div>
+                    <div className="font-bold text-slate-900">{purchase.user.name}</div>
+                    <div className="text-sm text-slate-600 font-semibold">{purchase.quotas} cotas</div>
                   </div>
                   <div className="text-right">
-                    <div className="font-bold">R$ {purchase.amount.toFixed(2)}</div>
-                    <div className="text-xs text-gray-600">
+                    <div className="font-black text-blue-700 text-lg">R$ {Number(purchase.amount).toFixed(2)}</div>
+                    <div className="text-xs text-slate-600 font-semibold">
                       {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                     </div>
                   </div>

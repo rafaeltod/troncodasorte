@@ -13,7 +13,7 @@ export const createRaffleSchema = z.object({
   prizeAmount: z.number().positive('Valor do prêmio deve ser positivo'),
   totalQuotas: z.number().int().positive('Número de cotas deve ser positivo'),
   quotaPrice: z.number().positive('Preço da cota deve ser positivo').default(0.50),
-  images: z.array(z.string().url()).max(20, 'Máximo 20 imagens'),
+  images: z.array(z.string()).max(20, 'Máximo 20 imagens').optional(),
 })
 
 export const purchaseRaffleSchema = z.object({

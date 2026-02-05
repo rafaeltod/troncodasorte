@@ -37,12 +37,22 @@ export async function POST(req: NextRequest) {
       throw new Error('Erro ao criar usuário')
     }
 
-    const token = Buffer.from(JSON.stringify(user)).toString('base64')
-
-    return NextResponse.json({
+    // Criar resposta com cookie HTTP-only
+    const response = NextResponse.json({
       user,
-      token,
+      message: 'Conta criada com sucesso',
     }, { status: 201 })
+
+    // Salvar o ID do usuário em um cookie HTTP-only
+    response.cookies.set('token', user.id, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+    })
+
+    return response
   } catch (error) {
     console.error('Error in register:', error)
     return NextResponse.json(

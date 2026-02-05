@@ -7,7 +7,6 @@ import { useAuth } from '@/context/auth-context'
 
 export default function LoginPage() {
   const router = useRouter()
-  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -43,7 +42,6 @@ export default function LoginPage() {
       }
 
       const data = await response.json()
-      login(data.user, data.token)
       
       // Aguardar para garantir que o cookie foi definido
       await new Promise(resolve => setTimeout(resolve, 500))

@@ -263,7 +263,7 @@ export default function AccountPage() {
 
             <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl shadow-xl p-6 text-white">
               <p className="text-purple-100 font-semibold text-sm">Total Gasto</p>
-              <p className="text-3xl font-black mt-2">R$ {totalSpent.toFixed(2)}</p>
+              <p className="text-3xl font-black mt-2">R$ {Number(totalSpent).toFixed(2)}</p>
             </div>
 
             <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl shadow-xl p-6 text-white">
@@ -293,7 +293,7 @@ export default function AccountPage() {
                       </div>
                       <div className="text-right">
                         <p className="font-black text-indigo-600 text-lg">
-                          R$ {purchase.amount.toFixed(2)}
+                          R$ {Number(purchase.amount).toFixed(2)}
                         </p>
                         <span className={`inline-block mt-2 px-3 py-1 rounded-full text-xs font-bold ${
                           purchase.status === 'completed' 

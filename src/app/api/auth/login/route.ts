@@ -34,16 +34,15 @@ export async function POST(req: NextRequest) {
       message: 'Login realizado com sucesso',
     })
 
-    // Salvar o ID do usuário em um cookie HTTP-only e seguro
-    response.cookies.set('auth-token', user.id, {
+    // Salvar o ID do usuário em um cookie HTTP-only
+    response.cookies.set('token', user.id, {
       httpOnly: true,
-      secure: false, // Em dev, não usar https
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 30, // 30 dias
+      maxAge: 60 * 60 * 24 * 30,
       path: '/',
     })
 
-    console.log('[LOGIN] Cookie set with user ID:', user.id)
     return response
   } catch (error) {
     console.error('Error in login:', error)

@@ -7,7 +7,6 @@ import { useAuth } from '@/context/auth-context'
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { login } = useAuth()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -59,9 +58,7 @@ export default function RegisterPage() {
       }
 
       const data = await response.json()
-      console.log('[RegisterPage] Registration successful, calling login()...')
-      login(data.user, data.token)
-      console.log('[RegisterPage] login() called, waiting 1 second before redirect...')
+      console.log('[RegisterPage] Registration successful')
       
       // Aguardar mais tempo para garantir sincronização
       await new Promise(resolve => setTimeout(resolve, 1000))

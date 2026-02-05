@@ -19,12 +19,22 @@ export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps
       return
     }
 
+    // Verificar tamanho do arquivo (máximo 5MB)
+    const fileSizeMB = file.size / (1024 * 1024)
+    if (fileSizeMB > 5) {
+      alert(`Imagem muito grande (${fileSizeMB.toFixed(2)}MB). Máximo: 5MB`)
+      return
+    }
+
     const reader = new FileReader()
     reader.onload = (event) => {
       const base64 = event.target?.result as string
       const newImages = [...images, base64]
       setImages(newImages)
       onImagesChange(newImages)
+    }
+    reader.onerror = () => {
+      alert('Erro ao ler a imagem. Tente novamente.')
     }
     reader.readAsDataURL(file)
   }
@@ -57,7 +67,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps
           </div>
         </div>
         <p className="text-slate-600 text-sm mt-2">
-          Máximo de {maxImages} imagens. Formatos: JPG, PNG, GIF
+          Máximo de {maxImages} imagens. Limite: 5MB por imagem. Formatos: JPG, PNG, GIF
         </p>
       </div>
 

@@ -88,7 +88,7 @@ export default function TopBuyersPage() {
 
                 <div className="text-right">
                   <div className="text-3xl font-black text-indigo-600">
-                    R$ {buyer.totalSpent.toFixed(2)}
+                    R$ {Number(buyer.totalSpent).toFixed(2)}
                   </div>
                 </div>
               </div>

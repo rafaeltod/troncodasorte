@@ -98,3 +98,67 @@ export async function getTopBuyers(limit = 5) {
 
   return queryMany(query, [limit])
 }
+
+// Rifas que o usuário criou
+export async function getUserCreatedRaffles(userId: string) {
+  const query = `
+    SELECT 
+      r.*,
+      json_build_object('name', u.name, 'email', u.email) as creator
+    FROM raffle r
+    JOIN "user" u ON r."creatorId" = u.id
+    WHERE r."creatorId" = $1
+    ORDER BY r."createdAt" DESC
+  `
+
+  return queryMany(query, [userId])
+}
+
+// Rifas que o usuário está participando (em andamento)
+export async function getUserParticipatingRaffles(userId: string) {
+  const query = `
+    SELECT DISTINCT
+      r.*,
+      json_build_object('name', u.name, 'email', u.email) as creator,
+      (SELECT COALESCE(SUM(quotas), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userQuotas
+    FROM raffle r
+    JOIN "user" u ON r."creatorId" = u.id
+    JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    WHERE rp."userId" = $1 AND r.status = 'open'
+    ORDER BY r."createdAt" DESC
+  `
+
+  return queryMany(query, [userId])
+}
+
+// Rifas que o usuário já participou (finalizadas)
+export async function getUserFinishedRaffles(userId: string) {
+  const query = `
+    SELECT DISTINCT
+      r.*,
+      json_build_object('name', u.name, 'email', u.email) as creator,
+      (SELECT COALESCE(SUM(quotas), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userQuotas
+    FROM raffle r
+    JOIN "user" u ON r."creatorId" = u.id
+    JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    WHERE rp."userId" = $1 AND r.status != 'open'
+    ORDER BY r."createdAt" DESC
+  `
+
+  return queryMany(query, [userId])
+}
+
+// Rifas disponíveis (de outros usuários, com status open)
+export async function getAvailableRaffles(userId: string) {
+  const query = `
+    SELECT 
+      r.*,
+      json_build_object('name', u.name, 'email', u.email) as creator
+    FROM raffle r
+    JOIN "user" u ON r."creatorId" = u.id
+    WHERE r."creatorId" != $1 AND r.status = 'open'
+    ORDER BY r."createdAt" DESC
+  `
+
+  return queryMany(query, [userId])
+}

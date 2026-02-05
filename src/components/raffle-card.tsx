@@ -7,10 +7,10 @@ interface RaffleCardProps {
   id: string
   title: string
   image?: string | null
-  prizeAmount: number
-  totalQuotas: number
-  soldQuotas: number
-  quotaPrice: number
+  prizeAmount: number | string
+  totalQuotas: number | string
+  soldQuotas: number | string
+  quotaPrice: number | string
   status: string
 }
 
@@ -24,7 +24,7 @@ export function RaffleCard({
   quotaPrice,
   status,
 }: RaffleCardProps) {
-  const progress = (soldQuotas / totalQuotas) * 100
+  const progress = (Number(soldQuotas) / Number(totalQuotas)) * 100
 
   return (
     <Link href={`/rifas/${id}`}>
@@ -51,12 +51,12 @@ export function RaffleCard({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-slate-600 font-semibold text-sm">Prêmio:</span>
-              <span className="font-black text-indigo-600 text-lg">R$ {prizeAmount.toFixed(2)}</span>
+              <span className="font-black text-indigo-600 text-lg">R$ {Number(prizeAmount).toFixed(2)}</span>
             </div>
 
             <div className="flex justify-between items-center">
               <span className="text-slate-600 font-semibold text-sm">Cota:</span>
-              <span className="font-semibold text-slate-900">R$ {quotaPrice.toFixed(2)}</span>
+              <span className="font-semibold text-slate-900">R$ {Number(quotaPrice).toFixed(2)}</span>
             </div>
 
             <div className="space-y-2">
@@ -68,7 +68,7 @@ export function RaffleCard({
               </div>
 
               <div className="text-xs font-semibold text-slate-600 text-center">
-                {soldQuotas} / {totalQuotas} cotas
+                {Number(soldQuotas)} / {Number(totalQuotas)} cotas
               </div>
             </div>
 
