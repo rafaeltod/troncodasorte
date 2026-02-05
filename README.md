@@ -1,6 +1,6 @@
 # 🎲 Tronco da Sorte
 
-Plataforma de ebooks premiados. Base do projeto criada em Next.js.
+Plataforma de ebooks premiados. Base do projeto criada em Nextjs.
 
 ## 📋 Tecnologias
 
