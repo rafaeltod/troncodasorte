@@ -2,6 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { Calendar, Users, TrendingUp } from 'lucide-react'
 
 interface RaffleCardProps {
   id: string
@@ -24,60 +25,82 @@ export function RaffleCard({
   quotaPrice,
   status,
 }: RaffleCardProps) {
-  const progress = (Number(soldQuotas) / Number(totalQuotas)) * 100
+  const percentageSold = (Number(soldQuotas) / Number(totalQuotas)) * 100
+  const remainingQuotas = Number(totalQuotas) - Number(soldQuotas)
 
   return (
-    <Link href={`/rifas/${id}`}>
-      <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all transform hover:scale-105 overflow-hidden cursor-pointer border border-slate-100">
-        {image && (
-          <div className="relative w-full h-48">
+    <Link href={`/rifas/${id}`} className="block">
+      <div className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+        {/* Image */}
+        <div className="relative h-48 overflow-hidden">
+          {image ? (
             <Image
               src={image}
               alt={title}
               fill
               className="object-cover"
+              onError={(e) => {
+                e.currentTarget.src = '/placeholder.png'
+              }}
             />
-            {status === 'drawn' && (
-              <div className="absolute inset-0 bg-green-600 bg-opacity-80 flex items-center justify-center backdrop-blur-sm">
-                <span className="text-white font-black text-xl">✨ SORTEADA</span>
-              </div>
-            )}
+          ) : (
+            <div className="w-full h-full bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+              <div className="text-emerald-400 text-5xl">📦</div>
+            </div>
+          )}
+          <div className="absolute top-3 right-3 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+            R$ {Number(quotaPrice).toFixed(2)}
           </div>
-        )}
+          {percentageSold >= 80 && (
+            <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+              <TrendingUp className="w-4 h-4" />
+              Quase Esgotado
+            </div>
+          )}
+          {status === 'drawn' && (
+            <div className="absolute inset-0 bg-green-500 bg-opacity-50 flex items-center justify-center">
+              <span className="text-white font-bold text-3xl">SORTEADA</span>
+            </div>
+          )}
+        </div>
 
+        {/* Content */}
         <div className="p-5">
-          <h3 className="font-black text-lg truncate text-slate-900 mb-3">{title}</h3>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+            {title}
+          </h3>
 
-          <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 font-semibold text-sm">Prêmio:</span>
-              <span className="font-black text-indigo-600 text-lg">R$ {Number(prizeAmount).toFixed(2)}</span>
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="flex justify-between text-sm mb-1">
+              <span className="text-gray-600">Cotas vendidas</span>
+              <span className="font-semibold text-emerald-600">
+                {Number(soldQuotas).toLocaleString('pt-BR')} / {Number(totalQuotas).toLocaleString('pt-BR')}
+              </span>
             </div>
-
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 font-semibold text-sm">Cota:</span>
-              <span className="font-semibold text-slate-900">R$ {Number(quotaPrice).toFixed(2)}</span>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div
+                className="bg-emerald-600 h-2.5 rounded-full transition-all duration-300"
+                style={{ width: `${percentageSold}%` }}
+              />
             </div>
-
-            <div className="space-y-2">
-              <div className="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
-                <div
-                  className="bg-gradient-to-r from-indigo-500 to-purple-600 h-3 rounded-full transition-all"
-                  style={{ width: `${progress}%` }}
-                ></div>
-              </div>
-
-              <div className="text-xs font-semibold text-slate-600 text-center">
-                {Number(soldQuotas)} / {Number(totalQuotas)} cotas
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <div className="text-xs font-bold text-white bg-indigo-600 rounded-lg py-2 text-center">
-                Ver Detalhes →
-              </div>
+            <div className="text-xs text-gray-500 mt-1">
+              {remainingQuotas.toLocaleString('pt-BR')} cotas restantes
             </div>
           </div>
+
+          {/* Prize Info */}
+          <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
+            <div className="text-sm text-gray-600">Prêmio Principal</div>
+            <div className="text-2xl font-bold text-emerald-600">
+              R$ {Number(prizeAmount).toFixed(2)}
+            </div>
+          </div>
+
+          {/* Button */}
+          <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
+            Comprar Cotas
+          </button>
         </div>
       </div>
     </Link>

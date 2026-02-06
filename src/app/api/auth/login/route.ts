@@ -3,34 +3,70 @@ import { queryOne } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   try {
-    const { email, password } = await req.json()
+    const { cpf, email, phone } = await req.json()
 
-    if (!email || !password) {
+    console.log('[LOGIN] Iniciando login com CPF:', cpf)
+
+    // CPF é obrigatório
+    if (!cpf || !cpf.replace(/\D/g, '') || cpf.replace(/\D/g, '').length !== 11) {
+      console.log('[LOGIN] CPF inválido')
       return NextResponse.json(
-        { error: 'Email e senha são obrigatórios' },
+        { error: 'CPF válido é obrigatório' },
         { status: 400 }
       )
     }
 
-    // Buscar usuário pelo email
-    const user = await queryOne(
-      'SELECT * FROM "user" WHERE email = $1',
-      [email]
+    // Validar que pelo menos Email OU Telefone foi fornecido
+    const hasEmail = email && email.trim() && email.includes('@')
+    const hasPhone = phone && phone.replace(/\D/g, '').length >= 10
+
+    if (!hasEmail && !hasPhone) {
+      console.log('[LOGIN] Nem email nem telefone fornecidos')
+      return NextResponse.json(
+        { error: 'Informe um email válido ou telefone válido' },
+        { status: 400 }
+      )
+    }
+
+    // Buscar usuário por CPF primeiro (obrigatório)
+    console.log('[LOGIN] Buscando usuário com CPF:', cpf)
+    let user = await queryOne(
+      'SELECT id, name, email, cpf, phone, "birthDate", "createdAt" FROM "user" WHERE cpf = $1',
+      [cpf]
     )
 
-    if (!user || user.password !== password) {
+    if (!user) {
+      console.log('[LOGIN] Usuário não encontrado com CPF:', cpf)
       return NextResponse.json(
-        { error: 'Email ou senha incorretos' },
+        { error: 'Usuário não encontrado' },
         { status: 401 }
       )
     }
 
-    // Remover senha do objeto retornado
-    const { password: _, ...userWithoutPassword } = user
+    console.log('[LOGIN] Usuário encontrado:', user.id)
+
+    // Validar que o email ou telefone corresponde ao CPF
+    if (hasEmail && user.email !== email) {
+      console.log('[LOGIN] Email não corresponde - esperado:', user.email, 'recebido:', email)
+      return NextResponse.json(
+        { error: 'Email não corresponde ao CPF' },
+        { status: 401 }
+      )
+    }
+
+    if (hasPhone && (!user.phone || user.phone !== phone.replace(/\D/g, ''))) {
+      console.log('[LOGIN] Telefone não corresponde - esperado:', user.phone, 'recebido:', phone.replace(/\D/g, ''))
+      return NextResponse.json(
+        { error: 'Telefone não corresponde ao CPF' },
+        { status: 401 }
+      )
+    }
+
+    console.log('[LOGIN] Login bem-sucedido para usuário:', user.id)
 
     // Criar resposta com cookie HTTP-only
     const response = NextResponse.json({
-      user: userWithoutPassword,
+      user,
       message: 'Login realizado com sucesso',
     })
 
@@ -45,9 +81,9 @@ export async function POST(req: NextRequest) {
 
     return response
   } catch (error) {
-    console.error('Error in login:', error)
+    console.error('[LOGIN] Error in login:', error)
     return NextResponse.json(
-      { error: 'Erro ao fazer login' },
+      { error: `Erro ao fazer login: ${error instanceof Error ? error.message : 'erro desconhecido'}` },
       { status: 500 }
     )
   }

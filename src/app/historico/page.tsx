@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useAuth } from '@/context/auth-context'
+import { PixPaymentModal } from '@/components/pix-payment-modal'
+import { History, TrendingUp, ShoppingCart } from 'lucide-react'
 
 interface Purchase {
   id: string
@@ -24,6 +26,9 @@ export default function HistoricoPage() {
   const { user, loading } = useAuth()
   const [purchases, setPurchases] = useState<Purchase[]>([])
   const [pageLoading, setPageLoading] = useState(true)
+  const [showPixModal, setShowPixModal] = useState(false)
+  const [selectedPurchaseId, setSelectedPurchaseId] = useState<string | null>(null)
+  const [selectedPurchaseAmount, setSelectedPurchaseAmount] = useState(0)
 
   useEffect(() => {
     if (loading) return
@@ -62,15 +67,15 @@ export default function HistoricoPage() {
 
   if (purchases.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
+      <div className="min-h-screen bg-gray-50 py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-black text-slate-900 mb-4">📊 Histórico de Compras</h1>
-          <p className="text-slate-600 text-lg mb-8">
+          <h1 className="text-5xl font-black text-gray-900 mb-4"><History className="inline mr-2" size={40} />Histórico de Compras</h1>
+          <p className="text-gray-600 text-lg mb-8">
             Você ainda não comprou nenhuma cota
           </p>
           <Link
             href="/rifas"
-            className="inline-block bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-8 py-3 rounded-lg font-bold hover:from-indigo-700 hover:to-purple-700 transition"
+            className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
             Explorar Rifas 🎯
           </Link>
@@ -83,21 +88,21 @@ export default function HistoricoPage() {
   const totalQuotas = purchases.reduce((acc, p) => acc + p.quotas, 0)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl font-black text-slate-900 mb-2">📊 Histórico de Compras</h1>
+        <h1 className="text-5xl font-black text-gray-900 mb-2"><History className="inline mr-2" size={40} />Histórico de Compras</h1>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-indigo-100 text-sm font-semibold">Total Gasto</p>
+          <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-lg p-4 text-white">
+            <p className="text-emerald-100 text-sm font-semibold">Total Gasto</p>
             <p className="text-2xl font-black mt-1">R$ {Number(totalSpent).toFixed(2)}</p>
           </div>
-          <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-purple-100 text-sm font-semibold">Cotas</p>
+          <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg shadow-lg p-4 text-white">
+            <p className="text-teal-100 text-sm font-semibold">Cotas</p>
             <p className="text-2xl font-black mt-1">{totalQuotas}</p>
           </div>
-          <div className="bg-gradient-to-br from-pink-500 to-pink-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-pink-100 text-sm font-semibold">Participações</p>
+          <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg shadow-lg p-4 text-white">
+            <p className="text-cyan-100 text-sm font-semibold">Participações</p>
             <p className="text-2xl font-black mt-1">{purchases.length}</p>
           </div>
         </div>
@@ -105,40 +110,56 @@ export default function HistoricoPage() {
         <div className="space-y-3">
           {purchases.map((purchase) => (
             <Link key={purchase.id} href={`/rifas/${purchase.raffleId}`}>
-              <div className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-slate-100 cursor-pointer transition transform hover:scale-102">
+              <div className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 cursor-pointer transition transform hover:scale-102">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="font-black text-slate-900 text-lg">{purchase.raffle.title}</h3>
-                    <p className="text-slate-600 text-sm mt-1">
+                    <h3 className="font-black text-gray-900 text-lg">{purchase.raffle.title}</h3>
+                    <p className="text-gray-600 text-sm mt-1">
                       {purchase.quotas} cota{purchase.quotas !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-black text-indigo-600">
+                    <div className="text-2xl font-black text-emerald-600">
                       R$ {Number(purchase.amount).toFixed(2)}
                     </div>
                   </div>
                 </div>
 
                 <div className="mt-4 flex justify-between items-center">
-                  <span
-                    className={`text-xs font-bold px-3 py-1 rounded-full ${
-                      purchase.raffle.status === 'drawn'
-                        ? 'bg-green-100 text-green-800'
+                  <div className="flex gap-2 items-center">
+                    <span
+                      className={`text-xs font-bold px-3 py-1 rounded-full ${
+                        purchase.raffle.status === 'drawn'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : purchase.raffle.status === 'open'
+                            ? 'bg-cyan-100 text-cyan-800'
+                            : 'bg-gray-100 text-gray-800'
+                      }`}
+                    >
+                      {purchase.raffle.status === 'drawn'
+                        ? '✅ Sorteada'
                         : purchase.raffle.status === 'open'
-                          ? 'bg-blue-100 text-blue-800'
-                          : 'bg-slate-100 text-slate-800'
-                    }`}
-                  >
-                    {purchase.raffle.status === 'drawn'
-                      ? '✅ Sorteada'
-                      : purchase.raffle.status === 'open'
-                        ? '🔄 Aberta'
-                        : '⏸️ Fechada'}
-                  </span>
+                          ? '🔄 Aberta'
+                          : '⏸️ Fechada'}
+                    </span>
+
+                    {purchase.status === 'pending' && (
+                      <button
+                        onClick={(e) => {
+                          e.preventDefault()
+                          setSelectedPurchaseId(purchase.id)
+                          setSelectedPurchaseAmount(purchase.amount)
+                          setShowPixModal(true)
+                        }}
+                        className="text-xs font-bold px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 hover:bg-yellow-200 transition"
+                      >
+                        📱 Ver QR Code
+                      </button>
+                    )}
+                  </div>
 
                   {purchase.raffle.status === 'drawn' && purchase.raffle.winner && (
-                    <span className="text-sm text-green-600 font-black">
+                    <span className="text-sm text-emerald-600 font-black">
                       🏆 Você ganhou!
                     </span>
                   )}
@@ -147,6 +168,22 @@ export default function HistoricoPage() {
             </Link>
           ))}
         </div>
+
+        {/* PIX Payment Modal */}
+        <PixPaymentModal
+          isOpen={showPixModal}
+          onClose={() => {
+            setShowPixModal(false)
+            setSelectedPurchaseId(null)
+          }}
+          purchaseId={selectedPurchaseId || ''}
+          amount={selectedPurchaseAmount}
+          raffleId=""
+          onPaymentConfirmed={() => {
+            setShowPixModal(false)
+            setSelectedPurchaseId(null)
+          }}
+        />
       </div>
     </div>
   )

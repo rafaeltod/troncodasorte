@@ -20,24 +20,9 @@
 # production
 /build
 
-# misc
-.DS_Store
-*.pem
+# uploads
+/public/uploads
 
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
+# figma exports
+/code-figma-main
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-/src/generated/prisma

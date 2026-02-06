@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { ImageUpload } from '@/components/image-upload'
+import { Plus, FileText, DollarSign, Ticket, Image as ImageIcon, AlertCircle } from 'lucide-react'
 
 export default function CreateRafflePageContent() {
   const router = useRouter()
@@ -32,8 +33,8 @@ export default function CreateRafflePageContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
       </div>
     )
   }
@@ -98,28 +99,43 @@ export default function CreateRafflePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
-      <div className="max-w-3xl mx-auto px-4">
+    <div className="min-h-screen bg-gray-50 py-12">
+      <div className="container mx-auto px-4 max-w-4xl">
+        {/* Header */}
         <div className="mb-10">
-          <h1 className="text-5xl font-black text-slate-900 mb-3">🚀 Criar Nova Rifa</h1>
-          <p className="text-lg text-slate-600">Preencha os dados para criar sua rifa e começar a ganhar!</p>
+          <div className="flex items-center gap-4 mb-4">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600">
+              <Plus className="w-8 h-8 text-white" />
+            </div>
+            <div>
+              <h1 className="text-4xl font-black text-gray-900">Criar Nova Rifa</h1>
+              <p className="text-gray-600">Preencha os dados para criar sua rifa e ganhar!</p>
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-2xl p-8 space-y-8 border border-slate-100">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 space-y-8 border border-gray-200">
           {error && (
-            <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg">
-              <p className="font-bold">❌ {error}</p>
+            <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg flex gap-3">
+              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold">Erro</p>
+                <p className="text-sm">{error}</p>
+              </div>
             </div>
           )}
 
           {success && (
-            <div className="bg-green-50 border-l-4 border-green-600 text-green-700 p-4 rounded-lg">
+            <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg">
               <p className="font-bold">✅ Rifa criada com sucesso! Redirecionando...</p>
             </div>
           )}
 
           <div>
-            <label className="block text-slate-900 font-bold text-lg mb-3">📝 Título da Rifa</label>
+            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-emerald-600" />
+              Título da Rifa
+            </label>
             <input
               type="text"
               name="title"
@@ -127,18 +143,21 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               required
               minLength={5}
-              className="w-full border-2 border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition"
+              className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
               placeholder="Ex: Rifa do iPhone 15 Pro"
             />
           </div>
 
           <div>
-            <label className="block text-slate-900 font-bold text-lg mb-3">📄 Descrição</label>
+            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <FileText className="w-5 h-5 text-emerald-600" />
+              Descrição
+            </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              className="w-full border-2 border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 resize-none"
+              className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 resize-none"
               rows={5}
               placeholder="Descreva sua rifa em detalhes... (condição, especificações, etc)"
             ></textarea>
@@ -146,7 +165,10 @@ export default function CreateRafflePageContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-slate-900 font-bold text-lg mb-3">💰 Valor do Prêmio (R$)</label>
+              <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+                <DollarSign className="w-5 h-5 text-emerald-600" />
+                Valor do Prêmio (R$)
+              </label>
               <input
                 type="number"
                 name="prizeAmount"
@@ -155,12 +177,15 @@ export default function CreateRafflePageContent() {
                 required
                 step="0.01"
                 min="0"
-                className="w-full border-2 border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition"
+                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
                 placeholder="5000.00"
               />
             </div>
             <div>
-              <label className="block text-slate-900 font-bold text-lg mb-3">🎫 Total de Cotas</label>
+              <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+                <Ticket className="w-5 h-5 text-emerald-600" />
+                Total de Cotas
+              </label>
               <input
                 type="number"
                 name="totalQuotas"
@@ -168,14 +193,17 @@ export default function CreateRafflePageContent() {
                 onChange={handleInputChange}
                 required
                 min="1"
-                className="w-full border-2 border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition"
+                className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
                 placeholder="100"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-slate-900 font-bold text-lg mb-3">💵 Preço da Cota (R$)</label>
+            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <DollarSign className="w-5 h-5 text-emerald-600" />
+              Preço da Cota (R$)
+            </label>
             <input
               type="number"
               name="quotaPrice"
@@ -183,29 +211,40 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               step="0.01"
               min="0.01"
-              className="w-full border-2 border-slate-200 rounded-xl px-5 py-3 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition"
+              className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
               placeholder="0.50"
             />
           </div>
 
           <div>
-            <label className="block text-slate-900 font-bold text-lg mb-3">🖼️ Imagens da Rifa (Opcional)</label>
-            <p className="text-slate-600 text-sm mb-3">
-              ⚠️ Imagens de base64 podem causar problemas. Use ImageKit.io ou URLs diretas para melhor performance.
-            </p>
+            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5 text-emerald-600" />
+              Imagens da Rifa (Opcional)
+            </label>
             <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
           </div>
 
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-black text-lg hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-extrabold text-lg hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
           >
-            {isSubmitting ? '⏳ Criando sua rifa...' : '✨ Criar Rifa Agora'}
+            {isSubmitting ? (
+              <>
+                <span className="animate-spin">⏳</span>
+                Criando sua rifa...
+              </>
+            ) : (
+              <>
+                <Plus className="w-5 h-5" />
+                Criar Rifa Agora
+              </>
+            )}
           </button>
 
-          <p className="text-center text-slate-600 text-sm">
-            💡 Dica: Quanto mais atrativo seu prêmio e descrição, mais pessoas vão querer participar!
+          <p className="text-center text-gray-600 text-sm bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-2 items-start">
+            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <span><strong>Dica:</strong> Quanto mais atrativo seu prêmio e descrição, mais pessoas vão querer participar!</span>
           </p>
         </form>
       </div>

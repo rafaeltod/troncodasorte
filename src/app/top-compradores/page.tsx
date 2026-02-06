@@ -1,8 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { Trophy } from 'lucide-react'
 
 interface Buyer {
   id: string
@@ -14,19 +14,11 @@ interface Buyer {
 }
 
 export default function TopBuyersPage() {
-  const router = useRouter()
-  const { user, loading } = useAuth()
+  const { loading } = useAuth()
   const [buyers, setBuyers] = useState<Buyer[]>([])
   const [pageLoading, setPageLoading] = useState(true)
 
   useEffect(() => {
-    if (loading) return
-    
-    if (!user) {
-      router.push('/auth/login')
-      return
-    }
-
     const fetchTopBuyers = async () => {
       try {
         const response = await fetch('/api/top-buyers', {
@@ -44,50 +36,43 @@ export default function TopBuyersPage() {
     }
 
     fetchTopBuyers()
-  }, [user, loading, router])
+  }, [])
 
   if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
       </div>
     )
   }
 
-  if (!user) {
-    return null
-  }
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
-      <div className="max-w-2xl mx-auto px-4">
-        <h1 className="text-5xl font-black text-slate-900 mb-2">🏆 Top 5 Compradores</h1>
-        <p className="text-slate-600 font-semibold mb-8">Os maiores compradores da plataforma</p>
-
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-2xl mx-auto px-4 py-12">
         {buyers.length > 0 ? (
           <div className="space-y-4">
             {buyers.map((buyer, index) => (
               <div
                 key={buyer.id}
-                className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-slate-100 transition flex items-center justify-between"
+                className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 transition flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-full font-black text-2xl">
+                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-full font-black text-2xl">
                     {index === 0 && '🥇'}
                     {index === 1 && '🥈'}
                     {index === 2 && '🥉'}
                     {index > 2 && index + 1}
                   </div>
                   <div>
-                    <div className="font-black text-lg text-slate-900">{buyer.name}</div>
-                    <div className="text-sm text-slate-600">
+                    <div className="font-black text-lg text-gray-900">{buyer.name}</div>
+                    <div className="text-sm text-gray-600">
                       {buyer.raffleBought} rifa{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalQuotas} cotas
                     </div>
                   </div>
                 </div>
 
                 <div className="text-right">
-                  <div className="text-3xl font-black text-indigo-600">
+                  <div className="text-3xl font-black text-emerald-600">
                     R$ {Number(buyer.totalSpent).toFixed(2)}
                   </div>
                 </div>
@@ -95,8 +80,8 @@ export default function TopBuyersPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-md p-12 text-center border border-slate-100">
-            <p className="text-slate-600 font-semibold text-lg">Nenhum comprador registrado ainda</p>
+          <div className="bg-white rounded-xl shadow-md p-12 text-center border border-gray-200">
+            <p className="text-gray-600 font-semibold text-lg">Nenhum comprador registrado ainda</p>
           </div>
         )}
       </div>

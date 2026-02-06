@@ -7,23 +7,23 @@ import { AuthProvider } from "@/context/auth-context";
 import { useAuth } from "@/context/auth-context";
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
-  const { isAuthenticated, loading } = useAuth()
+  const { user, loading } = useAuth()
   const pathname = usePathname()
   
   // Rotas de autenticação não devem mostrar navbar
-  const isAuthRoute = pathname === '/' || pathname.startsWith('/auth/')
+  const isAuthRoute = pathname.startsWith('/auth/')
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
       </div>
     )
   }
 
   return (
     <>
-      {isAuthenticated && !isAuthRoute && <Navbar />}
+      {!isAuthRoute && <Navbar />}
       {children}
     </>
   )
@@ -38,8 +38,8 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Inicializando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl font-bold text-gray-600">⏳ Inicializando...</div>
       </div>
     )
   }

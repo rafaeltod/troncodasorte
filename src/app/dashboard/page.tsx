@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { RaffleCard } from '@/components/raffle-card'
 import Link from 'next/link'
+import { Plus, History, Trophy, Users } from 'lucide-react'
 
 interface Raffle {
   id: string
@@ -70,8 +71,8 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
       </div>
     )
   }
@@ -120,41 +121,41 @@ export default function DashboardPage() {
   const activeRaffles = getActiveRaffles()
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 py-12">
+    <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-5xl font-black text-slate-900 mb-3">
+          <h1 className="text-5xl font-black text-gray-900 mb-3">
             👋 Olá, {user.name.split(' ')[0]}!
           </h1>
-          <p className="text-lg text-slate-600 mb-6">
+          <p className="text-lg text-gray-600 mb-6">
             Bem-vindo ao seu painel de rifas. Explore, participe e crie suas próprias rifas!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Link
               href="/criar-rifa"
-              className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-xl font-bold hover:from-indigo-700 hover:to-purple-700 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg text-center"
             >
-              🚀 Criar Nova Rifa
+              <Plus className="inline mr-2" size={20} /> Criar Nova Rifa
             </Link>
             <Link
               href="/historico"
-              className="bg-white text-indigo-600 px-6 py-4 rounded-xl font-bold border-2 border-indigo-600 hover:bg-indigo-50 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
             >
-              📊 Meu Histórico
+              <History className="inline mr-2" size={20} /> Meu Histórico
             </Link>
             <Link
               href="/account"
-              className="bg-white text-indigo-600 px-6 py-4 rounded-xl font-bold border-2 border-indigo-600 hover:bg-indigo-50 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
             >
               👤 Meu Perfil
             </Link>
             <Link
               href="/top-compradores"
-              className="bg-white text-indigo-600 px-6 py-4 rounded-xl font-bold border-2 border-indigo-600 hover:bg-indigo-50 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
             >
-              🏆 Top Compradores
+              <Trophy className="inline mr-2" size={20} /> Top Compradores
             </Link>
           </div>
         </div>
@@ -168,8 +169,8 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-6 py-3 rounded-lg font-bold transition transform hover:scale-105 ${
                   activeTab === tab.id
-                    ? 'bg-indigo-600 text-white shadow-lg'
-                    : 'bg-white text-slate-900 border-2 border-slate-200 hover:border-indigo-600'
+                    ? 'bg-emerald-600 text-white shadow-lg'
+                    : 'bg-white text-gray-900 border-2 border-gray-200 hover:border-emerald-600'
                 }`}
               >
                 {tab.icon} {tab.label}
@@ -182,7 +183,7 @@ export default function DashboardPage() {
         <div>
           {activeRaffles.length > 0 ? (
             <>
-              <h2 className="text-3xl font-black text-slate-900 mb-6">{getTabLabel()}</h2>
+              <h2 className="text-3xl font-black text-gray-900 mb-6">{getTabLabel()}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {activeRaffles.map((raffle) => (
                   <RaffleCard key={raffle.id} {...raffle} />
@@ -190,14 +191,14 @@ export default function DashboardPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-slate-300 shadow-lg">
+            <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-300 shadow-lg">
               <div className="text-5xl mb-4">
                 {activeTab === 'available' && '🔍'}
                 {activeTab === 'created' && '📝'}
                 {activeTab === 'participating' && '🎫'}
                 {activeTab === 'finished' && '🏁'}
               </div>
-              <p className="text-xl text-slate-600 mb-6 font-semibold">
+              <p className="text-xl text-gray-600 mb-6 font-semibold">
                 {activeTab === 'available' && 'Nenhuma rifa disponível no momento'}
                 {activeTab === 'created' && 'Você ainda não criou nenhuma rifa'}
                 {activeTab === 'participating' && 'Você ainda não está participando de nenhuma rifa'}
@@ -206,7 +207,7 @@ export default function DashboardPage() {
               {(activeTab === 'available' || activeTab === 'created') && (
                 <Link
                   href="/criar-rifa"
-                  className="inline-block bg-indigo-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-indigo-700 transition"
+                  className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition"
                 >
                   Começar Agora 🚀
                 </Link>
