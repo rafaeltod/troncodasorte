@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
-import { QuotaPurchase } from '@/components/quota-purchase'
+import { Checkout } from '@/components/checkout'
 import { ArrowLeft, Gift, Ticket, Users, TrendingUp, Trophy, FileText } from 'lucide-react'
 
 interface DetailProps {
@@ -171,7 +171,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             </div>
 
             {isOpen && progress < 100 && (
-              <QuotaPurchase 
+              <Checkout 
                 raffleId={id}
                 quotaPrice={Number(raffle.quotaPrice)}
                 availableQuotas={raffle.totalQuotas - raffle.soldQuotas}
