@@ -5,6 +5,8 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
+import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
+import { formatCPF, formatPhone } from '@/lib/formatters'
 import { UserPlus, User, Mail, FileText, Phone, Calendar, CheckCircle2, AlertCircle } from 'lucide-react'
 
 interface FormData {
@@ -18,7 +20,7 @@ interface FormData {
 
 export default function RegisterPage() {
   const router = useRouter()
-  const { user } = useAuth()
+  const { user, refetch } = useAuth()
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -45,23 +47,6 @@ export default function RegisterPage() {
     }))
   }
 
-  const formatCPF = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-      .substring(0, 14)
-  }
-
-  const formatPhone = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{5})(\d)/, '$1-$2')
-      .substring(0, 15)
-  }
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
@@ -72,15 +57,15 @@ export default function RegisterPage() {
       setError('Nome é obrigatório')
       return
     }
-    if (!formData.email.trim()) {
-      setError('Email é obrigatório')
+    if (!formData.email.trim() || !isValidEmail(formData.email)) {
+      setError('Email válido é obrigatório')
       return
     }
-    if (!formData.cpf.replace(/\D/g, '') || formData.cpf.replace(/\D/g, '').length !== 11) {
+    if (!isValidCPF(formData.cpf)) {
       setError('CPF inválido')
       return
     }
-    if (!formData.phone.replace(/\D/g, '') || formData.phone.replace(/\D/g, '').length < 10) {
+    if (!isValidPhone(formData.phone)) {
       setError('Telefone inválido')
       return
     }
@@ -94,17 +79,7 @@ export default function RegisterPage() {
     }
 
     // Validar idade mínima de 18 anos
-    const birthDate = new Date(formData.birthDate)
-    const today = new Date()
-    const age = today.getFullYear() - birthDate.getFullYear()
-    const monthDifference = today.getMonth() - birthDate.getMonth()
-    
-    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-      if (age - 1 < 18) {
-        setError('Você deve ter no mínimo 18 anos de idade')
-        return
-      }
-    } else if (age < 18) {
+    if (!isAdult(formData.birthDate)) {
       setError('Você deve ter no mínimo 18 anos de idade')
       return
     }
@@ -133,8 +108,11 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Erro ao criar conta')
       }
 
+      // Atualizar context imediatamente
+      await refetch()
+
       setSuccess('✅ Conta criada com sucesso!')
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      await new Promise(resolve => setTimeout(resolve, 300))
       router.push('/rifas')
     } catch (err) {
       console.error('[RegisterPage] Error:', err)

@@ -24,3 +24,36 @@ export const purchaseRaffleSchema = z.object({
 export type CreateUserInput = z.infer<typeof createUserSchema>
 export type CreateRaffleInput = z.infer<typeof createRaffleSchema>
 export type PurchaseRaffleInput = z.infer<typeof purchaseRaffleSchema>
+
+export function calculateAge(birthDate: string | Date): number {
+  const birth = typeof birthDate === 'string' ? new Date(birthDate) : birthDate
+  const today = new Date()
+  let age = today.getFullYear() - birth.getFullYear()
+  const monthDifference = today.getMonth() - birth.getMonth()
+
+  if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
+    age--
+  }
+
+  return age
+}
+
+export function isAdult(birthDate: string | Date): boolean {
+  return calculateAge(birthDate) >= 18
+}
+
+// Validações de campo
+export function isValidCPF(cpf: string): boolean {
+  const cleanedCPF = cpf.replace(/\D/g, '')
+  return cleanedCPF.length === 11
+}
+
+export function isValidEmail(email: string): boolean {
+  return email.includes('@') && email.includes('.')
+}
+
+export function isValidPhone(phone: string): boolean {
+  const cleanedPhone = phone.replace(/\D/g, '')
+  return cleanedPhone.length >= 10
+}
+

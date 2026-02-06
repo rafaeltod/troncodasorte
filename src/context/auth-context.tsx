@@ -16,7 +16,7 @@ interface AuthContextType {
   isAuthenticated: boolean
   loading: boolean
   logout: () => void
-  refetch: () => Promise<void>
+  refetch: () => Promise<boolean>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -37,10 +37,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(null)
       }
     } catch (error) {
-      console.error('Error checking session:', error)
       setUser(null)
     } finally {
       setLoading(false)
+    }
+  }, [])
+
+  // refetch para chamadas manuais (login/registro)
+  const refetch = useCallback(async () => {
+    try {
+      const response = await fetch('/api/auth/me', {
+        credentials: 'include',
+      })
+      if (response.ok) {
+        const data = await response.json()
+        setUser(data.user)
+        return true
+      } else {
+        setUser(null)
+        return false
+      }
+    } catch (error) {
+      setUser(null)
+      return false
     }
   }, [])
 
@@ -63,7 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, logout, refetch: checkSession }}>
+    <AuthContext.Provider value={{ user, isAuthenticated: !!user, loading, logout, refetch }}>
       {children}
     </AuthContext.Provider>
   )
