@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -20,7 +21,16 @@ export function Navbar() {
     <nav className="bg-white shadow-lg sticky top-0 z-50 border-b-2 border-indigo-100">
       <div className="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
         <Link href="/" className="font-black text-2xl md:text-3xl text-indigo-600 hover:text-indigo-700 transition flex items-center gap-2">
-          🎲 <span>Tronco da Sorte</span>
+          <Image 
+            src="/troncodasorte.png" 
+            alt="Tronco da Sorte" 
+            width={40} 
+            height={40}
+            priority
+            unoptimized
+            className="rounded-lg"
+          />
+          <span>Tronco da Sorte</span>
         </Link>
 
         <div className="hidden md:flex gap-8 items-center">
