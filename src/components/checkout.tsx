@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
+import { formatCPF, formatPhone } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Minus, Plus, User, Mail, FileText, Phone, Calendar } from 'lucide-react'
 
@@ -20,8 +22,7 @@ export function Checkout({
   isOpen,
 }: CheckoutProps) {
   const router = useRouter()
-  const { user } = useAuth()
-  const [step, setStep] = useState<'quantity' | 'payment'>('quantity')
+  const { user, refetch } = useAuth()
   const [quantity, setQuantity] = useState(1)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
@@ -46,23 +47,6 @@ export function Checkout({
     }
   }
 
-  const formatCPF = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})/, '$1-$2')
-      .substring(0, 14)
-  }
-
-  const formatPhone = (value: string) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{5})(\d)/, '$1-$2')
-      .substring(0, 15)
-  }
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({
@@ -77,15 +61,15 @@ export function Checkout({
         setError('Nome é obrigatório')
         return false
       }
-      if (!formData.email.trim() || !formData.email.includes('@')) {
+      if (!isValidEmail(formData.email)) {
         setError('Email válido é obrigatório')
         return false
       }
-      if (!formData.cpf.replace(/\D/g, '') || formData.cpf.replace(/\D/g, '').length !== 11) {
+      if (!isValidCPF(formData.cpf)) {
         setError('CPF inválido')
         return false
       }
-      if (!formData.phone.replace(/\D/g, '') || formData.phone.replace(/\D/g, '').length < 10) {
+      if (!isValidPhone(formData.phone)) {
         setError('Telefone inválido')
         return false
       }
@@ -95,17 +79,7 @@ export function Checkout({
       }
 
       // Validar idade mínima de 18 anos
-      const birthDate = new Date(formData.birthDate)
-      const today = new Date()
-      const age = today.getFullYear() - birthDate.getFullYear()
-      const monthDifference = today.getMonth() - birthDate.getMonth()
-
-      if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
-        if (age - 1 < 18) {
-          setError('Você deve ter no mínimo 18 anos de idade')
-          return false
-        }
-      } else if (age < 18) {
+      if (!isAdult(formData.birthDate)) {
         setError('Você deve ter no mínimo 18 anos de idade')
         return false
       }
@@ -145,6 +119,9 @@ export function Checkout({
           const data = await registerResponse.json()
           throw new Error(data.error || 'Erro ao criar conta')
         }
+
+        // Atualizar context de autenticação com novo usuário
+        await refetch()
       }
 
       // Fazer a compra
@@ -195,9 +172,8 @@ export function Checkout({
         </div>
       )}
 
-      {step === 'quantity' ? (
-        <>
-          {/* Mostrar dados do usuário se logado */}
+      <>
+        {/* Mostrar dados do usuário se logado */}
           {user && (
             <div className="mb-6 bg-emerald-50 p-4 rounded-lg border border-emerald-200">
               <p className="text-sm font-bold text-emerald-900">✅ Logado como:</p>
@@ -334,8 +310,8 @@ export function Checkout({
           <p className="text-xs text-gray-600 text-center mt-3">
             ✅ Pagamento seguro via PIX
           </p>
-        </>
-      ) : null}
+      </>
+
 
       {/* PIX Payment Modal */}
       <PixPaymentModal

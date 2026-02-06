@@ -60,12 +60,11 @@ export async function POST(req: NextRequest) {
           })
         }
       } catch (error) {
-        console.log('Erro ao integrar com Mercado Pago, usando PIX estático', error)
+        // Usar PIX estático se Mercado Pago falhar
       }
     }
 
-    // Fallback: PIX estático para desenvolvimento
-    // Em produção, isso não seria usado
+    // PIX estático para desenvolvimento
     const pixKey = 'mercado-pago@troncodasorte.com.br'
     const qrCodeData = {
       pix: pixKey,
