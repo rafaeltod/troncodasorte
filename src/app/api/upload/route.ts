@@ -1,7 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,28 +29,21 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Criar pasta de uploads se não existir
-    const uploadsDir = join(process.cwd(), 'public', 'uploads')
-    if (!existsSync(uploadsDir)) {
-      await mkdir(uploadsDir, { recursive: true })
+    // Validar tamanho máximo (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'Imagem muito grande. Máximo 5MB' },
+        { status: 400 }
+      )
     }
 
-    // Gerar nome único para o arquivo
-    const timestamp = Date.now()
-    const random = Math.random().toString(36).substring(7)
-    const fileExtension = file.type.split('/')[1] || 'jpg'
-    const fileName = `${timestamp}-${random}.${fileExtension}`
-
-    // Salvar arquivo
+    // Converter arquivo para base64
     const buffer = await file.arrayBuffer()
-    const filePath = join(uploadsDir, fileName)
-    await writeFile(filePath, Buffer.from(buffer))
-
-    // Retornar URL pública
-    const publicUrl = `/uploads/${fileName}`
+    const base64 = Buffer.from(buffer).toString('base64')
+    const dataUrl = `data:${file.type};base64,${base64}`
 
     return NextResponse.json({
-      url: publicUrl,
+      url: dataUrl,
       fileName: file.name,
       size: file.size,
     })

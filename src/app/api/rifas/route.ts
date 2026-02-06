@@ -16,6 +16,17 @@ export async function POST(req: NextRequest) {
 
     const body = await req.json()
 
+    // Log do body para debug
+    console.log('[CREATE RAFFLE] Body received:', {
+      title: body.title,
+      description: body.description?.substring(0, 50),
+      prizeAmount: body.prizeAmount,
+      totalQuotas: body.totalQuotas,
+      quotaPrice: body.quotaPrice,
+      imagesCount: body.images?.length || 0,
+      imageSizes: body.images?.map((img: string) => img.length) || [],
+    })
+
     // Validate
     const validatedData = createRaffleSchema.parse(body)
 
@@ -45,10 +56,14 @@ export async function POST(req: NextRequest) {
     
     if (error instanceof Error) {
       console.error('Error details:', error.message)
+      console.error('Error stack:', error.stack)
+      
       if (error.message.includes('validation')) {
         errorMessage = error.message
       } else if (error.message.includes('query')) {
         errorMessage = 'Erro ao salvar no banco de dados'
+      } else if (error.message.includes('JSON')) {
+        errorMessage = 'Erro ao processar dados (imagens podem estar muito grandes)'
       }
     }
     
