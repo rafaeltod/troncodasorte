@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 
 export async function POST(req: NextRequest) {
   try {
@@ -21,15 +24,36 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Converter arquivo para base64
-    const buffer = await file.arrayBuffer()
-    const base64 = Buffer.from(buffer).toString('base64')
-    const dataURI = `data:${file.type};base64,${base64}`
+    // Validar tipo de arquivo
+    if (!file.type.startsWith('image/')) {
+      return NextResponse.json(
+        { error: 'Apenas imagens são aceitas' },
+        { status: 400 }
+      )
+    }
 
-    // Por enquanto, vou retornar um objeto simulado
-    // Você pode integrar com ImageKit.io mais tarde
+    // Criar pasta de uploads se não existir
+    const uploadsDir = join(process.cwd(), 'public', 'uploads')
+    if (!existsSync(uploadsDir)) {
+      await mkdir(uploadsDir, { recursive: true })
+    }
+
+    // Gerar nome único para o arquivo
+    const timestamp = Date.now()
+    const random = Math.random().toString(36).substring(7)
+    const fileExtension = file.type.split('/')[1] || 'jpg'
+    const fileName = `${timestamp}-${random}.${fileExtension}`
+
+    // Salvar arquivo
+    const buffer = await file.arrayBuffer()
+    const filePath = join(uploadsDir, fileName)
+    await writeFile(filePath, Buffer.from(buffer))
+
+    // Retornar URL pública
+    const publicUrl = `/uploads/${fileName}`
+
     return NextResponse.json({
-      url: dataURI,
+      url: publicUrl,
       fileName: file.name,
       size: file.size,
     })

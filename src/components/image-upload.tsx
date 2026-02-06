@@ -9,8 +9,9 @@ interface ImageUploadProps {
 
 export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps) {
   const [images, setImages] = useState<string[]>([])
+  const [uploading, setUploading] = useState(false)
 
-  const handleAddImage = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -26,17 +27,35 @@ export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps
       return
     }
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      const base64 = event.target?.result as string
-      const newImages = [...images, base64]
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        credentials: 'include',
+        body: formData,
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        alert(`Erro ao fazer upload: ${errorData.error || 'Erro desconhecido'}`)
+        return
+      }
+
+      const data = await response.json()
+      const newImages = [...images, data.url]
       setImages(newImages)
       onImagesChange(newImages)
+    } catch (error) {
+      console.error('Upload error:', error)
+      alert('Erro ao fazer upload da imagem. Tente novamente.')
+    } finally {
+      setUploading(false)
+      // Limpar input
+      e.target.value = ''
     }
-    reader.onerror = () => {
-      alert('Erro ao ler a imagem. Tente novamente.')
-    }
-    reader.readAsDataURL(file)
   }
 
   const handleRemoveImage = (index: number) => {
@@ -56,13 +75,15 @@ export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps
             type="file"
             accept="image/*"
             onChange={handleAddImage}
-            disabled={images.length >= maxImages}
+            disabled={images.length >= maxImages || uploading}
             className="w-full border-2 border-dashed border-slate-300 rounded-xl px-5 py-8 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition cursor-pointer hover:border-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-slate-500 text-center">
-              <div className="text-3xl mb-2">📁</div>
-              <div className="text-sm font-semibold">Clique para selecionar uma imagem</div>
+              <div className="text-3xl mb-2">{uploading ? '⏳' : '📁'}</div>
+              <div className="text-sm font-semibold">
+                {uploading ? 'Fazendo upload...' : 'Clique para selecionar uma imagem'}
+              </div>
             </span>
           </div>
         </div>
@@ -81,6 +102,10 @@ export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps
                   src={image} 
                   alt={`Preview ${index}`} 
                   className="w-full h-24 object-cover rounded-lg shadow-md" 
+                  onError={(e) => {
+                    console.error(`Erro ao carregar imagem ${index}:`, image)
+                    e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100"%3E%3Crect fill="%23ccc" width="100" height="100"/%3E%3Ctext x="50" y="50" text-anchor="middle" font-size="14" fill="%23999"%3EErro%3C/text%3E%3C/svg%3E'
+                  }}
                 />
                 <button
                   type="button"

@@ -8,7 +8,17 @@ export async function GET(
   try {
     const { userId } = await params
     const purchases = await queryMany(
-      `SELECT rp.*, r.title as "raffleTitle", r."prizeAmount"
+      `SELECT 
+        rp.id,
+        rp."raffleId",
+        rp.quotas,
+        rp.amount,
+        rp.status,
+        rp.numbers,
+        rp."createdAt",
+        r.title as "raffleTitle",
+        r.status as "raffleStatus",
+        r.winner
        FROM "rafflePurchase" rp
        JOIN raffle r ON rp."raffleId" = r.id
        WHERE rp."userId" = $1
@@ -16,7 +26,22 @@ export async function GET(
       [userId]
     )
 
-    return NextResponse.json(purchases)
+    // Mapear para o formato esperado pelo frontend
+    const formattedPurchases = purchases.map(p => ({
+      id: p.id,
+      raffleId: p.raffleId,
+      raffle: {
+        title: p.raffleTitle,
+        status: p.raffleStatus,
+        winner: p.winner
+      },
+      quotas: p.quotas,
+      amount: p.amount,
+      status: p.status,
+      createdAt: p.createdAt
+    }))
+
+    return NextResponse.json(formattedPurchases)
   } catch (error) {
     console.error('Error fetching purchases:', error)
     return NextResponse.json(

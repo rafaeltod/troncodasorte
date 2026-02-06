@@ -23,7 +23,20 @@ export async function getRaffles(status?: string) {
 export async function getRaffleById(id: string) {
   const query = `
     SELECT 
-      r.*,
+      r.id,
+      r.title,
+      r.description,
+      r.image,
+      r.images,
+      r."prizeAmount",
+      r."totalQuotas",
+      r."soldQuotas",
+      r."quotaPrice",
+      r.status,
+      r.winner,
+      r."creatorId",
+      r."createdAt",
+      r."updatedAt",
       json_build_object('name', u.name, 'email', u.email) as creator,
       coalesce(json_agg(
         json_build_object(
@@ -43,7 +56,7 @@ export async function getRaffleById(id: string) {
     LEFT JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
     LEFT JOIN "user" u2 ON rp."userId" = u2.id
     WHERE r.id = $1
-    GROUP BY r.id, u.id
+    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalQuotas", r."soldQuotas", r."quotaPrice", r.status, r.winner, r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
   `
 
   return queryOne(query, [id])
