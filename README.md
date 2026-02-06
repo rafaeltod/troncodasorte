@@ -11,6 +11,9 @@ Plataforma de ebooks premiados. Base do projeto criada em Nextjs.
 - **PostgreSQL** - Banco de dados
 - **Zod** - Validação de dados
 
+## Artefatos
+* [Documento de visão](docs/visao_do_produto.md)
+
 ## 🚀 Como Começar
 
 ### 1. Instalar Dependências
