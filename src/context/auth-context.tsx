@@ -9,6 +9,7 @@ interface User {
   cpf: string
   phone: string
   createdAt: string
+  isAdmin: boolean
 }
 
 interface AuthContextType {
