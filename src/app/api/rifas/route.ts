@@ -19,13 +19,11 @@ export async function POST(req: NextRequest) {
     // Validate
     const validatedData = createRaffleSchema.parse(body)
 
-    // If the DB column `images` is a PostgreSQL text[] (array), pass a JS array
-    // directly—node-postgres will convert it to text[] automatically.
-    // This avoids the jsonb/text[] mismatch error.
+    const imagesJson = JSON.stringify(validatedData.images || [])
     // Create raffle com o userId do token
     const raffle = await queryOne(
       `INSERT INTO raffle (title, description, "prizeAmount", "totalQuotas", "quotaPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
+       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8::jsonb, NOW(), NOW())
        RETURNING *`,
       [
         validatedData.title,
@@ -35,7 +33,7 @@ export async function POST(req: NextRequest) {
         validatedData.quotaPrice,
         token, // userId do token autenticado
         validatedData.images?.[0] || null,
-        validatedData.images || [],
+        imagesJson,
       ]
     )
 

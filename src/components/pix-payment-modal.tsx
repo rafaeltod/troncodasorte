@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { X, Copy, CheckCircle2 } from 'lucide-react'
+import QRCode from 'qrcode'
 
 interface PixPaymentModalProps {
   isOpen: boolean
@@ -60,6 +61,31 @@ export function PixPaymentModal({
         }
 
         const data = await response.json()
+
+  // se o backend retornar um objeto contendo content (BR Code), pixKey, inAppUrl, transactionId etc.
+  // preferimos usar content (BR Code) para gerar o QR. Se não tiver, usar pixKey.
+  const payload = data.content || data.pixKey || data.inAppUrl || `${data.transactionId}|${data.amount}`
+
+        try {
+          // se o payload for um e-mail, por padrão não geramos QR (evita abrir cliente de email).
+          // Para testes podemos forçar a geração definindo NEXT_PUBLIC_FORCE_QR=true no .env
+          const isEmail = /\S+@\S+\.\S+/.test(payload)
+          const FORCE_QR = process.env.NEXT_PUBLIC_FORCE_QR === 'true'
+          if (isEmail && !FORCE_QR) {
+            data.qrCode = null
+            data.pixKey = data.pixKey || payload
+          } else {
+            // gera SVG (string) via qrcode
+            const svgString = await QRCode.toString(payload, { type: 'svg', width: 300 })
+            const svgDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString)
+            // guardar o qr como dataURL para exibir <img src={...} />
+            data.qrCode = svgDataUrl
+          }
+        } catch (err) {
+          console.error('Erro ao gerar QR localmente:', err)
+          // se falhar, continue sem qrCode; o modal exibirá a chave para copiar
+        }
+
         setPixData(data)
       }
     } catch (error) {
@@ -71,8 +97,9 @@ export function PixPaymentModal({
   }
 
   const copyPixKey = () => {
-    if (pixData?.pixKey) {
-      navigator.clipboard.writeText(pixData.pixKey)
+    const key = pixData?.pixKey || pixData?.content || ''
+    if (key) {
+      navigator.clipboard.writeText(key)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     }
@@ -122,23 +149,31 @@ export function PixPaymentModal({
             <>
               {/* QR Code Section */}
               <div className="flex flex-col items-center gap-4">
-                <div className="bg-white p-4 rounded-xl border-2 border-gray-200">
-                  <img
-                    src={pixData.qrCode}
-                    alt="QR Code PIX"
-                    className="w-48 h-48"
-                    onError={(e) => {
-                      e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22white%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22 fill=%22black%22%3EPIX QR Code%3C/text%3E%3C/svg%3E'
-                    }}
-                  />
+                <div className="bg-white p-4 rounded-xl border-2 border-gray-200 flex items-center justify-center w-full">
+                  {pixData.qrCode ? (
+                    <img
+                      src={pixData.qrCode}
+                      alt="QR Code PIX"
+                      className="w-48 h-48"
+                      onError={(e) => {
+                        e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22white%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22 fill=%22black%22%3EPIX QR Code%3C/text%3E%3C/svg%3E'
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full p-6 text-center text-sm text-gray-600">
+                      <p className="font-semibold">QR indisponível</p>
+                      <p className="mt-2">Use a chave abaixo para pagar via PIX</p>
+                    </div>
+                  )}
                 </div>
 
+                {/* Copiar chave - sempre mostrar abaixo do QR */}
                 <div className="w-full">
                   <p className="text-xs font-bold text-gray-600 mb-2">OU COPIE A CHAVE:</p>
                   <div className="flex gap-2">
                     <input
                       type="text"
-                      value={pixData.pixKey || ''}
+                      value={pixData.content || pixData.pixKey || ''}
                       readOnly
                       className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg font-mono"
                     />
@@ -157,7 +192,7 @@ export function PixPaymentModal({
 
                 <div className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <p className="text-xs text-blue-700 font-bold">
-                    ℹ️ Transação ID: <span className="font-mono text-xs">{pixData.transactionId}</span>
+                   Transação ID: <span className="font-mono text-xs">{pixData.transactionId}</span>
                   </p>
                   <p className="text-xs text-blue-600 mt-1">
                     Sua compra será confirmada em até alguns minutos após o pagamento.
@@ -169,7 +204,7 @@ export function PixPaymentModal({
                 onClick={onClose}
                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-bold transition"
               >
-                ✅ Entendi
+                Entendi
               </button>
             </>
           )}
@@ -178,3 +213,5 @@ export function PixPaymentModal({
     </div>
   )
 }
+
+const mpPublicKey = process.env.NEXT_PUBLIC_MERCADO_PAGO_PUBLIC_KEY

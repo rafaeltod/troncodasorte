@@ -34,6 +34,9 @@ export async function POST(req: NextRequest) {
           headers: {
             'Authorization': `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
             'Content-Type': 'application/json',
+            // Mercado Pago exige um header de idempotência para criação de pagamentos
+            // usamos o purchaseId recebido para garantir idempotência das requisições
+            'X-Idempotency-Key': String(purchaseId),
           },
           body: JSON.stringify({
             transaction_amount: amount,
@@ -51,16 +54,94 @@ export async function POST(req: NextRequest) {
 
         const data = await mpResponse.json()
 
-        if (data.point_of_interaction?.qr_code?.in_app_url) {
-          return NextResponse.json({
-            qrCode: data.point_of_interaction.qr_code.in_app_url,
-            qrImage: data.point_of_interaction.qr_code.image_url,
+        // Debug logging to help verify that the backend realmente chamou a API do Mercado Pago
+        console.log('[MP POST] status=', mpResponse.status, 'ok=', mpResponse.ok)
+        // Em ambiente de desenvolvimento, também logamos o body retornado
+        if (process.env.NODE_ENV !== 'production') {
+          console.log('[MP POST] body=', JSON.stringify(data))
+        }
+
+        // Try to extract the BR Code content and image from the initial response.
+        // Mercado Pago can return fields in different places depending on integration/version.
+        // Check several possible locations (point_of_interaction.qr_code, transaction_data.qr_code, qr_code_base64, etc.).
+        let content =
+          data.point_of_interaction?.qr_code?.content ||
+          data.point_of_interaction?.qr_code?.qr_code ||
+          data.point_of_interaction?.transaction_data?.qr_code ||
+          data.transaction_data?.qr_code ||
+          null
+
+        // For image, Mercado Pago sometimes returns a base64 PNG in qr_code_base64
+        let qrImage =
+          data.point_of_interaction?.qr_code?.image_url ||
+          data.point_of_interaction?.qr_code?.in_app_url ||
+          null
+
+        const base64Img =
+          data.point_of_interaction?.transaction_data?.qr_code_base64 || data.transaction_data?.qr_code_base64 || null
+        if (!qrImage && base64Img) {
+          // convert base64 payload to data URL
+          qrImage = `data:image/png;base64,${base64Img}`
+        }
+
+        // Sometimes Mercado Pago does not include the `content` in the initial POST response.
+        // In that case, fetch the payment resource to retrieve `point_of_interaction.qr_code.content`.
+        if (data.id && !content) {
+          try {
+            const mpGet = await fetch(`https://api.mercadopago.com/v1/payments/${data.id}`, {
+              method: 'GET',
+              headers: {
+                'Authorization': `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
+                'Content-Type': 'application/json',
+              },
+            })
+
+            if (mpGet.ok) {
+              const getData = await mpGet.json()
+              // same extraction from GET response
+              content =
+                getData.point_of_interaction?.qr_code?.content ||
+                getData.point_of_interaction?.qr_code?.qr_code ||
+                getData.point_of_interaction?.transaction_data?.qr_code ||
+                getData.transaction_data?.qr_code ||
+                content
+
+              const getBase64 =
+                getData.point_of_interaction?.transaction_data?.qr_code_base64 || getData.transaction_data?.qr_code_base64 || null
+              qrImage =
+                qrImage ||
+                getData.point_of_interaction?.qr_code?.image_url ||
+                (getBase64 ? `data:image/png;base64,${getBase64}` : null) ||
+                null
+            }
+          } catch (err) {
+            console.error('Erro fetching payment details from Mercado Pago:', err)
+          }
+        }
+
+        if (content || qrImage) {
+          const resp: any = {
+            qrCode: qrImage,
+            qrImage: qrImage,
+            content,
             transactionId: data.id,
             status: 'pending',
-          })
+          }
+
+          // Em DEV, inclua também o corpo bruto retornado pelo MP para inspeção pelo frontend
+          if (process.env.NODE_ENV !== 'production') {
+            resp.mpDebug = {
+              status: mpResponse.status,
+              ok: mpResponse.ok,
+              body: data,
+            }
+          }
+
+          return NextResponse.json(resp)
         }
       } catch (error) {
         // Usar PIX estático se Mercado Pago falhar
+        console.error('[MP POST] erro ao chamar Mercado Pago:', error)
       }
     }
 
