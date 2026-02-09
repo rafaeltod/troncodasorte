@@ -96,6 +96,14 @@ export function Checkout({
 
     setLoading(true)
 
+    // ✅ Se o modal já estiver aberto, fechar primeiro para resetar
+    if (showPixModal) {
+      setShowPixModal(false)
+      setPurchaseId(null)
+      // Pequeno delay para garantir que o modal fecha completamente
+      await new Promise(resolve => setTimeout(resolve, 100))
+    }
+
     try {
       // Se não estiver logado, criar conta primeiro
       if (!user) {
@@ -327,6 +335,11 @@ export function Checkout({
           setShowPixModal(false)
           setPurchaseId(null)
           router.push('/historico')
+        }}
+        onCanceled={() => {
+          setShowPixModal(false)
+          setPurchaseId(null)
+          setQuantity(1)
         }}
       />
     </div>

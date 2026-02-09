@@ -68,6 +68,74 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
+    // ⚠️ Se existe uma compra PENDING anterior, deletá-la para evitar acumulação
+    // Isso permite que o usuário mude de ideia e tente novamente com quantidade diferente
+    const existingPendingPurchase = await queryOne(
+      `SELECT * FROM "rafflePurchase" WHERE "userId" = $1 AND "raffleId" = $2 AND status = 'pending'`,
+      [token, id]
+    )
+
+    if (existingPendingPurchase) {
+      console.log('[Purchase] Deletando compra pending anterior:', {
+        purchaseId: existingPendingPurchase.id,
+        quotas: existingPendingPurchase.quotas,
+        amount: existingPendingPurchase.amount,
+      })
+
+      const previousQuotas = Number(existingPendingPurchase.quotas)
+      const previousAmount = Number(existingPendingPurchase.amount)
+
+      // Deletar compra anterior
+      await queryOne(
+        'DELETE FROM "rafflePurchase" WHERE id = $1',
+        [existingPendingPurchase.id]
+      )
+
+      // Reverter as cotas vendidas
+      await queryOne(
+        `UPDATE raffle SET "soldQuotas" = "soldQuotas" - $1 WHERE id = $2`,
+        [previousQuotas, id]
+      )
+
+      // Reverter o top buyer
+      const topBuyer = await queryOne(
+        `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+        [token]
+      )
+
+      if (topBuyer) {
+        const newTotalSpent = Math.max(0, Number(topBuyer.totalSpent) - previousAmount)
+        const newTotalQuotas = Math.max(0, Number(topBuyer.totalQuotas) - previousQuotas)
+        const newRaffleBought = Math.max(0, Number(topBuyer.raffleBought) - 1)
+
+        if (newTotalSpent === 0 && newTotalQuotas === 0 && newRaffleBought === 0) {
+          await queryOne(`DELETE FROM "topBuyer" WHERE "userId" = $1`, [token])
+        } else {
+          await queryOne(
+            `UPDATE "topBuyer" SET "totalSpent" = $1, "totalQuotas" = $2, "raffleBought" = $3, "updatedAt" = NOW() WHERE "userId" = $4`,
+            [newTotalSpent, newTotalQuotas, newRaffleBought, token]
+          )
+        }
+      }
+    }
+
+    // VALIDAR O VALOR: confirmar que amount = quotas × quotaPrice
+    const expectedAmount = quotas * raffle.quotaPrice
+    const tolerance = 0.01 // margem de erro para floating point
+    if (Math.abs(amount - expectedAmount) > tolerance) {
+      console.warn(`[Purchase] Valor inválido! Esperado: ${expectedAmount}, Recebido: ${amount}`)
+      return NextResponse.json(
+        { 
+          error: 'Valor da compra inválido',
+          details: {
+            expected: expectedAmount,
+            received: amount
+          }
+        },
+        { status: 400 }
+      )
+    }
+
     // Gerar números das cotas (exemplo: "1,2,3,4,5" para 5 cotas)
     const startNumber = raffle.soldQuotas + 1
     const endNumber = raffle.soldQuotas + quotas
@@ -80,12 +148,6 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     const purchase = await queryOne(
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'pending', NOW(), NOW())
-       ON CONFLICT ("userId", "raffleId") 
-       DO UPDATE SET 
-         quotas = "rafflePurchase".quotas + $3,
-         amount = "rafflePurchase".amount + $4,
-         numbers = "rafflePurchase".numbers || ',' || $5,
-         "updatedAt" = NOW()
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
       [token, id, quotas, amount, quotaNumbers]
     )
@@ -93,6 +155,14 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     if (!purchase) {
       throw new Error('Erro ao criar compra')
     }
+
+    console.log('[Purchase] Compra criada:', {
+      purchaseId: purchase.id,
+      quotas: purchase.quotas,
+      amount: purchase.amount,
+      expectedAmount: expectedAmount,
+      formula: `${quotas} × ${raffle.quotaPrice} = ${expectedAmount}`
+    })
 
     // Atualizar quantidade de cotas vendidas
     const updatedRaffle = await queryOne(
@@ -133,16 +203,9 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // TODO: Integrar com gateway de pagamento (Stripe, Mercado Pago, etc)
-    // Por enquanto, marcar compra como confirmada (em produção seria 'pending')
-    await queryOne(
-      `UPDATE "rafflePurchase" SET status = 'confirmed' WHERE id = $1`,
-      [purchase.id]
-    )
-
     return NextResponse.json({
       purchaseId: purchase.id,
-      message: 'Compra realizada com sucesso',
+      message: 'Compra criada! Aguardando pagamento...',
       checkoutUrl: null, // Será preenchido quando integrar com gateway
     }, { status: 201 })
   } catch (error) {

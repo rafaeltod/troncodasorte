@@ -36,7 +36,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <a href="/rifas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition">
+        <a href="/rifas" className="items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition">
           <ArrowLeft className="w-4 h-4" />
           Voltar
         </a>

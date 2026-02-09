@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { X, Copy, CheckCircle2 } from 'lucide-react'
 import QRCode from 'qrcode'
+import { usePurchaseStatus } from '@/hooks/use-purchase-status'
 
 interface PixPaymentModalProps {
   isOpen: boolean
@@ -11,6 +12,7 @@ interface PixPaymentModalProps {
   amount: number
   raffleId: string
   onPaymentConfirmed?: () => void
+  onCanceled?: () => void
 }
 
 export function PixPaymentModal({
@@ -20,15 +22,35 @@ export function PixPaymentModal({
   amount,
   raffleId,
   onPaymentConfirmed,
+  onCanceled,
 }: PixPaymentModalProps) {
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<any>(null)
   const [copied, setCopied] = useState(false)
+  // Rastrear o amount que veio do backend (funciona pfv)
+  const [backendAmount, setBackendAmount] = useState<number | null>(null)
+  const [canceling, setCanceling] = useState(false)
+
+  // Polling para confirmar pagamento
+  const { status: purchaseStatus, retryCount } = usePurchaseStatus({
+    purchaseId,
+    raffleId,
+    onConfirmed: onPaymentConfirmed,
+    // Não chamar onCanceled aqui para evitar confusão com cancelamento manual
+    enabled: isOpen && !!pixData, // Só faz polling quando modal está aberto e QR foi gerado
+  })
+
+  // ✅ Resetar pixData e backendAmount quando purchaseId mudar
+  // Isso garante que cada nova compra começa com estado limpo
+  useEffect(() => {
+    setPixData(null)
+    setBackendAmount(null)
+    setCopied(false)
+  }, [purchaseId])
 
   const generatePixQR = async () => {
     setLoading(true)
     try {
-      // Se vier do histórico (raffleId vazio), fazer GET na compra existente
       if (!raffleId) {
         const response = await fetch(`/api/payment/pix/${purchaseId}`, {
           method: 'GET',
@@ -36,13 +58,17 @@ export function PixPaymentModal({
         })
 
         if (!response.ok) {
-          throw new Error('Erro ao recuperar QR code')
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error || 'Erro ao recuperar QR code')
         }
 
         const data = await response.json()
         setPixData(data)
+        if (data.amount) {
+          setBackendAmount(Number(data.amount))
+        }
       } else {
-        // Se vier da compra (raffleId preenchido), fazer POST para nova compra
+       
         const response = await fetch('/api/payment/pix', {
           method: 'POST',
           headers: {
@@ -51,46 +77,51 @@ export function PixPaymentModal({
           credentials: 'include',
           body: JSON.stringify({
             purchaseId,
-            amount,
             raffleId,
           }),
         })
 
         if (!response.ok) {
-          throw new Error('Erro ao gerar QR code')
+            const errorData = await response.json().catch(() => ({}))
+            throw new Error(errorData.error || 'Erro ao gerar QR code')
         }
 
         const data = await response.json()
 
-  // se o backend retornar um objeto contendo content (BR Code), pixKey, inAppUrl, transactionId etc.
-  // preferimos usar content (BR Code) para gerar o QR. Se não tiver, usar pixKey.
-  const payload = data.content || data.pixKey || data.inAppUrl || `${data.transactionId}|${data.amount}`
-
-        try {
-          // se o payload for um e-mail, por padrão não geramos QR (evita abrir cliente de email).
-          // Para testes podemos forçar a geração definindo NEXT_PUBLIC_FORCE_QR=true no .env
-          const isEmail = /\S+@\S+\.\S+/.test(payload)
-          const FORCE_QR = process.env.NEXT_PUBLIC_FORCE_QR === 'true'
-          if (isEmail && !FORCE_QR) {
-            data.qrCode = null
-            data.pixKey = data.pixKey || payload
-          } else {
-            // gera SVG (string) via qrcode
-            const svgString = await QRCode.toString(payload, { type: 'svg', width: 300 })
-            const svgDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString)
-            // guardar o qr como dataURL para exibir <img src={...} />
-            data.qrCode = svgDataUrl
+          // Se o backend já retornou um qrCode pronto, usar direto
+          if (data.qrCode && typeof data.qrCode === 'string' && data.qrCode.startsWith('data:')) {
+            // Já é um data URL válido, usar direto
+            console.log('[PixPaymentModal] QR Code já vem do backend')
+          } else if (!data.qrCode && (data.content || data.pixKey)) {
+            // Se não tem qrCode mas tem content (BR Code), gerar localmente
+            const payload = data.content || data.pixKey
+            const isEmail = /\S+@\S+\.\S+/.test(payload)
+            const FORCE_QR = process.env.NEXT_PUBLIC_FORCE_QR === 'true'
+          
+            if (isEmail && !FORCE_QR) {
+              console.log('[PixPaymentModal] Payload é email, não gerando QR automaticamente')
+              data.qrCode = null
+            } else {
+              try {
+                console.log('[PixPaymentModal] Gerando QR code localmente')
+                const svgString = await QRCode.toString(payload, { type: 'svg', width: 300 })
+                data.qrCode = 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString)
+              } catch (err) {
+                console.error('[PixPaymentModal] Erro ao gerar QR localmente:', err)
+                data.qrCode = null
+              }
+            }
           }
-        } catch (err) {
-          console.error('Erro ao gerar QR localmente:', err)
-          // se falhar, continue sem qrCode; o modal exibirá a chave para copiar
-        }
 
         setPixData(data)
+        // ✅ Setar o amount validado do backend (tanto no POST quanto no GET)
+        if (data.amount) {
+          setBackendAmount(Number(data.amount))
+        }
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('Erro ao gerar/recuperar QR code PIX')
+        alert(error instanceof Error ? error.message : 'Erro ao gerar/recuperar QR code PIX')
     } finally {
       setLoading(false)
     }
@@ -102,6 +133,34 @@ export function PixPaymentModal({
       navigator.clipboard.writeText(key)
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
+    }
+  }
+
+  const cancelPurchase = async () => {
+    if (!confirm('Tem certeza que deseja cancelar esta compra? As cotas serão devolvidas à rifa.')) {
+      return
+    }
+
+    setCanceling(true)
+    try {
+      const response = await fetch(`/api/rifas/${raffleId}/purchase/${purchaseId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(errorData.error || 'Erro ao cancelar compra')
+      }
+
+      console.log('[PixPaymentModal] Compra cancelada com sucesso')
+      onCanceled?.()
+      onClose()
+    } catch (error) {
+      console.error('[PixPaymentModal] Erro ao cancelar:', error)
+      alert(error instanceof Error ? error.message : 'Erro ao cancelar compra')
+    } finally {
+      setCanceling(false)
     }
   }
 
@@ -130,7 +189,7 @@ export function PixPaymentModal({
             <>
               <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
                 <p className="text-sm text-gray-700 mb-3">
-                  💰 <span className="font-bold">Valor a pagar:</span> R$ {amount.toFixed(2)}
+                  💰 <span className="font-bold">Valor a pagar:</span> R$ {(backendAmount || amount).toFixed(2)}
                 </p>
                 <p className="text-xs text-gray-600">
                   Clique em "Gerar QR Code" para escanear com seu celular e realizar o pagamento via PIX.
@@ -175,7 +234,7 @@ export function PixPaymentModal({
                       type="text"
                       value={pixData.content || pixData.pixKey || ''}
                       readOnly
-                      className="flex-1 px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-lg font-mono"
+                      className="flex-1 px-3 py-2 text-sm text-black bg-gray-50 border border-gray-300 rounded-lg font-mono"
                     />
                     <button
                       onClick={copyPixKey}
@@ -197,6 +256,11 @@ export function PixPaymentModal({
                   <p className="text-xs text-blue-600 mt-1">
                     Sua compra será confirmada em até alguns minutos após o pagamento.
                   </p>
+                  {retryCount > 0 && (
+                    <p className="text-xs text-blue-500 mt-2">
+                      🔄 Verificando... ({retryCount})
+                    </p>
+                  )}
                 </div>
               </div>
 
@@ -205,6 +269,14 @@ export function PixPaymentModal({
                 className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-bold transition"
               >
                 Entendi
+              </button>
+
+              <button
+                onClick={cancelPurchase}
+                disabled={canceling}
+                className="w-full bg-red-50 hover:bg-red-100 text-red-700 py-3 rounded-lg font-bold transition border border-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {canceling ? '⏳ Cancelando...' : '❌ Cancelar Compra'}
               </button>
             </>
           )}
