@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     const user = await queryOne(
       `INSERT INTO "user" (id, name, email, cpf, phone, "birthDate", "acceptedTerms", "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, NOW(), NOW())
-       RETURNING id, name, email, cpf, phone, "birthDate", "createdAt"`,
+       RETURNING id, name, email, cpf, phone, "birthDate", "createdAt", "isAdmin"`,
       [name, email, cpf, phone, birthDate, acceptedTerms]
     )
 

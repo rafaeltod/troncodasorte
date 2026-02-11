@@ -62,12 +62,14 @@ export function Navbar() {
                   <User className="w-4 h-4" />
                   {user.name}
                 </Link>
-                <Link
-                  href="/criar-rifa"
-                  className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
-                >
-                  + Criar Rifa
-                </Link>
+                {user.isAdmin && (
+                  <Link
+                    href="/criar-rifa"
+                    className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    + Criar Rifa
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"
@@ -133,13 +135,15 @@ export function Navbar() {
                     <User className="w-4 h-4" />
                     Minha Conta
                   </Link>
-                  <Link
-                    href="/criar-rifa"
-                    className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    + Criar Rifa
-                  </Link>
+                  {user.isAdmin && (
+                    <Link
+                      href="/criar-rifa"
+                      className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      + Criar Rifa
+                    </Link>
+                  )}
                   <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors text-left w-full"
