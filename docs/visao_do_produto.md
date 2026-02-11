@@ -2,7 +2,7 @@
 
 ## Tronco da Sorte
 
-### Histórico da Revisão 
+### Histórico da Revisão
 
 |  Data  | Versão | Descrição | Autores |
 |:-------|:-------|:----------|:------|
@@ -10,18 +10,18 @@
 | 11/02/2026 |  **`2`** | Adequações  | Izabel|
 
 
-### 1. Objetivo do Projeto 
+### 1. Objetivo do Projeto
 
-O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de ações digitais. Automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Permitindo que o administrador crie campanhas, gerencie recebimentos via Pix e realize sorteios por meio da loteria federal.
+O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de ações digitais, automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Assim, o administrador pode criar campanhas, gerenciar recebimentos via Pix e realizar sorteios por meio da Loteria Federal.
  
 
-### 2. Descrição do problema 
+### 2. Descrição do problema
 
 |         __        | __   |
 |:------------------|:-----|
-| **_O problema_**    | A necessidade do cliente de um site para relizar seus sorteios. |
+| **_O problema_**    | A necessidade do cliente de um site para realizar seus sorteios. |
 | **_Afetando_**      | A disponibilidade para realização dos sorteios do cliente. |
-| **_cujo impacto é_**| A impossibilidade do cliente de relizar os sorteios. |
+| **_cujo impacto é_**| A impossibilidade do cliente de realizar os sorteios. |
 | **_Uma boa solução seria_** | Criar um sistema onde o cliente possa realizar seus sorteios sem interferências externas. |
 
 
@@ -42,23 +42,23 @@ Titulares: acessam o sistema mais frequentemente por celular, mas também por co
 
 
 ### 5. Principais necessidades dos usuários
-O cliente percebe a falta de um site que o de liberdade para realizar seus sorteis e que o represente, com sua própria identidade visual.
+O cliente percebe a falta de um site que lhe dê liberdade para realizar seus sorteios e que o represente, com sua própria identidade visual.
 
-A partir das informações acima seria interessante a existência de um site onde o cliente posso criar suas ações e outros usuários possam comprá-las através do PIX.
+A partir das informações acima, seria interessante a existência de um site onde o cliente possa criar suas ações e outros usuários possam comprá-las por meio do Pix.
 
 
-### 6.	Visão geral do produto
-A plataforma em desenvolvimento deve ser feita para ser utilizada em navegadores (browsers);
-O site tem 2 tipos de usuário. O titular seria um usuário cadastrado, podendo interagir com as ações, podendo fazer compras e possuindo seus dados salvos.
-O administrador será um moderador do sistema, aquele que gerência as ações do sistema.
+### 6. Visão geral do produto
+A plataforma em desenvolvimento deve ser feita para ser utilizada em navegadores (browsers).
+O site tem dois tipos de usuários. O titular é um usuário cadastrado, podendo interagir com as ações, fazer compras e manter seus dados salvos.
+O administrador será um moderador do sistema, aquele que gerencia as ações do sistema.
  
 
 ### 7. Requisitos Funcionais
 
 | Código | Nome | Descrição |
 |:---  |:--- |:--- |
-| RF01 | Fazer o login de usuário | Para fazer o primeiro login, se for adiministrador, o usuário vai diretamente para um site em que ele insere suas informações de login; se for titular, o usuário deve inserir o numero de telefone, se for um numero cadastrado ele ira ter acesso as irformações da conta, se não for um numero cadastrado irá aparecer um formulário com os campos necessários para o cadastro, com o campo de telefone ja preenchido.|
-| RF02 | Comprar cota | O titular deve inserir o numero de cotas que deseja compras, depois inserir seu telefone, após a validação do numero deve realizar o pagamento. |
+| RF01 | Fazer login de usuário | Para fazer o primeiro login, se for administrador, o usuário vai diretamente para um site em que insere suas informações de login; se for titular, o usuário deve inserir o número de telefone. Se for um número cadastrado, ele terá acesso às informações da conta; se não for um número cadastrado, aparecerá um formulário com os campos necessários para o cadastro, com o campo de telefone já preenchido.|
+| RF02 | Comprar cota | O titular deve inserir o número de cotas que deseja comprar, depois inserir seu telefone e, após a validação do número, deve realizar o pagamento. |
 | RF03 | Criar campanha | O usuário administrador pode criar uma campanha, selecionando as fotos, o nome, o tamanho da campanha e o valor de cada cota. |
 | RF04 | Selecionar o ganhador | O usuário administrador terá um campo onde poderá inserir o número ganhador e os dados do titular da cota serão mostrados. |
 
