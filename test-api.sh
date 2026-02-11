@@ -14,8 +14,8 @@ NC='\033[0m' # No Color
 
 BASE_URL="http://localhost:3000/api"
 
-echo -e "${BLUE}1. Testando GET /api/rifas${NC}"
-response=$(curl -s -w "\n%{http_code}" "$BASE_URL/rifas")
+echo -e "${BLUE}1. Testando GET /api/campanhas${NC}"
+response=$(curl -s -w "\n%{http_code}" "$BASE_URL/campanhas")
 http_code=$(echo "$response" | tail -n1)
 body=$(echo "$response" | sed '$d')
 
@@ -39,8 +39,8 @@ else
 fi
 echo ""
 
-echo -e "${BLUE}3. Testando POST /api/rifas (sem BD, erro esperado)${NC}"
-response=$(curl -s -X POST "$BASE_URL/rifas" \
+echo -e "${BLUE}3. Testando POST /api/campanhas (sem BD, erro esperado)${NC}"
+response=$(curl -s -X POST "$BASE_URL/campanhas" \
   -H "Content-Type: application/json" \
   -d '{
     "title": "Teste",

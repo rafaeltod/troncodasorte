@@ -69,12 +69,12 @@ troncodasorte/
 1. **User** (Usuários)
    - id, cpf, name, email, phone, createdAt, updatedAt
 
-2. **Raffle** (Rifas)
+2. **Raffle** (Campanhas)
    - id, title, description, image, images[], prizeAmount
    - totalQuotas, soldQuotas, quotaPrice, status
    - winner, creatorId (FK), createdAt, updatedAt
 
-3. **RafflePurchase** (Compras de cotas)
+3. **RafflePurchase** (Compras de cotas para campanhas)
    - id, userId (FK), raffleId (FK), quotas, amount
    - numbers (JSON), status, createdAt, updatedAt
 
@@ -90,9 +90,9 @@ troncodasorte/
 
 - [x] **Home** - Dashboard com estatísticas globais
 - [x] **Navbar** - Navegação responsiva mobile/desktop
-- [x] **Listar Rifas** - Grade de rifas com filtros
-- [x] **Detalhe da Rifa** - Página completa com galeria
-- [x] **Criar Rifa** - Formulário com upload de até 20 fotos
+- [x] **Listar Campanhas** - Grade de campanhas com filtros
+- [x] **Detalhe da Campanha** - Página completa com galeria
+- [x] **Criar Campanha** - Formulário com upload de até 20 fotos
 - [x] **Top 5 Compradores** - Ranking com medals
 - [x] **Histórico** - Página (estruturada, pronta para auth)
 - [x] **Responsivo** - Mobile-first design
@@ -100,9 +100,9 @@ troncodasorte/
 
 ### ✅ Backend/API
 
-- [x] **GET /api/rifas** - Listar todas as rifas
-- [x] **POST /api/rifas** - Criar nova rifa
-- [x] **GET /api/rifas/[id]** - Detalhe individual
+- [x] **GET /api/campanhas** - Listar todas as campanhas
+- [x] **POST /api/campanhas** - Criar nova campanha
+- [x] **GET /api/campanhas/[id]** - Detalhe individual
 - [x] **GET /api/top-buyers** - Top 5 compradores
 - [x] **Prisma Queries** - Queries otimizadas
 - [x] **Validações** - Schema Zod no backend
