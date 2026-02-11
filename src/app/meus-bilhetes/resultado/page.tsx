@@ -253,7 +253,7 @@ export default function TicketsResultPage() {
         {/* Action Button */}
         <div className="mt-6 flex gap-3">
           <Link
-            href="/rifas"
+            href="/campanhas"
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
           >
             Voltar para Campanhas

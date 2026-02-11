@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      router.push('/rifas')
+      router.push('/campanhas')
     }
   }, [user, loading, router])
 

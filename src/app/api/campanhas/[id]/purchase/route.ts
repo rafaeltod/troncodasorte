@@ -12,15 +12,8 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     const { id } = await params
     const { quotas, amount } = await req.json()
 
-    // Validar token (usuário deve estar logado)
-    const token = req.cookies.get('token')?.value
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado para comprar' },
-        { status: 401 }
-      )
-    }
+    // Token é opcional (permite compras anônimas)
+    const token = req.cookies.get('token')?.value || null
 
     // Validar dados
     if (!quotas || quotas < 1 || !amount || amount < 0) {
@@ -30,7 +23,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Verificar se a rifa existe
+    // Verificar se a campanha existe
     const raffle = await queryOne(
       'SELECT * FROM raffle WHERE id = $1',
       [id]
@@ -38,15 +31,15 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     if (!raffle) {
       return NextResponse.json(
-        { error: 'Rifa não encontrada' },
+        { error: 'Campanha não encontrada' },
         { status: 404 }
       )
     }
 
-    // Verificar se o usuário é o criador da rifa
-    if (raffle.creatorId === token) {
+    // Se está logado, verificar se não é o criador
+    if (token && raffle.creatorId === token) {
       return NextResponse.json(
-        { error: 'Você não pode comprar cotas da sua própria rifa' },
+        { error: 'Você não pode comprar cotas da sua própria campanha' },
         { status: 403 }
       )
     }
@@ -60,10 +53,10 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Verificar se a rifa está aberta
+    // Verificar se a campanha está aberta
     if (raffle.status !== 'open') {
       return NextResponse.json(
-        { error: 'Esta rifa não está aberta para compras' },
+        { error: 'Esta campanha não está aberta para compras' },
         { status: 400 }
       )
     }
@@ -76,7 +69,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       (_, i) => String(startNumber + i)
     ).join(',')
 
-    // Criar registro de compra
+    // Criar registro de compra (userId pode ser NULL para compras anônimas)
     const purchase = await queryOne(
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'pending', NOW(), NOW())
@@ -104,33 +97,35 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     )
 
     if (!updatedRaffle) {
-      throw new Error('Erro ao atualizar rifa')
+      throw new Error('Erro ao atualizar campanha')
     }
 
-    // Atualizar top buyer
-    const existingBuyer = await queryOne(
-      `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-      [token]
-    )
+    // Atualizar top buyer apenas se o usuário está logado
+    if (token) {
+      const existingBuyer = await queryOne(
+        `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+        [token]
+      )
 
-    if (existingBuyer) {
-      // Atualizar comprador existente
-      await queryOne(
-        `UPDATE "topBuyer" 
-         SET "totalSpent" = "totalSpent" + $1,
-             "totalQuotas" = "totalQuotas" + $2,
-             "raffleBought" = "raffleBought" + 1,
-             "updatedAt" = NOW()
-         WHERE "userId" = $3`,
-        [amount, quotas, token]
-      )
-    } else {
-      // Criar novo comprador
-      await queryOne(
-        `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
-         VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-        [token, amount, quotas]
-      )
+      if (existingBuyer) {
+        // Atualizar comprador existente
+        await queryOne(
+          `UPDATE "topBuyer" 
+           SET "totalSpent" = "totalSpent" + $1,
+               "totalQuotas" = "totalQuotas" + $2,
+               "raffleBought" = "raffleBought" + 1,
+               "updatedAt" = NOW()
+           WHERE "userId" = $3`,
+          [amount, quotas, token]
+        )
+      } else {
+        // Criar novo comprador
+        await queryOne(
+          `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+           VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
+          [token, amount, quotas]
+        )
+      }
     }
 
     // TODO: Integrar com gateway de pagamento (Stripe, Mercado Pago, etc)

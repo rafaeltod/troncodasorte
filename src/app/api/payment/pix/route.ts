@@ -9,14 +9,8 @@ export async function POST(req: NextRequest) {
   try {
     const { purchaseId, amount, raffleId } = await req.json()
 
-    // Validar token (usuário deve estar logado)
-    const token = req.cookies.get('token')?.value
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Não autenticado' },
-        { status: 401 }
-      )
-    }
+    // Token é opcional (permite pagamentos anônimos)
+    const token = req.cookies.get('token')?.value || null
 
     if (!purchaseId || !amount) {
       return NextResponse.json(
@@ -29,6 +23,10 @@ export async function POST(req: NextRequest) {
     if (MERCADO_PAGO_ACCESS_TOKEN) {
       // Integração real com Mercado Pago
       try {
+        const payerEmail = token 
+          ? `user_${token}@example.com`
+          : `anonymous@example.com`
+
         const mpResponse = await fetch('https://api.mercadopago.com/v1/payments', {
           method: 'POST',
           headers: {
@@ -40,7 +38,7 @@ export async function POST(req: NextRequest) {
             description: `Compra de cotas - Rifa ${raffleId}`,
             payment_method_id: 'pix',
             payer: {
-              email: `user_${token}@example.com`,
+              email: payerEmail,
             },
             metadata: {
               purchaseId,

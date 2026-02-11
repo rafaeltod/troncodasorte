@@ -74,10 +74,10 @@ export default function HistoricoPage() {
             Você ainda não comprou nenhuma cota
           </p>
           <Link
-            href="/rifas"
+            href="/campanhas"
             className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
-            Explorar Rifas 🎯
+            Explorar Campanhas 🎯
           </Link>
         </div>
       </div>
@@ -109,7 +109,7 @@ export default function HistoricoPage() {
 
         <div className="space-y-3">
           {purchases.map((purchase) => (
-            <Link key={purchase.id} href={`/rifas/${purchase.raffleId}`}>
+            <Link key={purchase.id} href={`/campanhas/${purchase.raffleId}`}>
               <div className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 cursor-pointer transition transform hover:scale-102">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">

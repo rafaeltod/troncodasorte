@@ -41,7 +41,7 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/rifas"
+              href="/campanhas"
               className="hover:text-emerald-100 transition-colors"
             >
               Campanhas
@@ -64,10 +64,10 @@ export function Navbar() {
                 </Link>
                 {user.isAdmin && (
                   <Link
-                    href="/criar-rifa"
+                    href="/criar-campanha"
                     className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
                   >
-                    + Criar Rifa
+                    + Criar Campanha
                   </Link>
                 )}
                 <button
@@ -103,7 +103,7 @@ export function Navbar() {
           <nav className="md:hidden py-4 border-t border-white/20">
             <div className="flex flex-col gap-3">
               <Link
-                href="/rifas"
+                href="/campanhas"
                 className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -129,11 +129,11 @@ export function Navbar() {
                   </Link>
                   {user.isAdmin && (
                     <Link
-                      href="/criar-rifa"
+                      href="/criar-campanha"
                       className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      + Criar Rifa
+                      + Criar Campanha
                     </Link>
                   )}
                   <button

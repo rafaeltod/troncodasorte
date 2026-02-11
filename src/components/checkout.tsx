@@ -125,7 +125,7 @@ export function Checkout({
       }
 
       // Fazer a compra
-      const purchaseResponse = await fetch(`/api/rifas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

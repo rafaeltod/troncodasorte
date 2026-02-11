@@ -31,14 +31,14 @@ export default function Home() {
 
   const fetchRaffles = async () => {
     try {
-      const response = await fetch('/api/rifas')
+      const response = await fetch('/api/campanhas')
       if (response.ok) {
         const data = await response.json()
         setRaffles(data)
         setFilteredRaffles(data)
       }
     } catch (err) {
-      console.error('Erro ao buscar rifas:', err)
+      console.error('Erro ao buscar campanhas:', err)
     } finally {
       setLoading(false)
     }

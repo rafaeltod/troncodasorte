@@ -8,7 +8,7 @@
 
 ## 🎲 Rifas
 
-### GET `/rifas`
+### GET `/campanhas`
 Retorna todas as rifas.
 
 **Query Parameters:**
@@ -41,7 +41,7 @@ Retorna todas as rifas.
 
 ---
 
-### POST `/rifas`
+### POST `/campanhas`
 Cria uma nova rifa.
 
 **Request Body:**
@@ -67,7 +67,7 @@ Cria uma nova rifa.
 
 ---
 
-### GET `/rifas/[id]`
+### GET `/campanhas/[id]`
 Retorna detalhes de uma rifa específica.
 
 **Response:**
@@ -178,7 +178,7 @@ curl http://localhost:3000/api/rifas
 
 ### Pegar uma rifa específica
 ```bash
-curl http://localhost:3000/api/rifas/[id]
+curl http://localhost:3000/api/campanhas/[id]
 ```
 
 ### Top compradores
