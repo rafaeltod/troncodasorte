@@ -72,20 +72,11 @@ export function RaffleCard({
 
           {/* Progress Bar */}
           <div className="mb-4">
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-600">Cotas vendidas</span>
-              <span className="font-semibold text-emerald-600">
-                {Number(soldQuotas).toLocaleString('pt-BR')} / {Number(totalQuotas).toLocaleString('pt-BR')}
-              </span>
-            </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-3">
               <div
-                className="bg-emerald-600 h-2.5 rounded-full transition-all duration-300"
+                className="bg-emerald-600 h-3 rounded-full transition-all duration-300"
                 style={{ width: `${percentageSold}%` }}
               />
-            </div>
-            <div className="text-xs text-gray-500 mt-1">
-              {remainingQuotas.toLocaleString('pt-BR')} cotas restantes
             </div>
           </div>
 

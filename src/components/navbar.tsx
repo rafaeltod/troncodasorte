@@ -44,7 +44,7 @@ export function Navbar() {
               href="/rifas"
               className="hover:text-emerald-100 transition-colors"
             >
-              Rifas
+              Campanhas
             </Link>
             <Link
               href="/top-compradores"
@@ -79,21 +79,13 @@ export function Navbar() {
                 </button>
               </>
             ) : (
-              <>
-                <Link
-                  href="/auth/login"
-                  className="flex items-center gap-2 hover:text-emerald-100 transition-colors"
-                >
-                  <User className="w-4 h-4" />
-                  Entrar
-                </Link>
-                <Link
-                  href="/auth/register"
-                  className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
-                >
-                  Criar Conta
-                </Link>
-              </>
+              <Link
+                href="/meus-bilhetes"
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+              >
+                <Ticket className="w-4 h-4" />
+                Meus Bilhetes
+              </Link>
             )}
           </nav>
 
@@ -115,7 +107,7 @@ export function Navbar() {
                 className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Rifas
+                Campanhas
               </Link>
               <Link
                 href="/top-compradores"
@@ -153,23 +145,14 @@ export function Navbar() {
                   </button>
                 </>
               ) : (
-                <>
-                  <Link
-                    href="/auth/login"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User className="w-4 h-4" />
-                    Entrar
-                  </Link>
-                  <Link
-                    href="/auth/register"
-                    className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    Criar Conta
-                  </Link>
-                </>
+                <Link
+                  href="/meus-bilhetes"
+                  className="flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg transition-colors"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Ticket className="w-4 h-4" />
+                  Meus Bilhetes
+                </Link>
               )}
             </div>
           </nav>

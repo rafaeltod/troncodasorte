@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Copy, CheckCircle2 } from 'lucide-react'
+import { X, Copy, CheckCircle2, Clock } from 'lucide-react'
 import QRCode from 'qrcode'
 import { usePurchaseStatus } from '@/hooks/use-purchase-status'
 
@@ -27,7 +27,7 @@ export function PixPaymentModal({
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<any>(null)
   const [copied, setCopied] = useState(false)
-  // Rastrear o amount que veio do backend (funciona pfv)
+  const [timeRemaining, setTimeRemaining] = useState(5 * 60) // 5 minutes in seconds
   const [backendAmount, setBackendAmount] = useState<number | null>(null)
   const [canceling, setCanceling] = useState(false)
 
@@ -36,17 +36,32 @@ export function PixPaymentModal({
     purchaseId,
     raffleId,
     onConfirmed: onPaymentConfirmed,
-    // Não chamar onCanceled aqui para evitar confusão com cancelamento manual
     enabled: isOpen && !!pixData, // Só faz polling quando modal está aberto e QR foi gerado
   })
 
   // ✅ Resetar pixData e backendAmount quando purchaseId mudar
-  // Isso garante que cada nova compra começa com estado limpo
   useEffect(() => {
     setPixData(null)
     setBackendAmount(null)
     setCopied(false)
+    setTimeRemaining(5 * 60)
   }, [purchaseId])
+
+  // Timer countdown
+  useEffect(() => {
+    if (!pixData || timeRemaining <= 0) return
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [pixData, timeRemaining])
 
   const generatePixQR = async () => {
     setLoading(true)
@@ -119,6 +134,8 @@ export function PixPaymentModal({
           setBackendAmount(Number(data.amount))
         }
       }
+      // Reset timer quando QR code é gerado/recuperado
+      setTimeRemaining(5 * 60)
     } catch (error) {
       console.error('Error:', error)
         alert(error instanceof Error ? error.message : 'Erro ao gerar/recuperar QR code PIX')
@@ -206,6 +223,20 @@ export function PixPaymentModal({
             </>
           ) : (
             <>
+              {/* Timer and Status */}
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border-2 border-yellow-200">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Clock className="w-8 h-8 text-yellow-600 animate-pulse" />
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-yellow-900">Aguardando pagamento</p>
+                    <p className="text-3xl font-black text-yellow-700">
+                      {String(Math.floor(timeRemaining / 60)).padStart(2, '0')}:
+                      {String(timeRemaining % 60).padStart(2, '0')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* QR Code Section */}
               <div className="flex flex-col items-center gap-4">
                 <div className="bg-white p-4 rounded-xl border-2 border-gray-200 flex items-center justify-center w-full">
@@ -266,9 +297,10 @@ export function PixPaymentModal({
 
               <button
                 onClick={onClose}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-bold transition"
+                disabled={timeRemaining === 0}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
               >
-                Entendi
+                {timeRemaining === 0 ? '⏱️ Tempo expirado' : '✅ Entendi'}
               </button>
 
               <button
