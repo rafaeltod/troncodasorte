@@ -12,15 +12,8 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
   try {
     const { id: raffleId, purchaseId } = await params
 
-    // Validar token (usuário deve estar logado)
+    // Token opcional - usuários podem verificar compra sem estar logados
     const token = req.cookies.get('token')?.value
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado' },
-        { status: 401 }
-      )
-    }
 
     // Buscar a compra
     const purchase = await queryOne(
@@ -35,14 +28,8 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Verificar se o usuário é o dono da compra
-    if (purchase.userId !== token) {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para acessar esta compra' },
-        { status: 403 }
-      )
-    }
-
+    // Não exigir autenticação para acessar status da compra
+    // Qualquer um pode verificar o status conhecendo o ID da compra
     return NextResponse.json({
       purchaseId: purchase.id,
       status: purchase.status,
@@ -64,15 +51,8 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
   try {
     const { id: raffleId, purchaseId } = await params
     
-    // Validar token (usuário deve estar logado)
+    // Token opcional - usuários podem cancelar sem estar logados
     const token = req.cookies.get('token')?.value
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado' },
-        { status: 401 }
-      )
-    }
 
     // Buscar a compra
     const purchase = await queryOne(
@@ -84,14 +64,6 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       return NextResponse.json(
         { error: 'Compra não encontrada' },
         { status: 404 }
-      )
-    }
-
-    // Verificar se o usuário é o dono da compra
-    if (purchase.userId !== token) {
-      return NextResponse.json(
-        { error: 'Você não tem permissão para cancelar esta compra' },
-        { status: 403 }
       )
     }
 

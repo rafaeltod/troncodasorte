@@ -13,20 +13,14 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
   try {
     const { purchaseId } = await params
 
-    // Validar token
+    // Token opcional - usuários podem recuperar QR code sem estar logados
     const token = req.cookies.get('token')?.value
 
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado' },
-        { status: 401 }
-      )
-    }
-
     // Buscar a compra
+    // Token opcional - buscar a compra sem validação de propriedade
     const purchase = await queryOne(
-      `SELECT * FROM "rafflePurchase" WHERE id = $1 AND "userId" = $2`,
-      [purchaseId, token]
+      `SELECT * FROM "rafflePurchase" WHERE id = $1`,
+      [purchaseId]
     )
 
     if (!purchase) {

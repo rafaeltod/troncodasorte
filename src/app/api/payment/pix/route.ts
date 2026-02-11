@@ -9,14 +9,8 @@ export async function POST(req: NextRequest) {
   try {
     const { purchaseId, raffleId } = await req.json()
 
-    // Validar token (usuário deve estar logado)
+    // Token opcional - usuários podem pagar sem estar logados
     const token = req.cookies.get('token')?.value
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Não autenticado' },
-        { status: 401 }
-      )
-    }
 
     if (!purchaseId || !raffleId) {
       return NextResponse.json(
@@ -38,15 +32,6 @@ export async function POST(req: NextRequest) {
         { status: 404 }
       )
     }
-
-    // Verificar se o usuário é o dono da compra
-    if (purchase.userId !== token) {
-      return NextResponse.json(
-        { error: 'Não autorizado' },
-        { status: 403 }
-      )
-    }
-
 
     // Usar o valor validado do banco (NÃO o enviado pelo cliente)
     const validatedAmount = Number(purchase.amount)

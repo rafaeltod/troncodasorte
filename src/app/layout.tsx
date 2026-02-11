@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Tronco da Sorte - Rifas Online",
-  description: "Plataforma de rifas online com sorteios premiados",
+  title: "Tronco da Sorte",
+  description: "Plataforma de campanhas online com sorteios premiados",
 };
 
 export default function RootLayout({

@@ -12,14 +12,12 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     const { id } = await params
     const { quotas, amount } = await req.json()
 
-    // Validar token (usuário deve estar logado)
-    const token = req.cookies.get('token')?.value
-
-    if (!token) {
-      return NextResponse.json(
-        { error: 'Você precisa estar logado para comprar' },
-        { status: 401 }
-      )
+    // Token opcional - usuários podem comprar sem estar logados
+    // Se não estiver logado, usar um anônimo UUID
+    let userId = req.cookies.get('token')?.value
+    if (!userId) {
+      // Gerar um UUID anônimo para usuários não-logados
+      userId = crypto.randomUUID()
     }
 
     // Validar dados
@@ -43,8 +41,8 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Verificar se o usuário é o criador da rifa
-    if (raffle.creatorId === token) {
+    // Verificar se o usuário é o criador (apenas se estiver logado)
+    if (req.cookies.get('token')?.value && raffle.creatorId === req.cookies.get('token')?.value) {
       return NextResponse.json(
         { error: 'Você não pode comprar cotas da sua própria rifa' },
         { status: 403 }
@@ -98,7 +96,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
-      [token, id, quotas, amount, quotaNumbers]
+      [userId, id, quotas, amount, quotaNumbers]
     )
 
     if (!purchase) {
@@ -126,30 +124,33 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       throw new Error('Erro ao atualizar rifa')
     }
 
-    // Atualizar top buyer
-    const existingBuyer = await queryOne(
-      `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-      [token]
-    )
+    // Atualizar top buyer (apenas se estiver logado)
+    const userToken = req.cookies.get('token')?.value
+    if (userToken) {
+      const existingBuyer = await queryOne(
+        `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+        [userToken]
+      )
 
-    if (existingBuyer) {
-      // Atualizar comprador existente
-      await queryOne(
-        `UPDATE "topBuyer" 
-         SET "totalSpent" = "totalSpent" + $1,
-             "totalQuotas" = "totalQuotas" + $2,
-             "raffleBought" = "raffleBought" + 1,
-             "updatedAt" = NOW()
-         WHERE "userId" = $3`,
-        [amount, quotas, token]
-      )
-    } else {
-      // Criar novo comprador
-      await queryOne(
-        `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
-         VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-        [token, amount, quotas]
-      )
+      if (existingBuyer) {
+        // Atualizar comprador existente
+        await queryOne(
+          `UPDATE "topBuyer" 
+           SET "totalSpent" = "totalSpent" + $1,
+               "totalQuotas" = "totalQuotas" + $2,
+               "raffleBought" = "raffleBought" + 1,
+               "updatedAt" = NOW()
+           WHERE "userId" = $3`,
+          [amount, quotas, userToken]
+        )
+      } else {
+        // Criar novo comprador
+        await queryOne(
+          `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+           VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
+          [userToken, amount, quotas]
+        )
+      }
     }
 
     return NextResponse.json({
@@ -159,8 +160,9 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     }, { status: 201 })
   } catch (error) {
     console.error('Error in purchase:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Erro desconhecido'
     return NextResponse.json(
-      { error: 'Erro ao processar compra' },
+      { error: `Erro ao processar compra: ${errorMessage}` },
       { status: 500 }
     )
   }
