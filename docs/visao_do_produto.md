@@ -2,25 +2,26 @@
 
 ## Tronco da Sorte
 
-### Histórico da Revisão 
+### Histórico da Revisão
 
 |  Data  | Versão | Descrição | Autores |
 |:-------|:-------|:----------|:------|
 | 05/02/2026 |  **`1`** | Início do documento de visão do projeto  | Izabel|
+| 11/02/2026 |  **`2`** | Adequações  | Izabel|
 
 
-### 1. Objetivo do Projeto 
+### 1. Objetivo do Projeto
 
-O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de rifas digitais. Automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Permitindo que o administrador crie campanhas, gerencie recebimentos via Pix e realize sorteios por meio da loteria federal.
+O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de ações digitais, automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Assim, o administrador pode criar campanhas, gerenciar recebimentos via Pix e realizar sorteios por meio da Loteria Federal.
  
 
-### 2. Descrição do problema 
+### 2. Descrição do problema
 
 |         __        | __   |
 |:------------------|:-----|
-| **_O problema_**    | A necessidade do cliente de um site para relizar seus sorteios. |
+| **_O problema_**    | A necessidade do cliente de um site para realizar seus sorteios. |
 | **_Afetando_**      | A disponibilidade para realização dos sorteios do cliente. |
-| **_cujo impacto é_**| A impossibilidade do cliente de relizar os sorteios. |
+| **_cujo impacto é_**| A impossibilidade do cliente de realizar os sorteios. |
 | **_Uma boa solução seria_** | Criar um sistema onde o cliente possa realizar seus sorteios sem interferências externas. |
 
 
@@ -28,9 +29,8 @@ O projeto tem como objetivo a criação de uma plataforma web para a gestão e c
 
 | Nome | Descrição | Responsabilidades |
 |:---  |:--- |:--- |
-| Titulares  | Usuários que são cadastrados e possuem interesse em adquirir cotas | Logar e deslogar na conta; Visualizar rifas; Fazer compras de cotas;|
-| Visitante  | Usuário externo não cadastrado | Acessar o site; Pesquisar rifas; Vizualizar rifas.|
-| Administrador | Usuário gerenciador do sistema | Criar rifas; |
+| Titulares  | Usuários que são cadastrados e possuem interesse em adquirir cotas | Logar e deslogar na conta; Visualizar ações; Fazer compras de cotas;|
+| Administrador | Usuário capaz de criar e gerenciar ações | Criar, editar e deletar ações; |
 
 ### 4. Descrição do ambiente dos usuários
 
@@ -42,40 +42,29 @@ Titulares: acessam o sistema mais frequentemente por celular, mas também por co
 
 
 ### 5. Principais necessidades dos usuários
-O cliente percebe a falta de um site que o de liberdade para realizar seus sorteis e que o represente, com sua própria identidade visual.
+O cliente percebe a falta de um site que lhe dê liberdade para realizar seus sorteios e que o represente, com sua própria identidade visual.
 
-A partir das informações acima seria interessante a existência de um site onde o cliente posso criar suas rifas e outros usuários possam comprá-las através do PIX.
-
-
-### 6.	Alternativas concorrentes
-Como alternativas concorrentes podemos colocar rifas em redes sociais (ex: Instagram e etc) e também sites que permitem a compra de rifas de outros usuários.
-
-Instagram: Pontos fortes: Permite a proximidade entre o comerciente e os compradores.
-Pontos fracos: Como a plataforma não é voltada para o comercio das rifas isso pode gerar grande informalidade e erros durante a venda.
-
-Rifa365:
-Pontos fortes: Criação de rifas com facilidade, boa integração com o mobile, automação dos pagamentos e boa estabilidade do site.
-Pontos fracos: taxas de mensalidade, personalização limitada e dependência em terceiros.
+A partir das informações acima, seria interessante a existência de um site onde o cliente possa criar suas ações e outros usuários possam comprá-las por meio do Pix.
 
 
-
-
-### 7.	Visão geral do produto
-A plataforma em desenvolvimento deve ser feita para ser utilizada em navegadores (browsers);
-O site tem 3 tipos de usuário. O usuário visitante, quando não é cadastrado, pode acessar o site e pesquisar por rifas de seu interesse, mas não pode interagir.
-O titular seria um usuário cadastrado, podendo interagir com as rifas, podendo fazer compras e possuindo seus dados salvos.
-O administrador será um moderador do sistema, aquele que gerência as rifas do sistema.
+### 6. Visão geral do produto
+A plataforma em desenvolvimento deve ser feita para ser utilizada em navegadores (browsers).
+O site tem dois tipos de usuários. O titular é um usuário cadastrado, podendo interagir com as ações, fazer compras e manter seus dados salvos.
+O administrador será um moderador do sistema, aquele que gerencia as ações do sistema.
  
 
-### 8. Requisitos Funcionais
+### 7. Requisitos Funcionais
 
 | Código | Nome | Descrição |
 |:---  |:--- |:--- |
-| RF01 | Fazer o login de usuário | Para fazer o primeiro login o usuário precisará preencher um campo formulário com seu nome, email, CPF, numero telefônico e senha. Os logins seguintes poderão ser feitos inserindo o email e a senha. Logo após o login, o usuário será redirecionado para a página inicial do site. |
+| RF01 | Fazer login de usuário | Para fazer o primeiro login, se for administrador, o usuário vai diretamente para um site em que insere suas informações de login; se for titular, o usuário deve inserir o número de telefone. Se for um número cadastrado, ele terá acesso às informações da conta; se não for um número cadastrado, aparecerá um formulário com os campos necessários para o cadastro, com o campo de telefone já preenchido.|
+| RF02 | Comprar cota | O titular deve inserir o número de cotas que deseja comprar, depois inserir seu telefone e, após a validação do número, deve realizar o pagamento. |
+| RF03 | Criar campanha | O usuário administrador pode criar uma campanha, selecionando as fotos, o nome, o tamanho da campanha e o valor de cada cota. |
+| RF04 | Selecionar o ganhador | O usuário administrador terá um campo onde poderá inserir o número ganhador e os dados do titular da cota serão mostrados. |
 
 
 
-### 9. Requisitos não-funcionais
+### 8. Requisitos não-funcionais
 
  Código | Nome | Descrição | Categoria | Classificação
 |:---  |:--- |:--- |:--- |:--- |
