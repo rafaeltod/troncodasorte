@@ -1,7 +1,9 @@
 import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
-import { Checkout } from '@/components/checkout'
-import { ArrowLeft, Gift, Ticket, Users, TrendingUp, Trophy, FileText } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
+import { RaffleRegulation } from '@/components/raffle-regulation'
+import { RaffleDetailClient } from '@/components/raffle-detail-client'
+import { RaffleImageGallery } from '@/components/raffle-image-gallery'
 
 interface DetailProps {
   params: Promise<{
@@ -36,50 +38,22 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        <a href="/rifas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition">
-          <ArrowLeft className="w-4 h-4" />
-          Voltar
-        </a>
+        <div className="flex items-center justify-between mb-6">
+          <a href="/rifas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+            <ArrowLeft className="w-4 h-4" />
+            Voltar
+          </a>
+        </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Images */}
           <div>
             {mainImage && (
-              <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-4 border border-gray-200">
-                <div className="relative w-full h-[500px] bg-gray-100">
-                  <Image
-                    src={mainImage}
-                    alt={raffle.title}
-                    fill
-                    className="object-cover"
-                  />
-                  {raffle.status === 'drawn' && (
-                    <div className="absolute inset-0 bg-emerald-500 bg-opacity-50 flex items-center justify-center">
-                      <div className="text-center">
-                        <Trophy className="w-20 h-20 text-white mx-auto mb-2" />
-                        <span className="text-white font-bold text-3xl">SORTEADA</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {images.length > 1 && (
-              <div className="grid grid-cols-4 gap-2">
-                {images.map((image: string, idx: number) => (
-                  <div key={idx} className="bg-white rounded-lg shadow overflow-hidden border border-gray-200">
-                    <div className="relative w-full h-20 bg-gray-100">
-                      <Image
-                        src={image}
-                        alt={`Imagem ${idx + 1}`}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
+              <RaffleImageGallery
+                mainImage={mainImage}
+                images={images}
+                status={raffle.status}
+              />
             )}
           </div>
 
@@ -105,7 +79,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </span>
               )}
 
-              <h1 className="text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
+              <h1 className="text-4xl font-black text-gray-900 mt-4">Sorteio: {raffle.title}</h1>
             </div>
 
             {raffle.description && (
@@ -133,20 +107,13 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     R$ {Number(raffle.quotaPrice).toFixed(2)}
                   </div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <div className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
-                    <TrendingUp className="w-4 h-4" />
-                    Total
-                  </div>
-                  <div className="text-2xl font-black text-emerald-700">{raffle.totalQuotas}</div>
-                </div>
               </div>
 
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm font-bold text-gray-900">Progresso de Vendas</span>
                   <span className="text-sm font-bold text-emerald-700">
-                    {raffle.soldQuotas} de {raffle.totalQuotas}
+                    {Math.round(progress)}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
@@ -171,12 +138,19 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             </div>
 
             {isOpen && progress < 100 && (
-              <Checkout 
-                raffleId={id}
-                quotaPrice={Number(raffle.quotaPrice)}
-                availableQuotas={raffle.totalQuotas - raffle.soldQuotas}
-                isOpen={true}
-              />
+              <>
+                <div className="w-full mb-6">
+                  <a href="/meus-bilhetes" className="block w-full bg-teal-50 hover:bg-teal-100 border-2 border-teal-300 text-teal-700 py-3 rounded-lg font-bold text-center transition">
+                    📋 Meus Bilhetes
+                  </a>
+                </div>
+                <RaffleDetailClient
+                  raffleId={id}
+                  quotaPrice={Number(raffle.quotaPrice)}
+                  availableQuotas={raffle.totalQuotas - raffle.soldQuotas}
+                  isOpen={true}
+                />
+              </>
             )}
 
             {progress >= 100 && isOpen && (
@@ -223,58 +197,24 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
           </div>
         )}
 
-        {/* Regulamento Section */}
-        <div className="mt-16 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-          <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-2">
-            <FileText className="w-8 h-8 text-emerald-600" />
-            Regulamento e Legislação
-          </h2>
-          
-          <div className="space-y-6">
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">📋 Termos e Condições</h3>
-              <p className="text-gray-700 leading-relaxed mb-3">
-                Esta rifa é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
-                Todos os participantes devem aceitar os Termos e Condições da plataforma Tronco da Sorte.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">⚖️ Responsabilidade Legal</h3>
-              <p className="text-gray-700 leading-relaxed mb-3">
-                O organizador desta rifa é responsável por:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2 ml-2">
-                <li>Manter registros completos de todas as transações</li>
-                <li>Realizar o sorteio de forma justa e transparente</li>
-                <li>Cumprir todas as obrigações legais e fiscais</li>
-                <li>Proteger os dados pessoais dos participantes</li>
-                <li>Entregar o prêmio ao vencedor conforme regulamentado</li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-3">🔒 Transparência e Sorteio</h3>
-              <p className="text-gray-700 leading-relaxed">
-                O sorteio será realizado de forma pública e auditável. Todos os participantes serão notificados sobre:
-              </p>
-              <ul className="list-disc list-inside text-gray-700 space-y-2 ml-2">
-                <li>Data e horário exato do sorteio</li>
-                <li>Método de seleção do vencedor</li>
-                <li>Resultado do sorteio em tempo real</li>
-                <li>Dados do vencedor (apenas primeira letra do nome)</li>
-              </ul>
-            </div>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-              <p className="text-sm text-blue-900 font-semibold">
-                <strong>⚠️ Aviso Legal:</strong> A participação nesta rifa constitui aceitação automática de todos os termos, 
-                condições e regulamentos estabelecidos. Para mais informações, consulte a <a href="/termos" className="text-emerald-600 hover:text-emerald-700 font-bold">Política de Termos</a> e 
-                <a href="/privacidade" className="text-emerald-600 hover:text-emerald-700 font-bold"> Privacidade</a>.
-              </p>
-            </div>
+        {/* Disclaimer */}
+        <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
+          <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
+            <p className="font-bold text-gray-900">⚠️ Informações Importantes</p>
+            <p>
+              Este bilhete de loteria está autorizado com base no termo de autorização descrito no regulamento da promoção. Antes de contratar, consulte o Regulamento do produto. É proibida a venda para menores de 18 anos.
+            </p>
+            <p>
+              Os sorteios e entrega dos prêmios serão realizados de acordo com os critérios estabelecidos neste site, nos termos seguintes: O adquirente concorrerá em todos os sorteios previstos no bilhete digital emitido, mesmo sendo contemplado em alguns deles.
+            </p>
+            <p>
+              Ao contribuir, o titular do BILHETE Digital concorda desde já e sem ônus a utilização de seu nome, sua voz e imagem para a divulgação desta campanha social.
+            </p>
           </div>
         </div>
+
+        {/* Regulamento */}
+        <RaffleRegulation />
       </div>
     </div>
   )

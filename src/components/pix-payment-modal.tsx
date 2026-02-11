@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { X, Copy, CheckCircle2 } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { X, Copy, CheckCircle2, Clock } from 'lucide-react'
 
 interface PixPaymentModalProps {
   isOpen: boolean
@@ -23,6 +23,23 @@ export function PixPaymentModal({
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<any>(null)
   const [copied, setCopied] = useState(false)
+  const [timeRemaining, setTimeRemaining] = useState(5 * 60) // 5 minutes in seconds
+
+  // Timer countdown
+  useEffect(() => {
+    if (!pixData || timeRemaining <= 0) return
+
+    const interval = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
+
+    return () => clearInterval(interval)
+  }, [pixData, timeRemaining])
 
   const generatePixQR = async () => {
     setLoading(true)
@@ -62,6 +79,8 @@ export function PixPaymentModal({
         const data = await response.json()
         setPixData(data)
       }
+      // Reset timer quando QR code é gerado/recuperado
+      setTimeRemaining(5 * 60)
     } catch (error) {
       console.error('Error:', error)
       alert('Erro ao gerar/recuperar QR code PIX')
@@ -120,6 +139,20 @@ export function PixPaymentModal({
             </>
           ) : (
             <>
+              {/* Timer and Status */}
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl p-6 border-2 border-yellow-200">
+                <div className="flex items-center justify-center gap-3 mb-4">
+                  <Clock className="w-8 h-8 text-yellow-600 animate-pulse" />
+                  <div className="text-center">
+                    <p className="text-sm font-bold text-yellow-900">Aguardando pagamento</p>
+                    <p className="text-3xl font-black text-yellow-700">
+                      {String(Math.floor(timeRemaining / 60)).padStart(2, '0')}:
+                      {String(timeRemaining % 60).padStart(2, '0')}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* QR Code Section */}
               <div className="flex flex-col items-center gap-4">
                 <div className="bg-white p-4 rounded-xl border-2 border-gray-200">
@@ -167,9 +200,10 @@ export function PixPaymentModal({
 
               <button
                 onClick={onClose}
-                className="w-full bg-gray-100 hover:bg-gray-200 text-gray-900 py-3 rounded-lg font-bold transition"
+                disabled={timeRemaining === 0}
+                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
               >
-                ✅ Entendi
+                {timeRemaining === 0 ? '⏱️ Tempo expirado' : '✅ Entendi'}
               </button>
             </>
           )}
