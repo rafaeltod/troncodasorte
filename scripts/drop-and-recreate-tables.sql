@@ -49,8 +49,7 @@ CREATE TABLE "rafflePurchase" (
   numbers TEXT NOT NULL,
   status VARCHAR(50) DEFAULT 'pending',
   "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE("userId", "raffleId")
+  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Recriar tabela de top buyers

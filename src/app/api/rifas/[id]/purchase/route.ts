@@ -68,57 +68,6 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // ⚠️ Se existe uma compra PENDING anterior, deletá-la para evitar acumulação
-    // Isso permite que o usuário mude de ideia e tente novamente com quantidade diferente
-    const existingPendingPurchase = await queryOne(
-      `SELECT * FROM "rafflePurchase" WHERE "userId" = $1 AND "raffleId" = $2 AND status = 'pending'`,
-      [token, id]
-    )
-
-    if (existingPendingPurchase) {
-      console.log('[Purchase] Deletando compra pending anterior:', {
-        purchaseId: existingPendingPurchase.id,
-        quotas: existingPendingPurchase.quotas,
-        amount: existingPendingPurchase.amount,
-      })
-
-      const previousQuotas = Number(existingPendingPurchase.quotas)
-      const previousAmount = Number(existingPendingPurchase.amount)
-
-      // Deletar compra anterior
-      await queryOne(
-        'DELETE FROM "rafflePurchase" WHERE id = $1',
-        [existingPendingPurchase.id]
-      )
-
-      // Reverter as cotas vendidas
-      await queryOne(
-        `UPDATE raffle SET "soldQuotas" = "soldQuotas" - $1 WHERE id = $2`,
-        [previousQuotas, id]
-      )
-
-      // Reverter o top buyer
-      const topBuyer = await queryOne(
-        `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-        [token]
-      )
-
-      if (topBuyer) {
-        const newTotalSpent = Math.max(0, Number(topBuyer.totalSpent) - previousAmount)
-        const newTotalQuotas = Math.max(0, Number(topBuyer.totalQuotas) - previousQuotas)
-        const newRaffleBought = Math.max(0, Number(topBuyer.raffleBought) - 1)
-
-        if (newTotalSpent === 0 && newTotalQuotas === 0 && newRaffleBought === 0) {
-          await queryOne(`DELETE FROM "topBuyer" WHERE "userId" = $1`, [token])
-        } else {
-          await queryOne(
-            `UPDATE "topBuyer" SET "totalSpent" = $1, "totalQuotas" = $2, "raffleBought" = $3, "updatedAt" = NOW() WHERE "userId" = $4`,
-            [newTotalSpent, newTotalQuotas, newRaffleBought, token]
-          )
-        }
-      }
-    }
-
     // VALIDAR O VALOR: confirmar que amount = quotas × quotaPrice
     const expectedAmount = quotas * raffle.quotaPrice
     const tolerance = 0.01 // margem de erro para floating point

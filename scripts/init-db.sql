@@ -40,8 +40,7 @@ CREATE TABLE IF NOT EXISTS "rafflePurchase" (
   numbers TEXT NOT NULL,
   status VARCHAR(50) DEFAULT 'pending',
   "createdAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  UNIQUE("userId", "raffleId")
+  "updatedAt" TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Criar tabela de top buyers
