@@ -59,7 +59,7 @@ CREATE TABLE raffle (
 -- Recriar tabela de compras de rifas
 CREATE TABLE "rafflePurchase" (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  "userId" UUID NOT NULL REFERENCES "user"(id),
+  "userId" UUID REFERENCES "user"(id),
   "raffleId" UUID NOT NULL REFERENCES raffle(id),
   quotas INTEGER NOT NULL,
   amount DECIMAL(10, 2) NOT NULL,

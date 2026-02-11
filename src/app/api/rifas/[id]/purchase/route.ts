@@ -13,12 +13,8 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     const { quotas, amount } = await req.json()
 
     // Token opcional - usuários podem comprar sem estar logados
-    // Se não estiver logado, usar um anônimo UUID
-    let userId = req.cookies.get('token')?.value
-    if (!userId) {
-      // Gerar um UUID anônimo para usuários não-logados
-      userId = crypto.randomUUID()
-    }
+    // Se não estiver logado, userId será NULL (compra anônima)
+    const userId = req.cookies.get('token')?.value || null
 
     // Validar dados
     if (!quotas || quotas < 1 || !amount || amount < 0) {
