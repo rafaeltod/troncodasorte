@@ -42,6 +42,34 @@ export async function POST(req: NextRequest) {
       )
 
       console.log('[Webhook Sim] ✅ Compra confirmada:', purchaseId)
+
+      // Atualizar top buyer
+      if (purchase.userId) {
+        const existingBuyer = await queryOne(
+          `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+          [purchase.userId]
+        )
+
+        if (existingBuyer) {
+          await queryOne(
+            `UPDATE "topBuyer" 
+             SET "totalSpent" = "totalSpent" + $1,
+                 "totalQuotas" = "totalQuotas" + $2,
+                 "raffleBought" = "raffleBought" + 1,
+                 "updatedAt" = NOW()
+             WHERE "userId" = $3`,
+            [purchase.amount, purchase.quotas, purchase.userId]
+          )
+          console.log('[Webhook Sim] ✅ TopBuyer atualizado:', purchase.userId)
+        } else {
+          await queryOne(
+            `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+             VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
+            [purchase.userId, purchase.amount, purchase.quotas]
+          )
+          console.log('[Webhook Sim] ✅ TopBuyer criado:', purchase.userId)
+        }
+      }
       return NextResponse.json({
         success: true,
         message: 'Pagamento confirmado com sucesso!',
@@ -72,6 +100,39 @@ export async function POST(req: NextRequest) {
           'UPDATE "rafflePurchase" SET status = $1, "updatedAt" = NOW() WHERE id = $2',
           ['confirmed', purchase.id]
         )
+
+        // Buscar detalhes da compra para atualizar topBuyer
+        const fullPurchase = await queryOne(
+          'SELECT * FROM "rafflePurchase" WHERE id = $1',
+          [purchase.id]
+        )
+
+        // Atualizar top buyer
+        if (fullPurchase.userId) {
+          const existingBuyer = await queryOne(
+            `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+            [fullPurchase.userId]
+          )
+
+          if (existingBuyer) {
+            await queryOne(
+              `UPDATE "topBuyer" 
+               SET "totalSpent" = "totalSpent" + $1,
+                   "totalQuotas" = "totalQuotas" + $2,
+                   "raffleBought" = "raffleBought" + 1,
+                   "updatedAt" = NOW()
+               WHERE "userId" = $3`,
+              [fullPurchase.amount, fullPurchase.quotas, fullPurchase.userId]
+            )
+          } else {
+            await queryOne(
+              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+               VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
+              [fullPurchase.userId, fullPurchase.amount, fullPurchase.quotas]
+            )
+          }
+        }
+
         confirmed++
       }
 

@@ -12,21 +12,44 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Find user by phone and CPF
+    // Procura por usuário com phone e CPF
     const user = await queryOne(
       'SELECT id, name, email, cpf, phone FROM "user" WHERE phone = $1 AND cpf = $2',
       [phone, cpf]
     )
 
-    if (!user) {
-      return NextResponse.json(
-        { error: 'Nenhuma compra encontrada com esses dados' },
-        { status: 404 }
+    let purchases = []
+
+    if (user) {
+      // Se achou usuário, busca compras associadas ao userId
+      purchases = await queryMany(
+        `SELECT 
+          rp.id,
+          rp.quotas,
+          rp.amount,
+          rp.status,
+          rp."createdAt",
+          r.title as "raffleTitle",
+          r.status as "raffleStatus"
+        FROM "rafflePurchase" rp
+        JOIN raffle r ON rp."raffleId" = r.id
+        WHERE rp."userId" = $1 AND rp.status = 'confirmed'
+        ORDER BY rp."createdAt" DESC`,
+        [user.id]
       )
+
+      return NextResponse.json({
+        user: {
+          name: user.name,
+          phone: user.phone,
+          cpf: user.cpf,
+        },
+        purchases,
+      })
     }
 
-    // Get user's purchases
-    const purchases = await queryMany(
+    // Se não achou usuário, procura por compras anônimas com esse telefone
+    purchases = await queryMany(
       `SELECT 
         rp.id,
         rp.quotas,
@@ -37,16 +60,24 @@ export async function POST(req: NextRequest) {
         r.status as "raffleStatus"
       FROM "rafflePurchase" rp
       JOIN raffle r ON rp."raffleId" = r.id
-      WHERE rp."userId" = $1
+      WHERE rp.phone = $1 AND rp."userId" IS NULL AND rp.status = 'confirmed'
       ORDER BY rp."createdAt" DESC`,
-      [user.id]
+      [phone]
     )
 
+    if (purchases.length === 0) {
+      return NextResponse.json(
+        { error: 'Nenhuma compra encontrada com esses dados' },
+        { status: 404 }
+      )
+    }
+
+    // Para compras anônimas, não temos dados do usuário
     return NextResponse.json({
       user: {
-        name: user.name,
-        phone: user.phone,
-        cpf: user.cpf,
+        name: 'Comprador Anônimo',
+        phone: phone,
+        cpf: cpf,
       },
       purchases,
     })

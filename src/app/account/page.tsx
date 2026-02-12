@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
+import { censorName, censorPhone } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, TrendingUp, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -267,14 +268,14 @@ export default function AccountPage() {
                       <User className="w-4 h-4 text-emerald-600" />
                       Nome
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{user.name}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorName(user.name)}</p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <p className="text-gray-600 font-semibold text-sm flex items-center gap-2 mb-1">
                       <Phone className="w-4 h-4 text-emerald-600" />
                       Telefone
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{user.phone}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorPhone(user.phone)}</p>
                   </div>
                 </div>
 

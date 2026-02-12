@@ -18,7 +18,15 @@ export async function GET() {
        LIMIT 5`
     )
 
-    return NextResponse.json(topBuyers)
+    // Converter strings em números (DECIMAL do PostgreSQL retorna como string)
+    const formatted = topBuyers.map(buyer => ({
+      ...buyer,
+      totalSpent: Number(buyer.totalSpent) || 0,
+      totalQuotas: Number(buyer.totalQuotas) || 0,
+      raffleBought: Number(buyer.raffleBought) || 0,
+    }))
+
+    return NextResponse.json(formatted)
   } catch (error) {
     console.error('Error fetching top buyers:', error)
     return NextResponse.json(

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { censorName } from '@/lib/formatters'
 import { RaffleCard } from '@/components/raffle-card'
 import Link from 'next/link'
 import { Plus, History, Trophy, Users } from 'lucide-react'
@@ -126,7 +127,7 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-5xl font-black text-gray-900 mb-3">
-            👋 Olá, {user.name.split(' ')[0]}!
+            👋 Olá, {censorName(user.name).split(' ')[0]}!
           </h1>
           <p className="text-lg text-gray-600 mb-6">
             Bem-vindo ao seu painel de campanhas. Explore, participe e crie suas próprias campanhas!

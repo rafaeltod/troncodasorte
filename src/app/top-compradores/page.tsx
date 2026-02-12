@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useAuth } from '@/context/auth-context'
+import { censorName } from '@/lib/formatters'
 import { Trophy } from 'lucide-react'
 
 interface Buyer {
@@ -64,7 +65,7 @@ export default function TopBuyersPage() {
                     {index > 2 && index + 1}
                   </div>
                   <div>
-                    <div className="font-black text-lg text-gray-900">{buyer.name}</div>
+                    <div className="font-black text-lg text-gray-900">{censorName(buyer.name)}</div>
                     <div className="text-sm text-gray-600">
                       {buyer.raffleBought} campanha{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalQuotas} cotas
                     </div>

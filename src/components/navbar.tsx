@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { censorName } from '@/lib/formatters'
 import Image from 'next/image'
 import { Ticket, User, Trophy, Menu, X, LogOut } from 'lucide-react'
 
@@ -60,7 +61,7 @@ export function Navbar() {
                   className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
                 >
                   <User className="w-4 h-4" />
-                  {user.name}
+                  {censorName(user.name)}
                 </Link>
                 {user.isAdmin && (
                   <Link

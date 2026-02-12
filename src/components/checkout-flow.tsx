@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
 
@@ -204,6 +204,7 @@ export function CheckoutFlow({
         body: JSON.stringify({
           quotas: selectedQuantity,
           amount: totalPrice,
+          phone: formData.phone.replace(/\D/g, ''), // Enviar telefone sem formatação
         }),
       })
 
@@ -416,7 +417,7 @@ export function CheckoutFlow({
               <p>
                 <strong>Nome:</strong>{' '}
                 {existingCustomer
-                  ? `${existingCustomer.name.charAt(0)}${existingCustomer.name.slice(1).replace(/./g, '*')}`
+                  ? censorName(existingCustomer.name)
                   : formData.name}
               </p>
               <p>

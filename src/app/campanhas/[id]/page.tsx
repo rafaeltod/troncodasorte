@@ -168,35 +168,6 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
           </div>
         </div>
 
-        {/* Purchases */}
-        {raffle.purchases.length > 0 && (
-          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-            <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-2">
-              <Users className="w-8 h-8 text-emerald-600" />
-              Últimas Compras
-            </h2>
-            <div className="space-y-3">
-              {raffle.purchases.slice(0, 10).map((purchase: any) => (
-                <div key={purchase.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-emerald-50 rounded-lg border border-gray-200 hover:border-emerald-300 transition">
-                  <div>
-                    <div className="font-bold text-gray-900">{purchase.user.name}</div>
-                    <div className="text-sm text-gray-600 font-semibold flex items-center gap-1 mt-1">
-                      <Ticket className="w-4 h-4 text-emerald-600" />
-                      {purchase.quotas} cotas
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-black text-emerald-700 text-lg">R$ {Number(purchase.amount).toFixed(2)}</div>
-                    <div className="text-xs text-gray-600 font-semibold">
-                      {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Disclaimer */}
         <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
           <div className="space-y-4 text-sm text-gray-700 leading-relaxed">

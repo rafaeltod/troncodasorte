@@ -11,10 +11,33 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
   try {
     const { id } = await params
     const body = await req.json()
-    const { quotas, amount } = body
+    const { quotas, amount, phone } = body
 
     // Token é opcional (permite compras anônimas)
     const token = req.cookies.get('token')?.value || null
+
+    // IMPORTANTE: Telefone é obrigatório para rastrear compas anônimas
+    if (!phone) {
+      return NextResponse.json(
+        { error: 'Telefone é obrigatório para criar compra' },
+        { status: 400 }
+      )
+    }
+
+    // Determinar userId
+    let userId: string | null = token
+
+    // Se não está logado, buscar usuário pelo telefone
+    if (!token) {
+      const phoneOnly = phone.replace(/\D/g, '')
+      const userByPhone = await queryOne(
+        'SELECT id FROM "user" WHERE phone = $1',
+        [phoneOnly]
+      )
+      if (userByPhone) {
+        userId = userByPhone.id
+      }
+    }
 
     // Validar dados - quotas deve ser inteiro positivo, amount deve ser positivo
     if (!Number.isInteger(quotas) || quotas < 1) {
@@ -54,7 +77,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
        AND amount = $4
        AND "createdAt" > NOW() - INTERVAL '1 minute'
        LIMIT 1`,
-      [id, token, quotas, amount]
+      [id, userId, quotas, amount]
     )
 
     if (recentDuplicate) {
@@ -68,7 +91,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     }
 
     // Se está logado, verificar se não é o criador
-    if (token && raffle.creatorId === token) {
+    if (userId && raffle.creatorId === userId) {
       return NextResponse.json(
         { error: 'Você não pode comprar cotas da sua própria campanha' },
         { status: 403 }
@@ -100,12 +123,13 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     ).join(',')
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
+    // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt")
-       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'pending', NOW(), NOW())
+      `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, phone, status, "createdAt", "updatedAt")
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
-      [token, id, quotas, amount, quotaNumbers]
+      [userId, id, quotas, amount, quotaNumbers, phone]
     )
 
     if (!purchase) {
@@ -125,37 +149,10 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       throw new Error('Erro ao atualizar campanha')
     }
 
-    // Atualizar top buyer apenas se o usuário está logado
-    if (token) {
-      const existingBuyer = await queryOne(
-        `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-        [token]
-      )
-
-      if (existingBuyer) {
-        // Atualizar comprador existente
-        await queryOne(
-          `UPDATE "topBuyer" 
-           SET "totalSpent" = "totalSpent" + $1,
-               "totalQuotas" = "totalQuotas" + $2,
-               "raffleBought" = "raffleBought" + 1,
-               "updatedAt" = NOW()
-           WHERE "userId" = $3`,
-          [amount, quotas, token]
-        )
-      } else {
-        // Criar novo comprador
-        await queryOne(
-          `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
-           VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-          [token, amount, quotas]
-        )
-      }
-    }
-
     // ✅ A compra fica como 'pending' até que o webhook do Mercado Pago confirme
     // NÃO marcar como 'confirmed' automaticamente!
     // A confirmação happen quando o pagamento PIX é realmente confirmado
+    // O topBuyer só é atualizado quando o webhook confirma o pagamento (status = 'confirmed')
 
     return NextResponse.json({
       purchaseId: purchase.id,
