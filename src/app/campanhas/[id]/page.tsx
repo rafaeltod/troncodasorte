@@ -39,7 +39,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <a href="/campanhas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+          <a href="/campanhas" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
@@ -87,7 +87,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
 
             <div className="space-y-4 mb-8">
-              <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
+              <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
                 <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold mb-2">
                   <Gift className="w-4 h-4" />
                   Prêmio
@@ -118,7 +118,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
+                    className="bg-linear-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
                   >
                     {progress > 10 && <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>}
@@ -169,7 +169,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
         </div>
 
         {/* Disclaimer */}
-        <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
+        <div className="mt-12 bg-linear-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
           <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
             <p className="font-bold text-gray-900">⚠️ Informações Importantes</p>
             <p>

@@ -40,7 +40,7 @@ export function Drawer({ isOpen, onClose, children, title }: DrawerProps) {
 
       {/* Drawer */}
       <div
-        className={`fixed inset-0 md:right-0 md:left-auto md:top-0 md:bottom-0 md:w-[500px] 
+        className={`fixed inset-0 md:right-0 md:left-auto md:top-0 md:bottom-0 md:w-125 
                      bg-white z-50 flex flex-col
                      rounded-t-3xl md:rounded-none
                      transition-all duration-300 ease-out
