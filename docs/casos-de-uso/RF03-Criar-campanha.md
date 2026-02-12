@@ -1,7 +1,7 @@
 
 # Tronco da sorte
 
-## Especificação do caso de uso - F03 - Gerencias campanha
+## Especificação do caso de uso - F03 - Criar campanha
 
 ### Histórico da Revisão
 
