@@ -44,7 +44,7 @@ export function RaffleCard({
               }}
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
+            <div className="w-full h-full bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
               <div className="text-emerald-400 text-5xl">📦</div>
             </div>
           )}

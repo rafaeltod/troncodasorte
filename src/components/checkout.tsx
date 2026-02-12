@@ -291,7 +291,7 @@ export function Checkout({
           </div>
 
           {/* Resumo de preço */}
-          <div className="bg-gradient-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
+          <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
             <div className="flex justify-between items-center mb-2">
               <p className="text-sm text-gray-700">Preço por cota:</p>
               <p className="font-bold text-gray-900">R$ {numericQuotaPrice.toFixed(2)}</p>
@@ -310,7 +310,7 @@ export function Checkout({
           <button
             onClick={handlePayment}
             disabled={loading || quantity === 0}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
             {loading ? '⏳ Processando...' : `💳 Comprar Agora - R$ ${totalPrice.toFixed(2)}`}
           </button>
