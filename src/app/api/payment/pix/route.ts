@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { queryOne } from '@/lib/db'
+import QRCode from 'qrcode'
 
 // Para desenvolvimento, usando uma chave PIX estática
 // Em produção, integrar com API do Mercado Pago
@@ -12,75 +13,173 @@ export async function POST(req: NextRequest) {
     // Token é opcional (permite pagamentos anônimos)
     const token = req.cookies.get('token')?.value || null
 
-    if (!purchaseId || !amount) {
+    if (!purchaseId || !raffleId) {
       return NextResponse.json(
         { error: 'Dados inválidos' },
         { status: 400 }
       )
     }
 
+    // IMPORTANTE: Buscar os dados reais da compra do banco
+    // NÃO confiar no amount enviado pelo cliente
+    const purchase = await queryOne(
+      'SELECT "quotas", "amount", "userId", "raffleId", "status" FROM "rafflePurchase" WHERE id = $1',
+      [purchaseId]
+    )
+
+    if (!purchase) {
+      return NextResponse.json(
+        { error: 'Compra não encontrada' },
+        { status: 404 }
+      )
+    }
+
+    // Usar o valor validado do banco (NÃO o enviado pelo cliente)
+    const validatedAmount = Number(purchase.amount)
+    const quotaCount = purchase.quotas
+
+    console.log('[Payment] Recuperei a compra do banco:', {
+      purchaseId,
+      quotas: purchase.quotas,
+      amount: purchase.amount,
+      validatedAmount,
+      type: typeof purchase.amount,
+    })
+
     // Verificar se tem Mercado Pago configurado
     if (MERCADO_PAGO_ACCESS_TOKEN) {
+      console.log('[Payment] Tentando chamar Mercado Pago...')
       // Integração real com Mercado Pago
       try {
         const payerEmail = token 
           ? `user_${token}@example.com`
           : `anonymous@example.com`
 
+        const requestPayload = {
+          transaction_amount: validatedAmount,
+          description: `Compra de ${quotaCount} cotas - Rifa ${raffleId}`,
+          payment_method_id: 'pix',
+          payer: {
+            email: payerEmail,
+          },
+          metadata: {
+            purchaseId,
+            raffleId,
+          },
+        }
+
+        console.log('[Payment] Payload para Mercado Pago:', {
+          transaction_amount: validatedAmount,
+          payment_method_id: 'pix',
+          payer_email: payerEmail,
+        })
+
         const mpResponse = await fetch('https://api.mercadopago.com/v1/payments', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
             'Content-Type': 'application/json',
+            'X-Idempotency-Key': `${purchaseId}-${Date.now()}`,
           },
-          body: JSON.stringify({
-            transaction_amount: amount,
-            description: `Compra de cotas - Rifa ${raffleId}`,
-            payment_method_id: 'pix',
-            payer: {
-              email: payerEmail,
-            },
-            metadata: {
-              purchaseId,
-              raffleId,
-            },
-          }),
+          body: JSON.stringify(requestPayload),
         })
 
         const data = await mpResponse.json()
 
-        if (data.point_of_interaction?.qr_code?.in_app_url) {
+        console.log('[Payment] Status do Mercado Pago:', mpResponse.status)
+        console.log('[Payment] Resposta completa:', JSON.stringify(data, null, 2))
+
+        // Tentar múltiplos caminhos possíveis para o QR code do Mercado Pago
+        let qrCodeUrl = data.point_of_interaction?.qr_code?.in_app_url
+        let qrCodeContent = data.point_of_interaction?.qr_code?.content
+
+        // Se não encontrou, tenta outros caminhos
+        if (!qrCodeContent) {
+          qrCodeContent = data.point_of_interaction?.transaction_data?.qr_code
+        }
+        if (!qrCodeContent && data.point_of_interaction?.qr_code) {
+          qrCodeContent = data.point_of_interaction.qr_code.raw_value || data.point_of_interaction.qr_code.content
+        }
+
+        // Se encontrou QR code da API do Mercado Pago
+        if (qrCodeUrl) {
+          console.log('[Payment] ✅ QR Code URL do Mercado Pago encontrado!')
           return NextResponse.json({
-            qrCode: data.point_of_interaction.qr_code.in_app_url,
+            qrCode: qrCodeUrl,
             qrImage: data.point_of_interaction.qr_code.image_url,
+            content: qrCodeContent,
             transactionId: data.id,
             status: 'pending',
           })
         }
+
+        // Se encontrou o conteúdo (BR Code), gerar QR code localmente
+        if (qrCodeContent) {
+          console.log('[Payment] ✅ QR Code content encontrado! Gerando QR localmente...')
+          try {
+            const qrSVG = await QRCode.toString(qrCodeContent, {
+              type: 'svg',
+              width: 300,
+            })
+            const qrDataUrl = 'data:image/svg+xml;utf8,' + encodeURIComponent(qrSVG)
+            
+            return NextResponse.json({
+              qrCode: qrDataUrl,
+              content: qrCodeContent,
+              transactionId: data.id,
+              status: 'pending',
+              source: 'mercado_pago_generated',
+            })
+          } catch (qrError) {
+            console.error('[Payment] Erro ao gerar QR localmente:', qrError)
+            // Se falhar, retorna pelo menos o conteúdo para copiar
+            return NextResponse.json({
+              qrCode: null,
+              content: qrCodeContent,
+              pixKey: qrCodeContent,
+              transactionId: data.id,
+              status: 'pending',
+              source: 'mercado_pago_content_only',
+            })
+          }
+        }
+
+        // Se chegou aqui, a resposta do MP não tem QR code
+        console.log('[Payment] ⚠️ Estrutura do QR Code não encontrada na resposta do MP')
+        console.log('[Payment] Data completo:', JSON.stringify(data, null, 2))
       } catch (error) {
-        // Usar PIX estático se Mercado Pago falhar
+        console.error('[Payment] ❌ Erro ao chamar Mercado Pago:', error)
       }
+    } else {
+      console.log('[Payment] MERCADO_PAGO_ACCESS_TOKEN não configurado, usando fallback')
     }
 
-    // PIX estático para desenvolvimento
+    // PIX estático para desenvolvimento (fallback)
+    console.log('[Payment] Usando PIX mock como fallback')
+    
+    // Tentar gerar QR code para a chave PIX
     const pixKey = 'mercado-pago@troncodasorte.com.br'
-    const qrCodeData = {
-      pix: pixKey,
-      amount: amount.toFixed(2),
-      description: `Compra de cotas - Rifa ${raffleId}`,
-      transactionId: purchaseId,
-      expiresIn: 3600, // 1 hora
+    let pixSVG = null
+    
+    try {
+      pixSVG = await QRCode.toString(pixKey, {
+        type: 'svg',
+        width: 300,
+      })
+    } catch (err) {
+      console.log('[Payment] Erro ao gerar QR para PIX key:', err)
     }
-
-    // Gerar um QR code mock para desenvolvimento
-    // Em produção, usar biblioteca como 'qrcode'
+    
     return NextResponse.json({
-      qrCode: `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='white' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-size='16' fill='black'%3E${pixKey}%3C/text%3E%3C/svg%3E`,
+      qrCode: pixSVG ? 'data:image/svg+xml;utf8,' + encodeURIComponent(pixSVG) : null,
       pixKey: pixKey,
-      amount: amount.toFixed(2),
+      content: pixKey,
+      amount: validatedAmount.toFixed(2),
       transactionId: purchaseId,
+      quotas: quotaCount,
       status: 'pending',
-      message: 'PIX Mock para desenvolvimento. Configure MERCADO_PAGO_ACCESS_TOKEN para pagamento real.',
+      source: 'fallback_pix_mock',
+      message: 'PIX em modo fallback. Configure MERCADO_PAGO_ACCESS_TOKEN para integração completa.',
     })
   } catch (error) {
     console.error('Error creating PIX payment:', error)

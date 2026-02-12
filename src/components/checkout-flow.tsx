@@ -470,7 +470,29 @@ export function CheckoutFlow({
         onPaymentConfirmed={() => {
           setShowPixModal(false)
           setPurchaseId(null)
-          router.push('/historico')
+          
+          // Salvar compra anônima no localStorage para visualizar depois
+          if (!user && purchaseId) {
+            const anonymousPurchases = JSON.parse(localStorage.getItem('anonymousPurchases') || '[]')
+            const purchaseData = {
+              id: purchaseId,
+              raffleId,
+              amount: totalPrice,
+              quotas: selectedQuantity,
+              status: 'confirmed',
+              createdAt: new Date().toISOString(),
+            }
+            anonymousPurchases.push(purchaseData)
+            localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
+          }
+          
+          // Redirecionar apropriadamente
+          if (user) {
+            router.push('/historico')
+          } else {
+            // Usuário anônimo - voltar para campanhas
+            router.push('/campanhas')
+          }
         }}
       />
     </div>

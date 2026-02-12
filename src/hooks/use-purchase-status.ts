@@ -61,6 +61,8 @@ export function usePurchaseStatus({
   useEffect(() => {
     if (!enabled || !purchaseId || !raffleId) return
 
+    console.log('[usePurchaseStatus] Iniciando polling...')
+
     // Fazer check imediato
     checkStatus()
 
@@ -77,7 +79,10 @@ export function usePurchaseStatus({
       checkStatus()
     }, 3000)
 
-    return () => clearInterval(interval)
+    return () => {
+      console.log('[usePurchaseStatus] Parando polling')
+      clearInterval(interval)
+    }
   }, [enabled, purchaseId, raffleId, retryCount])
 
   return {

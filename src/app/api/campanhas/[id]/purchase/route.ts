@@ -10,15 +10,23 @@ interface RouteProps {
 export async function POST(req: NextRequest, { params }: RouteProps) {
   try {
     const { id } = await params
-    const { quotas, amount } = await req.json()
+    const body = await req.json()
+    const { quotas, amount } = body
 
     // Token é opcional (permite compras anônimas)
     const token = req.cookies.get('token')?.value || null
 
-    // Validar dados
-    if (!quotas || quotas < 1 || !amount || amount < 0) {
+    // Validar dados - quotas deve ser inteiro positivo, amount deve ser positivo
+    if (!Number.isInteger(quotas) || quotas < 1) {
       return NextResponse.json(
-        { error: 'Dados inválidos' },
+        { error: 'Quantidade de cotas inválida' },
+        { status: 400 }
+      )
+    }
+
+    if (typeof amount !== 'number' || amount <= 0) {
+      return NextResponse.json(
+        { error: 'Valor inválido' },
         { status: 400 }
       )
     }
@@ -34,6 +42,29 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
         { error: 'Campanha não encontrada' },
         { status: 404 }
       )
+    }
+
+    // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, quotas, amount, no último minuto)
+    // Isso previne "cotas fantasmas" causadas por retry automático do cliente
+    const recentDuplicate = await queryOne(
+      `SELECT id FROM "rafflePurchase" 
+       WHERE "raffleId" = $1 
+       AND "userId" = $2 
+       AND quotas = $3 
+       AND amount = $4
+       AND "createdAt" > NOW() - INTERVAL '1 minute'
+       LIMIT 1`,
+      [id, token, quotas, amount]
+    )
+
+    if (recentDuplicate) {
+      console.log('[Purchase] ⚠️ Compra duplicada detectada - retornando compra anterior:', recentDuplicate.id)
+      return NextResponse.json({
+        purchaseId: recentDuplicate.id,
+        message: 'Compra realizada com sucesso. Aguardando pagamento PIX.',
+        checkoutUrl: null,
+        isDuplicate: true,
+      }, { status: 201 })
     }
 
     // Se está logado, verificar se não é o criador
@@ -63,22 +94,16 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     // Gerar números das cotas (exemplo: "1,2,3,4,5" para 5 cotas)
     const startNumber = raffle.soldQuotas + 1
-    const endNumber = raffle.soldQuotas + quotas
     const quotaNumbers = Array.from(
       { length: quotas },
       (_, i) => String(startNumber + i)
     ).join(',')
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
+    // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'pending', NOW(), NOW())
-       ON CONFLICT ("userId", "raffleId") 
-       DO UPDATE SET 
-         quotas = "rafflePurchase".quotas + $3,
-         amount = "rafflePurchase".amount + $4,
-         numbers = "rafflePurchase".numbers || ',' || $5,
-         "updatedAt" = NOW()
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
       [token, id, quotas, amount, quotaNumbers]
     )
@@ -128,22 +153,20 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       }
     }
 
-    // TODO: Integrar com gateway de pagamento (Stripe, Mercado Pago, etc)
-    // Por enquanto, marcar compra como confirmada (em produção seria 'pending')
-    await queryOne(
-      `UPDATE "rafflePurchase" SET status = 'confirmed' WHERE id = $1`,
-      [purchase.id]
-    )
+    // ✅ A compra fica como 'pending' até que o webhook do Mercado Pago confirme
+    // NÃO marcar como 'confirmed' automaticamente!
+    // A confirmação happen quando o pagamento PIX é realmente confirmado
 
     return NextResponse.json({
       purchaseId: purchase.id,
-      message: 'Compra realizada com sucesso',
+      message: 'Compra realizada com sucesso. Aguardando pagamento PIX.',
       checkoutUrl: null, // Será preenchido quando integrar com gateway
     }, { status: 201 })
   } catch (error) {
     console.error('Error in purchase:', error)
+    const errorMessage = error instanceof Error ? error.message : 'erro desconhecido'
     return NextResponse.json(
-      { error: 'Erro ao processar compra' },
+      { error: `Erro ao processar compra: ${errorMessage}` },
       { status: 500 }
     )
   }
