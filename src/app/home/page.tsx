@@ -32,7 +32,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50">
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-12">
+      <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
@@ -131,7 +131,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div className="flex gap-4">
-              <Lock className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <Lock className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Totalmente Seguro</h3>
                 <p className="text-gray-300">Seus dados estão protegidos com criptografia de ponta. Sorteios auditados e transparentes.</p>
@@ -139,7 +139,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4">
-              <Zap className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <Zap className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Super Rápido</h3>
                 <p className="text-gray-300">Características e transações instantâneas. Sem burocracias nem atrasos.</p>
@@ -147,7 +147,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4">
-              <DollarSign className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <DollarSign className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Cotas Acessíveis</h3>
                 <p className="text-gray-300">A partir de R$ 0,50 por cota. Todos podem participar e ganhar prêmios incríveis.</p>
@@ -155,7 +155,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4">
-              <Target className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <Target className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Prêmios Reais</h3>
                 <p className="text-gray-300">Prêmios verificados e reais. De iPhones até viagens internacionais.</p>
@@ -163,7 +163,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4">
-              <Smartphone className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <Smartphone className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Mobile Friendly</h3>
                 <p className="text-gray-300">Funciona perfeitamente em qualquer dispositivo. Participe de qualquer lugar.</p>
@@ -171,7 +171,7 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4">
-              <Trophy className="w-10 h-10 text-emerald-400 flex-shrink-0" />
+              <Trophy className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
                 <h3 className="text-xl font-semibold text-white mb-2">Sorteios Justos</h3>
                 <p className="text-gray-300">Sistema de sorteio aleatório certificado. Todos têm chances iguais de ganhar.</p>
@@ -182,7 +182,7 @@ export default function HomePage() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 py-20 sm:py-24">
+      <div className="bg-linear-to-r from-emerald-600 to-teal-600 py-20 sm:py-24">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
             Pronto para começar?

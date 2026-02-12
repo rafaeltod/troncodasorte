@@ -110,7 +110,7 @@ export default function LoginPage() {
         <div className="max-w-md w-full">
           {/* Logo Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 mb-4 overflow-hidden">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 mb-4 overflow-hidden">
               <Image 
                 src="/troncodasorte.png"
                 alt="Tronco da Sorte"
@@ -128,21 +128,21 @@ export default function LoginPage() {
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
                 <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg mb-4 flex items-start gap-3">
-                  <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{error}</p>
                 </div>
               )}
 
               {success && (
                 <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg mb-4 flex items-start gap-3">
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{success}</p>
                 </div>
               )}
 
               {/* CPF Input */}
               <div>
-                <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                   <FileText className="w-4 h-4 text-emerald-600" />
                   CPF *
                 </label>
@@ -159,7 +159,7 @@ export default function LoginPage() {
 
               {/* Email Input */}
               <div>
-                <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                   <Mail className="w-4 h-4 text-emerald-600" />
                   Email
                 </label>
@@ -177,7 +177,7 @@ export default function LoginPage() {
 
               {/* Phone Input */}
               <div>
-                <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                   <Phone className="w-4 h-4 text-emerald-600" />
                   Telefone
                 </label>
@@ -197,7 +197,7 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+                className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
               >
                 {loading ? '⏳ Entrando...' : '🎯 Entrar'}
               </button>
