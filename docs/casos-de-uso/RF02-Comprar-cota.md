@@ -41,9 +41,9 @@ Permite ao usuário/cliente comprar cotas de uma campanha ativa, selecionando a 
 
 ### 5) Fluxos de evento
 
-#### 5.1) Fluxo básico – Comprar campanha
+#### 5.1) Fluxo básico – Comprar cotas
 
-1. \[IN] O usuário acessa a interface de venda da campanha.
+1. \[IN] O usuário acessa a interface de venda das cotas.
 2. \[IN] O usuário seleciona a quantidade de cotas que deseja.
 3. \[OUT] O sistema valida a quantidade de cotas disponíveis.
 4. \[OUT] O sistema valida a disponibilidade de promoções e aplica automaticamente (se aplicável).
@@ -138,8 +138,7 @@ Permite ao usuário/cliente comprar cotas de uma campanha ativa, selecionando a 
 
 ### 8) Protótipo(s) de interface do caso de uso
 
-(Figura 1: Seletor de quantidade de cotas)
-(Figura 2: Aplicação de cupom/Cálculo de desconto)
-(Figura 3: Validação de dados pessoais)
-(Figura 4: Modal de pagamento PIX com QR Code)
-(Figura 5: Confirmação de compra com números das cotas)
+(Figura 1: )
+(Figura 2: )
+(Figura 3: )
+

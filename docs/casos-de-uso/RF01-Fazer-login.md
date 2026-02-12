@@ -8,6 +8,7 @@
 | Data       | Versão | Descrição      | Autor            |
 | ---------- | ------ | -------------- | ---------------- |
 | 11/02/2026 | 1.00   | Versão Inicial | Kilton J. Araújo |
+| 12/02/2026 | 1.01   | Atualizações   | Kilton J. Araújo |
 
 ---
 
@@ -46,46 +47,53 @@ Para fazer o primeiro login, se for administrador, o usuário vai diretamente pa
 #### 5.1) Fluxo básico – Login de Administrador
 
 1. \[IN] O usuário acessa a página de login do sistema.
-2. \[OUT] O sistema exibe a interface de login com campos para e-mail e senha.
-3. \[IN] O usuário insere suas credenciais de administrador (e-mail e senha).
+2. \[OUT] O sistema exibe a interface de login com campos para telefone e cpf.
+3. \[IN] O usuário insere suas credenciais.
 4. \[OUT] O sistema valida as credenciais contra a base de dados.
 5. \[OUT] O sistema confirma que o usuário é um administrador.
 6. \[OUT] O sistema autentica o usuário e cria uma sessão.
-7. \[OUT] O sistema redireciona o usuário para o dashboard de administrador.
+7. \[OUT] O sistema redireciona o usuário para o dashboard.
 
 #### 5.2) Fluxo alternativo – Login de Usuário com Telefone Cadastrado
 
-1. \[IN] O usuário acessa a página de login do sistema.
-2. \[OUT] O sistema exibe a interface de login com campo para telefone.
-3. \[IN] O usuário insere seu número de telefone.
-4. \[OUT] O sistema valida o formato do telefone (XX) 9XXXX-XXXX.
-5. \[OUT] O sistema busca na base de dados se o telefone está cadastrado.
-6. \[OUT] O sistema encontra um usuário registrado com esse telefone.
-7. \[OUT] O sistema autentica o usuário e cria uma sessão.
-8. \[OUT] O sistema redireciona o usuário para o dashboard com suas informações de conta.
+1. \[IN] O usuário acessa a interface de venda da campanha.
+2. \[IN] O usuário seleciona a quantidade de cotas que deseja.
+3. \[OUT] O sistema valida a quantidade de cotas disponíveis.
+4. \[OUT] O sistema valida a disponibilidade de promoções e aplica automaticamente (se aplicável).
+5. \[IN] O usuário pode inserir um cupom de desconto (opcional).
+6. \[OUT] Se cupom foi inserido, o sistema valida o cupom.
+7. \[OUT] Se cupom válido, o sistema aplica o desconto adicional no valor da compra.
+8. \[IN] O usuário clica em "Comprar".
+9. \[OUT] O sistema pede o número de telefone para verificar se o usuário existe.
+10. \[IN] O usuário insere o número de telefone.
+11. \[OUT] O sistema valida os dados inseridos, constando como usuário existente.
+12. \[OUT] O sistema redireciona o usuário para a página de pagamentos.
+
 
 #### 5.3) Fluxo alternativo – Cadastro de Usuário (Telefone não cadastrado)
 
-1. \[IN] O usuário acessa a página de login do sistema.
-2. \[OUT] O sistema exibe a interface de login com campo para telefone.
-3. \[IN] O usuário insere seu número de telefone.
-4. \[OUT] O sistema valida o formato do telefone (XX) 9XXXX-XXXX.
-5. \[OUT] O sistema busca na base de dados se o telefone está cadastrado.
-6. \[OUT] O sistema NÃO encontra um usuário com esse telefone.
-7. \[OUT] O sistema exibe um formulário de cadastro com o telefone já preenchido.
-8. \[IN] O usuário preenche os campos obrigatórios: CPF, e-mail, data de nascimento e aceita os termos.
-9. \[OUT] O sistema valida todos os campos (CPF com 11 dígitos, e-mail válido, idade ≥ 18 anos).
-10. \[OUT] O sistema cria uma nova conta de usuário.
-11. \[OUT] O sistema autentica o usuário e cria uma sessão.
-12. \[OUT] O sistema redireciona o usuário para o dashboard com um bem-vindo inicial.
+1. \[IN] O usuário acessa a interface de venda da campanha.
+2. \[IN] O usuário seleciona a quantidade de cotas que deseja.
+3. \[OUT] O sistema valida a quantidade de cotas disponíveis.
+4. \[OUT] O sistema valida a disponibilidade de promoções e aplica automaticamente (se aplicável).
+5. \[IN] O usuário pode inserir um cupom de desconto (opcional).
+6. \[OUT] Se cupom foi inserido, o sistema valida o cupom.
+7. \[OUT] Se cupom válido, o sistema aplica o desconto adicional no valor da compra.
+8. \[IN] O usuário clica em "Comprar".
+9. \[OUT] O sistema pede o número de telefone para verificar se o usuário existe.
+10. \[IN] O usuário insere o número de telefone.
+11. \[OUT] O sistema valida o telefone e detecta que o usuário NÃO está cadastrado.
+12. \[OUT] O sistema redireciona o usuário para um formulário de cadastramento.
+13. \[IN] O usuário insere seus dados pessoais (Nome, telefone, cpf, email, data nascimento)
+14. \[OUT] O sistema valida os dados inseridos.
+15. \[OUT] O sistema cadastra o usuário.
+16. \[OUT] O sistema redireciona o usuário para a pagina de pagamento.
 
 #### 5.4) Fluxo de exceção – Erros de Validação
 
 * **Campo de telefone/credencial inválido**: \[OUT] O sistema destaca o campo com erro e exibe a mensagem: "Por favor, preencha o campo corretamente."
-* **Credenciais de administrador inválidas**: \[OUT] O sistema exibe mensagem: "E-mail ou senha incorretos."
 * **CPF inválido**: \[OUT] O sistema exibe mensagem: "CPF deve conter 11 dígitos."
-* **Usuário menor de idade**: \[OUT] O sistema exibe mensagem: "Você deve ter mínimo 18 anos para se cadastrar."
-* **E-mail já registrado**: \[OUT] O sistema exibe mensagem: "Este e-mail já está cadastrado no sistema."
+* **Usuário menor de idade**: \[OUT] O sistema exibe mensagem: "Você deve ter mínimo 18 anos para logar/cadastrar."
 
 ---
 
@@ -113,8 +121,6 @@ Para fazer o primeiro login, se for administrador, o usuário vai diretamente pa
 
 ### 8) Protótipo(s) de interface do caso de uso
 
-* (Figura 1: Tela de login inicial com seleção de tipo de usuário - Administrador ou Titular)
-* (Figura 3: Formulário de login para Titular com campo de telefone)
-* (Figura 4: Validação de telefone e redirecionamento para dashboard ou cadastro)
-* (Figura 5: Formulário de cadastro com telefone pré-preenchido para novo usuário)
-* (Figura 6: Dashboard após login bem-sucedido)
+* (Figura 1: )
+* (Figura 2: )
+* (Figura 3: )
