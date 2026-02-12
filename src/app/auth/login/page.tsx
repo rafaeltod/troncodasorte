@@ -6,11 +6,10 @@ import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
 import { formatCPF, formatPhone } from '@/lib/formatters'
-import { LogIn, FileText, Mail, Phone, CheckCircle2, AlertCircle } from 'lucide-react'
+import { LogIn, FileText, Phone, CheckCircle2, AlertCircle } from 'lucide-react'
 
 interface FormData {
   cpf: string
-  email: string
   phone: string
 }
 
@@ -19,7 +18,6 @@ export default function LoginPage() {
   const { user, refetch } = useAuth()
   const [formData, setFormData] = useState<FormData>({
     cpf: '',
-    email: '',
     phone: '',
   })
   const [loading, setLoading] = useState(false)
@@ -51,30 +49,20 @@ export default function LoginPage() {
       return
     }
 
-    // Validar que pelo menos Email OU Telefone foi preenchido
-    const hasEmail = formData.email.trim() && formData.email.includes('@')
+    // Validar telefone
     const hasPhone = formData.phone.replace(/\D/g, '').length >= 10
 
-    if (!hasEmail && !hasPhone) {
-      setError('Informe um email válido ou telefone válido')
+    if (!hasPhone) {
+      setError('Informe um telefone válido')
       return
     }
 
     setLoading(true)
 
     try {
-      const loginPayload: any = {
+      const loginPayload = {
         cpf: formData.cpf.replace(/\D/g, ''),
-      }
-
-      // Adicionar email se foi preenchido
-      if (hasEmail) {
-        loginPayload.email = formData.email
-      }
-
-      // Adicionar telefone se foi preenchido
-      if (hasPhone) {
-        loginPayload.phone = formData.phone.replace(/\D/g, '')
+        phone: formData.phone.replace(/\D/g, ''),
       }
 
       const response = await fetch('/api/auth/login', {
@@ -157,24 +145,6 @@ export default function LoginPage() {
                 />
               </div>
 
-              {/* Email Input */}
-              <div>
-                <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-emerald-600" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
-                />
-              </div>
-
-              <div className="text-center text-sm text-gray-600">ou</div>
-
               {/* Phone Input */}
               <div>
                 <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
@@ -191,7 +161,7 @@ export default function LoginPage() {
                 />
               </div>
 
-              <p className="text-xs text-gray-600 text-center">* Campo obrigatório | Informe um email ou telefone</p>
+              <p className="text-xs text-gray-600 text-center">* Campos obrigatórios</p>
 
               {/* Form Actions */}
               <button
