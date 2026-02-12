@@ -66,7 +66,7 @@ export default function TopBuyersPage() {
                   <div>
                     <div className="font-black text-lg text-gray-900">{buyer.name}</div>
                     <div className="text-sm text-gray-600">
-                      {buyer.raffleBought} rifa{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalQuotas} cotas
+                      {buyer.raffleBought} campanha{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalQuotas} cotas
                     </div>
                   </div>
                 </div>
