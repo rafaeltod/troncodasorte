@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
 
@@ -197,13 +197,14 @@ export function CheckoutFlow({
     setLoading(true)
 
     try {
-      const purchaseResponse = await fetch(`/api/rifas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
           quotas: selectedQuantity,
           amount: totalPrice,
+          phone: formData.phone.replace(/\D/g, ''), // Enviar telefone sem formatação
         }),
       })
 
@@ -416,7 +417,7 @@ export function CheckoutFlow({
               <p>
                 <strong>Nome:</strong>{' '}
                 {existingCustomer
-                  ? `${existingCustomer.name.charAt(0)}${existingCustomer.name.slice(1).replace(/./g, '*')}`
+                  ? censorName(existingCustomer.name)
                   : formData.name}
               </p>
               <p>
@@ -470,7 +471,29 @@ export function CheckoutFlow({
         onPaymentConfirmed={() => {
           setShowPixModal(false)
           setPurchaseId(null)
-          router.push('/historico')
+          
+          // Salvar compra anônima no localStorage para visualizar depois
+          if (!user && purchaseId) {
+            const anonymousPurchases = JSON.parse(localStorage.getItem('anonymousPurchases') || '[]')
+            const purchaseData = {
+              id: purchaseId,
+              raffleId,
+              amount: totalPrice,
+              quotas: selectedQuantity,
+              status: 'confirmed',
+              createdAt: new Date().toISOString(),
+            }
+            anonymousPurchases.push(purchaseData)
+            localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
+          }
+          
+          // Redirecionar apropriadamente
+          if (user) {
+            router.push('/historico')
+          } else {
+            // Usuário anônimo - voltar para campanhas
+            router.push('/campanhas')
+          }
         }}
       />
     </div>

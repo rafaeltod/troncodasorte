@@ -53,10 +53,13 @@ export async function POST(req: NextRequest) {
     }
 
     // Criar resposta com cookie HTTP-only
-    const response = NextResponse.json({
-      user,
-      message: 'Login realizado com sucesso',
-    })
+    const response = NextResponse.json(
+      {
+        user,
+        message: 'Login realizado com sucesso',
+      },
+      { status: 200 }
+    )
 
     // Salvar o ID do usuário em um cookie HTTP-only
     response.cookies.set('token', user.id, {

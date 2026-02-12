@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Ticket, Eye } from 'lucide-react'
+import { censorName, censorPhone } from '@/lib/formatters'
 
 interface Purchase {
   id: string
@@ -64,23 +65,6 @@ export default function TicketsResultPage() {
 
     loadTickets()
   }, [router])
-
-  const censorData = (text: string) => {
-    if (!text || text.length <= 2) return text
-    const visible = text.charAt(0) + text.charAt(1)
-    const hidden = '*'.repeat(Math.max(text.length - 2, 2))
-    return visible + hidden
-  }
-
-  const censorPhone = (phone: string) => {
-    // Mostrar: +55 84 9** **12
-    if (!phone || phone.length < 10) return phone
-    const match = phone.match(/(\d{2})(\d{1})(\d{4})(\d{4})/)
-    if (match) {
-      return `+55 ${match[1]} ${match[2]}** **${match[4].slice(-2)}`
-    }
-    return phone
-  }
 
   const censorCPF = (cpf: string) => {
     // Mostrar: 120***42
@@ -169,7 +153,7 @@ export default function TicketsResultPage() {
           <div className="p-6 space-y-4">
             <div>
               <p className="text-xs font-bold text-gray-600 mb-1">Nome Completo</p>
-              <p className="text-lg font-bold text-gray-900">{censorData(ticketData.user.name)}</p>
+              <p className="text-lg font-bold text-gray-900">{censorName(ticketData.user.name)}</p>
             </div>
             <div>
               <p className="text-xs font-bold text-gray-600 mb-1">Telefone</p>
@@ -253,7 +237,7 @@ export default function TicketsResultPage() {
         {/* Action Button */}
         <div className="mt-6 flex gap-3">
           <Link
-            href="/rifas"
+            href="/campanhas"
             className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
           >
             Voltar para Campanhas

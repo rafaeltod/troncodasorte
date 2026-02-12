@@ -65,8 +65,10 @@ export function PixPaymentModal({
 
   const generatePixQR = async () => {
     setLoading(true)
+    console.log('[PixPaymentModal] Iniciando generatePixQR...')
     try {
       if (!raffleId) {
+        console.log('[PixPaymentModal] Chamando GET /api/payment/pix/:purchaseId')
         const response = await fetch(`/api/payment/pix/${purchaseId}`, {
           method: 'GET',
           credentials: 'include',
@@ -83,7 +85,7 @@ export function PixPaymentModal({
           setBackendAmount(Number(data.amount))
         }
       } else {
-       
+        console.log('[PixPaymentModal] Chamando POST /api/payment/pix')
         const response = await fetch('/api/payment/pix', {
           method: 'POST',
           headers: {
@@ -93,15 +95,20 @@ export function PixPaymentModal({
           body: JSON.stringify({
             purchaseId,
             raffleId,
+            amount,
           }),
         })
 
+        console.log('[PixPaymentModal] Status da resposta:', response.status, response.statusText)
+
         if (!response.ok) {
             const errorData = await response.json().catch(() => ({}))
+            console.error('[PixPaymentModal] Erro na resposta:', errorData)
             throw new Error(errorData.error || 'Erro ao gerar QR code')
         }
 
         const data = await response.json()
+        console.log('[PixPaymentModal] Dados recebidos:', { source: data.source, hasQRCode: !!data.qrCode, hasContent: !!data.content })
 
           // Se o backend já retornou um qrCode pronto, usar direto
           if (data.qrCode && typeof data.qrCode === 'string' && data.qrCode.startsWith('data:')) {
@@ -136,9 +143,12 @@ export function PixPaymentModal({
       }
       // Reset timer quando QR code é gerado/recuperado
       setTimeRemaining(5 * 60)
+      console.log('[PixPaymentModal] ✅ QR code gerado com sucesso!')
     } catch (error) {
-      console.error('Error:', error)
-        alert(error instanceof Error ? error.message : 'Erro ao gerar/recuperar QR code PIX')
+      console.error('[PixPaymentModal] ❌ Erro ao gerar QR code:', error)
+      const message = error instanceof Error ? error.message : 'Erro ao gerar/recuperar QR code PIX'
+      console.error('[PixPaymentModal] Mensagem de erro:', message)
+      alert(message)
     } finally {
       setLoading(false)
     }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
+import { censorName } from '@/lib/formatters'
 import { RaffleCard } from '@/components/raffle-card'
 import Link from 'next/link'
 import { Plus, History, Trophy, Users } from 'lucide-react'
@@ -60,7 +61,7 @@ export default function DashboardPage() {
         setFinishedRaffles(Array.isArray(finished) ? finished : [])
         setAvailableRaffles(Array.isArray(available) ? available : [])
       } catch (err) {
-        console.error('Erro ao buscar rifas:', err)
+        console.error('Erro ao buscar campanhas:', err)
       } finally {
         setLoading(false)
       }
@@ -99,13 +100,13 @@ export default function DashboardPage() {
   const getTabLabel = () => {
     switch (activeTab) {
       case 'created':
-        return `Minhas Rifas (${createdRaffles.length})`
+        return `Minhas Campanhas (${createdRaffles.length})`
       case 'participating':
         return `Participando (${participatingRaffles.length})`
       case 'finished':
         return `Finalizadas (${finishedRaffles.length})`
       case 'available':
-        return `Rifas Disponíveis (${availableRaffles.length})`
+        return `Campanhas Disponíveis (${availableRaffles.length})`
       default:
         return ''
     }
@@ -126,15 +127,15 @@ export default function DashboardPage() {
         {/* Header */}
         <div className="mb-12">
           <h1 className="text-5xl font-black text-gray-900 mb-3">
-            👋 Olá, {user.name.split(' ')[0]}!
+            👋 Olá, {censorName(user.name).split(' ')[0]}!
           </h1>
           <p className="text-lg text-gray-600 mb-6">
-            Bem-vindo ao seu painel de rifas. Explore, participe e crie suas próprias rifas!
+            Bem-vindo ao seu painel de campanhas. Explore, participe e crie suas próprias campanhas!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Link
-              href="/criar-rifa"
+              href="/criar-campanha"
               className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg text-center"
             >
               <Plus className="inline mr-2" size={20} /> Criar Nova Rifa
@@ -206,7 +207,7 @@ export default function DashboardPage() {
               </p>
               {(activeTab === 'available' || activeTab === 'created') && (
                 <Link
-                  href="/criar-rifa"
+                  href="/criar-campanha"
                   className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition"
                 >
                   Começar Agora 🚀

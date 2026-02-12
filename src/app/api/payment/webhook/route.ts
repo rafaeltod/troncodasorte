@@ -111,6 +111,36 @@ export async function POST(req: NextRequest) {
           amount: updatedPurchase.amount,
         })
 
+        // Atualizar top buyer agora que a compra foi confirmada
+        if (updatedPurchase.userId) {
+          const existingBuyer = await queryOne(
+            `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
+            [updatedPurchase.userId]
+          )
+
+          if (existingBuyer) {
+            // Atualizar comprador existente
+            await queryOne(
+              `UPDATE "topBuyer" 
+               SET "totalSpent" = "totalSpent" + $1,
+                   "totalQuotas" = "totalQuotas" + $2,
+                   "raffleBought" = "raffleBought" + 1,
+                   "updatedAt" = NOW()
+               WHERE "userId" = $3`,
+              [updatedPurchase.amount, updatedPurchase.quotas, updatedPurchase.userId]
+            )
+            console.log('[MP Webhook] ✅ TopBuyer atualizado (existente):', updatedPurchase.userId)
+          } else {
+            // Criar novo comprador
+            await queryOne(
+              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+               VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
+              [updatedPurchase.userId, updatedPurchase.amount, updatedPurchase.quotas]
+            )
+            console.log('[MP Webhook] ✅ TopBuyer criado (novo):', updatedPurchase.userId)
+          }
+        }
+
         return NextResponse.json({
           success: true,
           message: 'Compra confirmada',

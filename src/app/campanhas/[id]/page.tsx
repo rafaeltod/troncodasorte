@@ -19,9 +19,9 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4 text-gray-900">Rifa não encontrada</h1>
-          <a href="/rifas" className="text-emerald-600 hover:text-emerald-700 font-semibold">
-            ← Voltar para rifas
+          <h1 className="text-2xl font-bold mb-4 text-gray-900">Campanha não encontrada</h1>
+          <a href="/campanhas" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+            ← Voltar para campanhas
           </a>
         </div>
       </div>
@@ -39,7 +39,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <a href="/rifas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+          <a href="/campanhas" className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
@@ -167,35 +167,6 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
           </div>
         </div>
-
-        {/* Purchases */}
-        {raffle.purchases.length > 0 && (
-          <div className="mt-12 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-            <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-2">
-              <Users className="w-8 h-8 text-emerald-600" />
-              Últimas Compras
-            </h2>
-            <div className="space-y-3">
-              {raffle.purchases.slice(0, 10).map((purchase: any) => (
-                <div key={purchase.id} className="flex justify-between items-center p-4 bg-gradient-to-r from-gray-50 to-emerald-50 rounded-lg border border-gray-200 hover:border-emerald-300 transition">
-                  <div>
-                    <div className="font-bold text-gray-900">{purchase.user.name}</div>
-                    <div className="text-sm text-gray-600 font-semibold flex items-center gap-1 mt-1">
-                      <Ticket className="w-4 h-4 text-emerald-600" />
-                      {purchase.quotas} cotas
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="font-black text-emerald-700 text-lg">R$ {Number(purchase.amount).toFixed(2)}</div>
-                    <div className="text-xs text-gray-600 font-semibold">
-                      {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Disclaimer */}
         <div className="mt-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">

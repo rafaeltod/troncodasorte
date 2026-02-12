@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Minus, Plus, User, Mail, FileText, Phone, Calendar } from 'lucide-react'
 
@@ -133,7 +133,7 @@ export function Checkout({
       }
 
       // Fazer a compra
-      const purchaseResponse = await fetch(`/api/rifas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -185,7 +185,7 @@ export function Checkout({
           {user && (
             <div className="mb-6 bg-emerald-50 p-4 rounded-lg border border-emerald-200">
               <p className="text-sm font-bold text-emerald-900">✅ Logado como:</p>
-              <p className="text-emerald-800 font-semibold">{user.name}</p>
+              <p className="text-emerald-800 font-semibold">{censorName(user.name)}</p>
             </div>
           )}
 

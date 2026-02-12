@@ -44,7 +44,7 @@ echo "  SUMMARY.md             # Resumo executivo"
 echo ""
 
 echo "🧪 TESTE RÁPIDO"
-echo "  curl http://localhost:3000/api/rifas"
+echo "  curl http://localhost:3000/api/campanhas"
 echo "  curl http://localhost:3000/api/top-buyers"
 echo ""
 

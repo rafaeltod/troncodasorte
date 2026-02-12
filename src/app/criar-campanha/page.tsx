@@ -65,7 +65,7 @@ export default function CreateRafflePageContent() {
     setSuccess(false)
 
     try {
-      const response = await fetch('/api/rifas', {
+      const response = await fetch('/api/campanhas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -81,7 +81,7 @@ export default function CreateRafflePageContent() {
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || `Erro ao criar rifa (${response.status})`)
+        throw new Error(errorData.error || `Erro ao criar campanha (${response.status})`)
       }
 
       const data = await response.json()
@@ -89,11 +89,11 @@ export default function CreateRafflePageContent() {
       setIsSubmitting(false)
       
       setTimeout(() => {
-        router.push(`/rifas/${data.id}`)
+        router.push(`/campanhas/${data.id}`)
       }, 1500)
     } catch (err) {
       console.error('Error creating raffle:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao criar rifa')
+      setError(err instanceof Error ? err.message : 'Erro ao criar campanha')
       setIsSubmitting(false)
     }
   }
@@ -108,8 +108,8 @@ export default function CreateRafflePageContent() {
               <Plus className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-gray-900">Criar Nova Rifa</h1>
-              <p className="text-gray-600">Preencha os dados para criar sua rifa e ganhar!</p>
+              <h1 className="text-4xl font-black text-gray-900">Criar Nova Campanha</h1>
+              <p className="text-gray-600">Preencha os dados para criar sua campanha e ganhar!</p>
             </div>
           </div>
         </div>
@@ -127,14 +127,14 @@ export default function CreateRafflePageContent() {
 
           {success && (
             <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg">
-              <p className="font-bold">✅ Rifa criada com sucesso! Redirecionando...</p>
+              <p className="font-bold">✅ Campanha criada com sucesso! Redirecionando...</p>
             </div>
           )}
 
           <div>
             <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-600" />
-              Título da Rifa
+              Título da Campanha
             </label>
             <input
               type="text"
@@ -144,7 +144,7 @@ export default function CreateRafflePageContent() {
               required
               minLength={5}
               className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
-              placeholder="Ex: Rifa do iPhone 15 Pro"
+              placeholder="Ex: Campanha do iPhone 15 Pro"
             />
           </div>
 
@@ -159,7 +159,7 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 resize-none"
               rows={5}
-              placeholder="Descreva sua rifa em detalhes... (condição, especificações, etc)"
+              placeholder="Descreva sua campanha em detalhes... (condição, especificações, etc)"
             ></textarea>
           </div>
 
@@ -219,7 +219,7 @@ export default function CreateRafflePageContent() {
           <div>
             <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <ImageIcon className="w-5 h-5 text-emerald-600" />
-              Imagens da Rifa (Opcional)
+              Imagens da Campanha (Opcional)
             </label>
             <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
           </div>
@@ -232,12 +232,12 @@ export default function CreateRafflePageContent() {
             {isSubmitting ? (
               <>
                 <span className="animate-spin">⏳</span>
-                Criando sua rifa...
+                Criando sua campanha...
               </>
             ) : (
               <>
                 <Plus className="w-5 h-5" />
-                Criar Rifa Agora
+                Criar Campanha Agora
               </>
             )}
           </button>

@@ -35,9 +35,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const data = await response.json()
         setUser(data.user)
       } else {
+        // 401 é esperado quando o usuário não está autenticado
+        // Não logar isto como erro
         setUser(null)
       }
     } catch (error) {
+      // Erro de rede ou parsing
       setUser(null)
     } finally {
       setLoading(false)

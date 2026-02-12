@@ -54,8 +54,8 @@ Acesse `http://localhost:3000`
 src/
 ├── app/
 │   ├── api/              # Rotas da API
-│   ├── rifas/            # Página de rifas
-│   ├── criar-rifa/       # Formulário para criar rifa
+│   ├── campanhas/        # Página de campanhas
+│   ├── criar-campanha/   # Formulário para criar campanha
 │   ├── top-compradores/  # Ranking de compradores
 │   ├── layout.tsx        # Layout principal
 │   ├── page.tsx          # Home

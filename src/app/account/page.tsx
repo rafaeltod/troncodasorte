@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
+import { censorName, censorPhone } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, TrendingUp, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -267,14 +268,14 @@ export default function AccountPage() {
                       <User className="w-4 h-4 text-emerald-600" />
                       Nome
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{user.name}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorName(user.name)}</p>
                   </div>
                   <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                     <p className="text-gray-600 font-semibold text-sm flex items-center gap-2 mb-1">
                       <Phone className="w-4 h-4 text-emerald-600" />
                       Telefone
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{user.phone}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorPhone(user.phone)}</p>
                   </div>
                 </div>
 
@@ -356,7 +357,7 @@ export default function AccountPage() {
           {purchases.length > 0 ? (
             <div className="space-y-3">
               {purchases.map((purchase) => (
-                <Link key={purchase.id} href={`/rifas/${purchase.raffleId}`}>
+                <Link key={purchase.id} href={`/campanhas/${purchase.raffleId}`}>
                   <div className="bg-gradient-to-r from-gray-50 to-emerald-50 hover:from-emerald-50 hover:to-teal-50 p-6 rounded-lg border border-gray-200 cursor-pointer transition transform hover:scale-102 hover:border-emerald-300">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -388,13 +389,13 @@ export default function AccountPage() {
           ) : (
             <div className="text-center py-12">
               <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma rifa</p>
+              <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma campanha</p>
               <Link
-                href="/rifas"
+                href="/campanhas"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105"
               >
                 <Ticket className="w-5 h-5" />
-                Explorar Rifas
+                Explorar Campanhas
               </Link>
             </div>
           )}

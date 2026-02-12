@@ -20,9 +20,9 @@
 
 ### Frontend - Páginas
 - [x] Home (dashboard com stats)
-- [x] Listar Rifas (/rifas)
-- [x] Detalhe Rifa (/rifas/[id])
-- [x] Criar Rifa (/criar-rifa)
+- [x] Listar Campanhas (/campanhas)
+- [x] Detalhe Campanha (/campanhas/[id])
+- [x] Criar Campanha (/criar-campanha)
 - [x] Top Compradores (/top-compradores)
 - [x] Histórico (/historico - estrutura)
 
@@ -33,9 +33,9 @@
 - [x] Forms com validação
 
 ### Backend - API
-- [x] GET /api/rifas
-- [x] POST /api/rifas
-- [x] GET /api/rifas/[id]
+- [x] GET /api/campanhas
+- [x] POST /api/campanhas
+- [x] GET /api/campanhas/[id]
 - [x] GET /api/top-buyers
 - [x] Error handling
 - [x] Validação Zod
@@ -201,7 +201,7 @@
 
 ### Páginas
 - [ ] /admin/dashboard
-- [ ] /admin/rifas
+- [ ] /admin/campanhas
 - [ ] /admin/usuarios
 - [ ] /admin/transacoes
 - [ ] /admin/relatorios

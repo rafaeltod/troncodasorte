@@ -16,6 +16,17 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async rewrites() {
+    return {
+      fallback: [
+        // Redireciona /uploads/* para /api/uploads/*
+        {
+          source: '/uploads/:filename',
+          destination: '/api/uploads/:filename',
+        },
+      ],
+    }
+  },
 };
 
 export default nextConfig;
