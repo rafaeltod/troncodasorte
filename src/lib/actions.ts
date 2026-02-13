@@ -59,10 +59,13 @@ export async function purchaseQuotas(
     throw new Error('Cotas insuficientes')
   }
 
-  // Gerar números aleatórios
+  // Gerar números aleatórios (6 dígitos: 000000-999999)
   const numbers = Array.from(
     { length: quotas },
-    () => Math.floor(Math.random() * raffle.totalQuotas) + 1
+    () => {
+      const randomNum = Math.floor(Math.random() * 1000000)
+      return String(randomNum).padStart(6, '0')
+    }
   )
 
   // Criar compra
