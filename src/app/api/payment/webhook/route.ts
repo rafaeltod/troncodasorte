@@ -98,7 +98,7 @@ export async function POST(req: NextRequest) {
         // Atualizar status da compra para 'confirmed'
         const updatedPurchase = await queryOne(
           `UPDATE "rafflePurchase" 
-           SET status = 'confirmed', "updatedAt" = NOW()
+           SET status = 'confirmed', "statusPago" = true, "updatedAt" = NOW()
            WHERE id = $1
            RETURNING *`,
           [purchaseId]
@@ -110,6 +110,15 @@ export async function POST(req: NextRequest) {
           quotas: updatedPurchase.quotas,
           amount: updatedPurchase.amount,
         })
+
+        // ✅ Agora sim atualizar soldQuotas da rifa pois o pagamento foi confirmado
+        await queryOne(
+          `UPDATE raffle 
+           SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+           WHERE id = $2`,
+          [updatedPurchase.quotas, updatedPurchase.raffleId]
+        )
+        console.log('[MP Webhook] ✅ Cotas da rifa atualizadas')
 
         // Atualizar top buyer agora que a compra foi confirmada
         if (updatedPurchase.userId) {

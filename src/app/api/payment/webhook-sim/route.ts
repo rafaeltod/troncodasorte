@@ -37,11 +37,20 @@ export async function POST(req: NextRequest) {
       }
 
       await queryOne(
-        'UPDATE "rafflePurchase" SET status = $1, "updatedAt" = NOW() WHERE id = $2',
+        'UPDATE "rafflePurchase" SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
         ['confirmed', purchaseId]
       )
 
       console.log('[Webhook Sim] ✅ Compra confirmada:', purchaseId)
+
+      // ✅ Atualizar soldQuotas da rifa com o pagamento confirmado
+      await queryOne(
+        `UPDATE raffle 
+         SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+         WHERE id = $2`,
+        [purchase.quotas, purchase.raffleId]
+      )
+      console.log('[Webhook Sim] ✅ Cotas da rifa atualizadas')
 
       // Atualizar top buyer
       if (purchase.userId) {
@@ -97,8 +106,16 @@ export async function POST(req: NextRequest) {
       let confirmed = 0
       for (const purchase of pendingPurchases) {
         await queryOne(
-          'UPDATE "rafflePurchase" SET status = $1, "updatedAt" = NOW() WHERE id = $2',
+          'UPDATE "rafflePurchase" SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
           ['confirmed', purchase.id]
+        )
+
+        // ✅ Atualizar soldQuotas da rifa
+        await queryOne(
+          `UPDATE raffle 
+           SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+           WHERE id = $2`,
+          [purchase.quotas, purchase.raffleId]
         )
 
         // Buscar detalhes da compra para atualizar topBuyer

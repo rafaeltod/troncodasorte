@@ -118,7 +118,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
                   <div
-                    className="bg-linear-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
+                    className="bg-gradient-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
                   >
                     {progress > 10 && <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>}

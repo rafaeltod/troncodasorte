@@ -12,7 +12,6 @@ interface PixPaymentModalProps {
   amount: number
   raffleId: string
   onPaymentConfirmed?: () => void
-  onCanceled?: () => void
 }
 
 export function PixPaymentModal({
@@ -22,14 +21,12 @@ export function PixPaymentModal({
   amount,
   raffleId,
   onPaymentConfirmed,
-  onCanceled,
 }: PixPaymentModalProps) {
   const [loading, setLoading] = useState(false)
   const [pixData, setPixData] = useState<any>(null)
   const [copied, setCopied] = useState(false)
   const [timeRemaining, setTimeRemaining] = useState(5 * 60) // 5 minutes in seconds
   const [backendAmount, setBackendAmount] = useState<number | null>(null)
-  const [canceling, setCanceling] = useState(false)
 
   // Polling para confirmar pagamento
   const { status: purchaseStatus, retryCount } = usePurchaseStatus({
@@ -46,6 +43,13 @@ export function PixPaymentModal({
     setCopied(false)
     setTimeRemaining(5 * 60)
   }, [purchaseId])
+
+  // ✅ Gerar QR code automaticamente quando modal abre
+  useEffect(() => {
+    if (isOpen && purchaseId && !pixData && !loading) {
+      generatePixQR()
+    }
+  }, [isOpen, purchaseId])
 
   // Timer countdown
   useEffect(() => {
@@ -163,34 +167,6 @@ export function PixPaymentModal({
     }
   }
 
-  const cancelPurchase = async () => {
-    if (!confirm('Tem certeza que deseja cancelar esta compra? As cotas serão devolvidas à rifa.')) {
-      return
-    }
-
-    setCanceling(true)
-    try {
-      const response = await fetch(`/api/rifas/${raffleId}/purchase/${purchaseId}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(errorData.error || 'Erro ao cancelar compra')
-      }
-
-      console.log('[PixPaymentModal] Compra cancelada com sucesso')
-      onCanceled?.()
-      onClose()
-    } catch (error) {
-      console.error('[PixPaymentModal] Erro ao cancelar:', error)
-      alert(error instanceof Error ? error.message : 'Erro ao cancelar compra')
-    } finally {
-      setCanceling(false)
-    }
-  }
-
   if (!isOpen) return null
 
   return (
@@ -213,24 +189,17 @@ export function PixPaymentModal({
       {/* Content */}
       <div className="p-6 space-y-4 overflow-y-auto flex-1">
         {!pixData ? (
-        <>
-          <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
+        <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
           <p className="text-sm text-gray-700 mb-3">
             💰 <span className="font-bold">Valor a pagar:</span> R$ {(backendAmount || amount).toFixed(2)}
           </p>
           <p className="text-xs text-gray-600">
-            Clique em "Gerar QR Code" para escanear com seu celular e realizar o pagamento via PIX.
+            Gerando QR Code PIX para você...
           </p>
+          <div className="mt-4 flex justify-center">
+            <div className="animate-spin">⏳</div>
           </div>
-
-          <button
-          onClick={generatePixQR}
-          disabled={loading}
-          className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-          {loading ? '⏳ Gerando QR Code...' : '📱 Gerar QR Code PIX'}
-          </button>
-        </>
+        </div>
         ) : (
         <>
           {/* Timer and Status */}
@@ -268,13 +237,13 @@ export function PixPaymentModal({
 
           {/* Copiar chave - sempre mostrar abaixo do QR */}
           <div className="w-full">
-            <p className="text-xs font-bold text-gray-600 mb-2">OU COPIE A CHAVE:</p>
+            <p className="text-xs font-bold text-gray-700 mb-2">OU COPIE A CHAVE:</p>
             <div className="flex gap-2">
             <input
               type="text"
               value={pixData.content || pixData.pixKey || ''}
               readOnly
-              className="flex-1 px-3 py-2 text-sm text-black bg-gray-50 border border-gray-300 rounded-lg font-mono"
+              className="flex-1 px-3 py-2 text-sm text-gray-900 bg-white border border-gray-400 rounded-lg font-mono font-bold"
             />
             <button
               onClick={copyPixKey}
@@ -310,14 +279,6 @@ export function PixPaymentModal({
           className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
           >
           {timeRemaining === 0 ? '⏱️ Tempo expirado' : '✅ Entendi'}
-          </button>
-
-          <button
-          onClick={cancelPurchase}
-          disabled={canceling}
-          className="w-full bg-red-50 hover:bg-red-100 text-red-700 py-3 rounded-lg font-bold transition border border-red-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-          {canceling ? '⏳ Cancelando...' : '❌ Cancelar Compra'}
           </button>
         </>
         )}

@@ -20,7 +20,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
