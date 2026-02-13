@@ -1,70 +1,64 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { queryOne, queryMany } from '@/lib/db'
+import { NextRequest, NextResponse } from "next/server";
+import { queryOne, queryMany } from "@/lib/db";
 
 interface RouteProps {
   params: Promise<{
-    id: string
-  }>
+    id: string;
+  }>;
 }
 
 export async function POST(req: NextRequest, { params }: RouteProps) {
   try {
-    const { id } = await params
-    const body = await req.json()
-    const { quotas, amount, phone } = body
+    const { id } = await params;
+    const body = await req.json();
+    const { quotas, amount, phone } = body;
 
     // Token é opcional (permite compras anônimas)
-    const token = req.cookies.get('token')?.value || null
+    const token = req.cookies.get("token")?.value || null;
 
     // IMPORTANTE: Telefone é obrigatório para rastrear compas anônimas
     if (!phone) {
       return NextResponse.json(
-        { error: 'Telefone é obrigatório para criar compra' },
-        { status: 400 }
-      )
+        { error: "Telefone é obrigatório para criar compra" },
+        { status: 400 },
+      );
     }
 
     // Determinar userId
-    let userId: string | null = token
+    let userId: string | null = token;
 
     // Se não está logado, buscar usuário pelo telefone
     if (!token) {
-      const phoneOnly = phone.replace(/\D/g, '')
+      const phoneOnly = phone.replace(/\D/g, "");
       const userByPhone = await queryOne(
         'SELECT id FROM "user" WHERE phone = $1',
-        [phoneOnly]
-      )
+        [phoneOnly],
+      );
       if (userByPhone) {
-        userId = userByPhone.id
+        userId = userByPhone.id;
       }
     }
 
     // Validar dados - quotas deve ser inteiro positivo, amount deve ser positivo
     if (!Number.isInteger(quotas) || quotas < 1) {
       return NextResponse.json(
-        { error: 'Quantidade de cotas inválida' },
-        { status: 400 }
-      )
+        { error: "Quantidade de cotas inválida" },
+        { status: 400 },
+      );
     }
 
-    if (typeof amount !== 'number' || amount <= 0) {
-      return NextResponse.json(
-        { error: 'Valor inválido' },
-        { status: 400 }
-      )
+    if (typeof amount !== "number" || amount <= 0) {
+      return NextResponse.json({ error: "Valor inválido" }, { status: 400 });
     }
 
     // Verificar se a campanha existe
-    const raffle = await queryOne(
-      'SELECT * FROM raffle WHERE id = $1',
-      [id]
-    )
+    const raffle = await queryOne("SELECT * FROM raffle WHERE id = $1", [id]);
 
     if (!raffle) {
       return NextResponse.json(
-        { error: 'Campanha não encontrada' },
-        { status: 404 }
-      )
+        { error: "Campanha não encontrada" },
+        { status: 404 },
+      );
     }
 
     // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, quotas, amount, no último minuto)
@@ -77,50 +71,71 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
        AND amount = $4
        AND "createdAt" > NOW() - INTERVAL '1 minute'
        LIMIT 1`,
-      [id, userId, quotas, amount]
-    )
+      [id, userId, quotas, amount],
+    );
 
     if (recentDuplicate) {
-      console.log('[Purchase] ⚠️ Compra duplicada detectada - retornando compra anterior:', recentDuplicate.id)
-      return NextResponse.json({
-        purchaseId: recentDuplicate.id,
-        message: 'Compra realizada com sucesso. Aguardando pagamento PIX.',
-        checkoutUrl: null,
-        isDuplicate: true,
-      }, { status: 201 })
+      console.log(
+        "[Purchase] ⚠️ Compra duplicada detectada - retornando compra anterior:",
+        recentDuplicate.id,
+      );
+      return NextResponse.json(
+        {
+          purchaseId: recentDuplicate.id,
+          message: "Compra realizada com sucesso. Aguardando pagamento PIX.",
+          checkoutUrl: null,
+          isDuplicate: true,
+        },
+        { status: 201 },
+      );
     }
 
     // Se está logado, verificar se não é o criador
     if (userId && raffle.creatorId === userId) {
       return NextResponse.json(
-        { error: 'Você não pode comprar cotas da sua própria campanha' },
-        { status: 403 }
-      )
+        { error: "Você não pode comprar cotas da sua própria campanha" },
+        { status: 403 },
+      );
     }
 
     // Verificar se há cotas disponíveis
-    const availableQuotas = raffle.totalQuotas - raffle.soldQuotas
+    const availableQuotas = raffle.totalQuotas - raffle.soldQuotas;
     if (quotas > availableQuotas) {
       return NextResponse.json(
-        { error: 'Quantidade de cotas indisponível' },
-        { status: 400 }
-      )
+        { error: "Quantidade de cotas indisponível" },
+        { status: 400 },
+      );
     }
 
     // Verificar se a campanha está aberta
-    if (raffle.status !== 'open') {
+    if (raffle.status !== "open") {
       return NextResponse.json(
-        { error: 'Esta campanha não está aberta para compras' },
-        { status: 400 }
-      )
+        { error: "Esta campanha não está aberta para compras" },
+        { status: 400 },
+      );
     }
 
     // Gerar números das cotas (exemplo: "1,2,3,4,5" para 5 cotas)
-    const startNumber = raffle.soldQuotas + 1
-    const quotaNumbers = Array.from(
-      { length: quotas },
-      (_, i) => String(startNumber + i)
-    ).join(',')
+    const startNumber = raffle.soldQuotas + 1;
+    const endNumber = raffle.totalQuotas;
+    const availableNumbers = Array.from(
+      { length: endNumber - startNumber + 1 },
+      (_, i) => startNumber + i,
+    );
+    // Embaralhar (shuffle) os números disponíveis usando Fisher-Yates
+    for (let i = availableNumbers.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [availableNumbers[i], availableNumbers[j]] = [
+        availableNumbers[j],
+        availableNumbers[i],
+      ];
+    }
+
+    // Pegar apenas a quantidade solicitada e converter para string
+    const quotaNumbers = availableNumbers
+      .slice(0, quotas)
+      .map((n) => String(n))
+      .join(",");
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
@@ -129,11 +144,11 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, phone, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
-      [userId, id, quotas, amount, quotaNumbers, phone]
-    )
+      [userId, id, quotas, amount, quotaNumbers, phone],
+    );
 
     if (!purchase) {
-      throw new Error('Erro ao criar compra')
+      throw new Error("Erro ao criar compra");
     }
 
     // Atualizar quantidade de cotas vendidas
@@ -142,11 +157,11 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
        SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
        WHERE id = $2
        RETURNING *`,
-      [quotas, id]
-    )
+      [quotas, id],
+    );
 
     if (!updatedRaffle) {
-      throw new Error('Erro ao atualizar campanha')
+      throw new Error("Erro ao atualizar campanha");
     }
 
     // ✅ A compra fica como 'pending' até que o webhook do Mercado Pago confirme
@@ -154,17 +169,21 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // A confirmação happen quando o pagamento PIX é realmente confirmado
     // O topBuyer só é atualizado quando o webhook confirma o pagamento (status = 'confirmed')
 
-    return NextResponse.json({
-      purchaseId: purchase.id,
-      message: 'Compra realizada com sucesso. Aguardando pagamento PIX.',
-      checkoutUrl: null, // Será preenchido quando integrar com gateway
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        purchaseId: purchase.id,
+        message: "Compra realizada com sucesso. Aguardando pagamento PIX.",
+        checkoutUrl: null, // Será preenchido quando integrar com gateway
+      },
+      { status: 201 },
+    );
   } catch (error) {
-    console.error('Error in purchase:', error)
-    const errorMessage = error instanceof Error ? error.message : 'erro desconhecido'
+    console.error("Error in purchase:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "erro desconhecido";
     return NextResponse.json(
       { error: `Erro ao processar compra: ${errorMessage}` },
-      { status: 500 }
-    )
+      { status: 500 },
+    );
   }
 }
