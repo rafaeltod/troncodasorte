@@ -40,6 +40,7 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
   const [user, setUser] = useState<User | null>(null)
   const [pageLoading, setPageLoading] = useState(true)
   const [error, setError] = useState('')
+  const [referrer, setReferrer] = useState<string | null>(null)
 
   useEffect(() => {
     const unwrapParams = async () => {
@@ -86,6 +87,7 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
             const data = JSON.parse(purchaseData)
             setPurchase(data.purchase)
             setUser(data.user)
+            setReferrer(data.referrer || null)
             setPageLoading(false)
           } else {
             setError('Compra não encontrada. Acesse por "Meus Bilhetes" para visualizar.')
@@ -142,11 +144,11 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <Link
-            href="/account"
+            href={authUser ? '/account' : referrer === 'meus-bilhetes-resultado' ? '/meus-bilhetes/resultado' : '/meus-bilhetes'}
             className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-bold mb-8"
           >
             <ArrowLeft className="w-5 h-5" />
-            Voltar para Perfil
+            {authUser ? 'Voltar para Perfil' : 'Voltar para Meus Bilhetes'}
           </Link>
 
           {/* Purchase Card */}
@@ -192,7 +194,7 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
               </h2>
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
                 <p className="text-2xl font-black text-gray-900">{purchase.raffle?.title || 'Campanha'}</p>
-                <p className="text-gray-600 mt-2">Status: {purchase.raffle?.status || 'N/A'}</p>
+                <p className="text-gray-600 mt-2">Status: <span className="font-bold capitalize">{purchase.raffle?.status ? (purchase.raffle.status === 'open' ? 'Aberta' : purchase.raffle.status === 'closed' ? 'Fechada' : purchase.raffle.status === 'finished' ? 'Finalizada' : purchase.raffle.status) : 'N/A'}</span></p>
               </div>
             </div>
 
@@ -229,14 +231,14 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
             {/* Numbers */}
             {purchase.numbers && purchase.numbers.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-600 mb-4">Números das Cotas</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <h3 className="text-sm font-bold text-gray-600 mb-3">Números das Cotas ({purchase.numbers.length})</h3>
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
                   {purchase.numbers.map((number, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-emerald-100 to-teal-100 border-2 border-emerald-300 rounded-lg p-4 text-center"
+                      className="bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-300 rounded p-2 text-center"
                     >
-                      <p className="text-2xl font-black text-emerald-800">{number}</p>
+                      <p className="text-xs font-bold text-emerald-800">{number}</p>
                     </div>
                   ))}
                 </div>
@@ -268,20 +270,42 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
           </div>
 
           {/* Action Buttons */}
-          <div className="grid grid-cols-2 gap-4">
-            <Link
-              href="/account"
-              className="text-center bg-white border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg font-bold hover:bg-emerald-50 transition"
-            >
-              ← Voltar ao Perfil
-            </Link>
-            <Link
-              href={`/campanhas/${purchase.raffleId}`}
-              className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
-            >
-              Ver Campanha →
-            </Link>
-          </div>
+          {authUser && (
+            <div className="grid grid-cols-2 gap-4">
+              <Link
+                href="/account"
+                className="text-center bg-white border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg font-bold hover:bg-emerald-50 transition"
+              >
+                ← Voltar ao Perfil
+              </Link>
+              {purchase.raffleId && (
+                <Link
+                  href={`/campanhas/${purchase.raffleId}`}
+                  className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                >
+                  Ver Campanha →
+                </Link>
+              )}
+            </div>
+          )}
+          {!authUser && (
+            <div className="flex gap-4">
+              <Link
+                href={referrer === 'meus-bilhetes-resultado' ? '/meus-bilhetes/resultado' : '/meus-bilhetes'}
+                className="flex-1 text-center bg-white border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg font-bold hover:bg-emerald-50 transition"
+              >
+                ← Voltar para Meus Bilhetes
+              </Link>
+              {purchase.raffleId && (
+                <Link
+                  href={`/campanhas/${purchase.raffleId}`}
+                  className="flex-1 text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                >
+                  Ver Campanha →
+                </Link>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

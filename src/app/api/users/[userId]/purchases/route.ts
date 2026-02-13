@@ -38,6 +38,7 @@ export async function GET(
       quotas: p.quotas,
       amount: p.amount,
       status: p.status,
+      numbers: p.numbers ? p.numbers.split(',') : [],
       createdAt: p.createdAt
     }))
 

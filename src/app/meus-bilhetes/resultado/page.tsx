@@ -19,6 +19,7 @@ interface Purchase {
 interface TicketData {
   user: {
     name: string
+    email: string
     phone: string
     cpf: string
   }
@@ -55,7 +56,7 @@ export default function TicketsResultPage() {
 
         const data = await response.json()
         setTicketData(data)
-        localStorage.removeItem('ticketQuery')
+        // Não remove ticketQuery para permitir voltar à página sem perder dados
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Erro ao carregar bilhetes')
       } finally {
@@ -137,6 +138,7 @@ export default function TicketsResultPage() {
       <div className="max-w-2xl mx-auto px-4 py-8">
         <Link
           href="/meus-bilhetes"
+          onClick={() => localStorage.removeItem('ticketQuery')}
           className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -189,12 +191,19 @@ export default function TicketsResultPage() {
             <div className="divide-y divide-gray-200">
               {ticketData.purchases.map((purchase) => {
                 const handlePurchaseClick = () => {
-                  // Armazenar dados da compra em localStorage para acesso sem login
+                  // Armazenar dados da compra e origem em localStorage
                   localStorage.setItem(
                     `purchase_${purchase.id}`,
                     JSON.stringify({
-                      purchase,
+                      purchase: {
+                        ...purchase,
+                        raffle: {
+                          title: purchase.raffleTitle,
+                          status: purchase.raffleStatus,
+                        },
+                      },
                       user: ticketData.user,
+                      referrer: 'meus-bilhetes-resultado',
                     })
                   )
                 }
@@ -230,16 +239,16 @@ export default function TicketsResultPage() {
                       <div className="flex items-center justify-between">
                         <span
                           className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                            purchase.status === 'completed'
+                            purchase.status === 'confirmed'
                               ? 'bg-emerald-100 text-emerald-700'
                               : purchase.status === 'pending'
                               ? 'bg-yellow-100 text-yellow-700'
                               : 'bg-gray-100 text-gray-700'
                           }`}
                         >
-                          {purchase.status === 'completed' && '✅ Pagamento confirmado'}
+                          {purchase.status === 'confirmed' && '✅ Pagamento confirmado'}
                           {purchase.status === 'pending' && '⏳ Aguardando confirmação'}
-                          {purchase.status !== 'completed' &&
+                          {purchase.status !== 'confirmed' &&
                             purchase.status !== 'pending' &&
                             purchase.status}
                         </span>
@@ -254,10 +263,11 @@ export default function TicketsResultPage() {
         </div>
 
         {/* Action Button */}
-        <div className="mt-6 flex gap-3">
+        <div className="mt-6">
           <Link
             href="/campanhas"
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
+            onClick={() => localStorage.removeItem('ticketQuery')}
+            className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
           >
             Voltar para Campanhas
           </Link>

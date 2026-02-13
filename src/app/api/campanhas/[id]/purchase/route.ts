@@ -115,27 +115,14 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       );
     }
 
-    // Gerar números das cotas (exemplo: "1,2,3,4,5" para 5 cotas)
-    const startNumber = raffle.soldQuotas + 1;
-    const endNumber = raffle.totalQuotas;
-    const availableNumbers = Array.from(
-      { length: endNumber - startNumber + 1 },
-      (_, i) => startNumber + i,
-    );
-    // Embaralhar (shuffle) os números disponíveis usando Fisher-Yates
-    for (let i = availableNumbers.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [availableNumbers[i], availableNumbers[j]] = [
-        availableNumbers[j],
-        availableNumbers[i],
-      ];
-    }
-
-    // Pegar apenas a quantidade solicitada e converter para string
-    const quotaNumbers = availableNumbers
-      .slice(0, quotas)
-      .map((n) => String(n))
-      .join(",");
+    // Gerar números das cotas (6 dígitos aleatórios: 000000-999999)
+    const quotaNumbers = Array.from(
+      { length: quotas },
+      () => {
+        const randomNum = Math.floor(Math.random() * 1000000)
+        return String(randomNum).padStart(6, '0')
+      }
+    ).join(',')
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
