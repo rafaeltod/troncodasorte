@@ -16,8 +16,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     // Token opcional - usuários podem recuperar QR code sem estar logados
     const token = req.cookies.get('token')?.value
 
-    // Buscar a compra
-    // Token opcional - buscar a compra sem validação de propriedade
+    // Buscar a compra COM o payment_id armazenado
     const purchase = await queryOne(
       `SELECT * FROM "rafflePurchase" WHERE id = $1`,
       [purchaseId]
@@ -30,12 +29,12 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Se tem token de Mercado Pago, tentar buscar dados reais
-    if (MERCADO_PAGO_ACCESS_TOKEN) {
+    // Se tem token de Mercado Pago E payment_id foi salvo, tentar buscar dados reais
+    if (MERCADO_PAGO_ACCESS_TOKEN && purchase.payment_id) {
       try {
-        // Buscar pagamentos usando o purchaseId no metadata
-        const mpSearchResponse = await fetch(
-          `https://api.mercadopago.com/v1/payments/search?metadata.purchaseId=${purchaseId}`,
+        // Buscar pagamento usando o payment_id armazenado
+        const mpResponse = await fetch(
+          `https://api.mercadopago.com/v1/payments/${purchase.payment_id}`,
           {
             method: 'GET',
             headers: {
@@ -45,9 +44,8 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
           }
         )
 
-        if (mpSearchResponse.ok) {
-          const searchData = await mpSearchResponse.json()
-          const payment = searchData.results?.[0]
+        if (mpResponse.ok) {
+          const payment = await mpResponse.json()
 
           if (payment) {
             // Extrair QR code e chave PIX do payment

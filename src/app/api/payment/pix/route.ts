@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
 
         const requestPayload = {
           transaction_amount: validatedAmount,
-          description: `Compra de ${quotaCount} cotas - Rifa ${raffleId}`,
+          description: `Compra de ${quotaCount} ebook (s) - Mudando sua vida - ${raffleId}`,
           payment_method_id: 'pix',
           payer: {
             email: payerEmail,
@@ -104,6 +104,16 @@ export async function POST(req: NextRequest) {
         // Se encontrou QR code da API do Mercado Pago
         if (qrCodeUrl) {
           console.log('[Payment] ✅ QR Code URL do Mercado Pago encontrado!')
+          
+          // Salvar payment_id na compra para referência futura
+          if (data.id) {
+            await queryOne(
+              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              [String(data.id), purchaseId]
+            )
+            console.log('[Payment] payment_id salvo:', data.id)
+          }
+          
           return NextResponse.json({
             qrCode: qrCodeUrl,
             qrImage: data.point_of_interaction.qr_code.image_url,
@@ -116,6 +126,16 @@ export async function POST(req: NextRequest) {
         // Se encontrou o conteúdo (BR Code), gerar QR code localmente
         if (qrCodeContent) {
           console.log('[Payment] ✅ QR Code content encontrado! Gerando QR localmente...')
+          
+          // Salvar payment_id na compra para referência futura
+          if (data.id) {
+            await queryOne(
+              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              [String(data.id), purchaseId]
+            )
+            console.log('[Payment] 💾 payment_id salvo:', data.id)
+          }
+          
           try {
             const qrSVG = await QRCode.toString(qrCodeContent, {
               type: 'svg',
