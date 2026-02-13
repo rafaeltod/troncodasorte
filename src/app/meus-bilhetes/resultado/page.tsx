@@ -19,6 +19,7 @@ interface Purchase {
 interface TicketData {
   user: {
     name: string
+    email: string
     phone: string
     cpf: string
   }
@@ -262,18 +263,11 @@ export default function TicketsResultPage() {
         </div>
 
         {/* Action Button */}
-        <div className="mt-6 flex gap-3">
-          <Link
-            href="/meus-bilhetes"
-            onClick={() => localStorage.removeItem('ticketQuery')}
-            className="flex-1 bg-white border-2 border-emerald-600 text-emerald-600 py-3 rounded-lg font-bold transition text-center hover:bg-emerald-50"
-          >
-            ← Voltar para Meus Bilhetes
-          </Link>
+        <div className="mt-6">
           <Link
             href="/campanhas"
             onClick={() => localStorage.removeItem('ticketQuery')}
-            className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
+            className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
           >
             Voltar para Campanhas
           </Link>

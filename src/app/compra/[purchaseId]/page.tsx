@@ -231,14 +231,14 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
             {/* Numbers */}
             {purchase.numbers && purchase.numbers.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-600 mb-4">Números das Cotas</h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                <h3 className="text-sm font-bold text-gray-600 mb-3">Números das Cotas ({purchase.numbers.length})</h3>
+                <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
                   {purchase.numbers.map((number, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-emerald-100 to-teal-100 border-2 border-emerald-300 rounded-lg p-4 text-center"
+                      className="bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-300 rounded p-2 text-center"
                     >
-                      <p className="text-2xl font-black text-emerald-800">{number}</p>
+                      <p className="text-xs font-bold text-emerald-800">{number}</p>
                     </div>
                   ))}
                 </div>

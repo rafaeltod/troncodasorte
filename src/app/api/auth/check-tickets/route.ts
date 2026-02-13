@@ -29,6 +29,7 @@ export async function POST(req: NextRequest) {
           rp.quotas,
           rp.amount,
           rp.status,
+          rp.numbers,
           rp."createdAt",
           r.title as "raffleTitle",
           r.status as "raffleStatus"
@@ -39,9 +40,16 @@ export async function POST(req: NextRequest) {
         [user.id]
       )
 
+      // Mapear números como array
+      purchases = purchases.map(p => ({
+        ...p,
+        numbers: p.numbers ? p.numbers.split(',') : []
+      }))
+
       return NextResponse.json({
         user: {
           name: user.name,
+          email: user.email,
           phone: user.phone,
           cpf: user.cpf,
         },
@@ -57,6 +65,7 @@ export async function POST(req: NextRequest) {
         rp.quotas,
         rp.amount,
         rp.status,
+        rp.numbers,
         rp."createdAt",
         r.title as "raffleTitle",
         r.status as "raffleStatus"
@@ -66,6 +75,12 @@ export async function POST(req: NextRequest) {
       ORDER BY rp."createdAt" DESC`,
       [phone]
     )
+
+    // Mapear números como array
+    purchases = purchases.map(p => ({
+      ...p,
+      numbers: p.numbers ? p.numbers.split(',') : []
+    }))
 
     if (purchases.length === 0) {
       return NextResponse.json(
