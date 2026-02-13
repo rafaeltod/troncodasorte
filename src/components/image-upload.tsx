@@ -1,15 +1,23 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 interface ImageUploadProps {
   onImagesChange: (images: string[]) => void
   maxImages?: number
+  initialImages?: string[]
 }
 
-export function ImageUpload({ onImagesChange, maxImages = 20 }: ImageUploadProps) {
-  const [images, setImages] = useState<string[]>([])
+export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = [] }: ImageUploadProps) {
+  const [images, setImages] = useState<string[]>(initialImages)
   const [uploading, setUploading] = useState(false)
+
+  // Sincronizar com initialImages quando mudar
+  useEffect(() => {
+    if (initialImages && initialImages.length > 0) {
+      setImages(initialImages)
+    }
+  }, [initialImages])
 
   const handleAddImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]

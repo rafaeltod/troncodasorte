@@ -63,3 +63,15 @@ export function censorPhone(phone: string): string {
   return `(${ddd}) ${middle}-**`
 }
 
+/**
+ * Formata um número como moeda brasileira (BRL)
+ * Ex: 1000 → "R$ 1.000,00"
+ * Ex: 50.5 → "R$ 50,50"
+ */
+export function formatCurrency(value: number): string {
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(value)
+}
+
