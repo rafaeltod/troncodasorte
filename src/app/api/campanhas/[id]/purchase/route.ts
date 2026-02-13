@@ -115,14 +115,28 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       );
     }
 
-    // Gerar números das cotas (6 dígitos aleatórios: 000000-999999)
-    const quotaNumbers = Array.from(
-      { length: quotas },
-      () => {
-        const randomNum = Math.floor(Math.random() * 1000000)
-        return String(randomNum).padStart(6, '0')
+    // Gerar números das cotas únicos
+    const existingNumbers = await queryMany(
+      `SELECT numbers FROM "rafflePurchase" WHERE "raffleId" = $1`,
+      [id]
+    );
+
+    const usedNumbers = new Set(
+      existingNumbers.flatMap((row) => row.numbers.split(","))
+    );
+
+    const quotaNumbers: string[] = [];
+    while (quotaNumbers.length < quotas) {
+      const randomNum = Math.floor(Math.random() * 1000000);
+      const formatted = String(randomNum).padStart(6, "0");
+
+      if (!usedNumbers.has(formatted) && !quotaNumbers.includes(formatted)) {
+        quotaNumbers.push(formatted);
+        usedNumbers.add(formatted);
       }
-    ).join(',')
+    }
+
+    const quotaNumbersString = quotaNumbers.join(",");
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
@@ -131,7 +145,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, phone, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", quotas, amount, status`,
-      [userId, id, quotas, amount, quotaNumbers, phone],
+      [userId, id, quotas, amount, quotaNumbersString, phone],
     );
 
     if (!purchase) {
