@@ -3,7 +3,7 @@ import { queryOne } from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   try {
-    const { cpf, email, phone } = await req.json()
+    const { cpf, phone } = await req.json()
 
     // CPF é obrigatório
     if (!cpf || !cpf.replace(/\D/g, '') || cpf.replace(/\D/g, '').length !== 11) {
@@ -13,13 +13,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validar que pelo menos Email OU Telefone foi fornecido
-    const hasEmail = email && email.trim() && email.includes('@')
+    // Telefone é obrigatório
     const hasPhone = phone && phone.replace(/\D/g, '').length >= 10
 
-    if (!hasEmail && !hasPhone) {
+    if (!hasPhone) {
       return NextResponse.json(
-        { error: 'Informe um email válido ou telefone válido' },
+        { error: 'Telefone válido é obrigatório' },
         { status: 400 }
       )
     }
@@ -37,15 +36,8 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validar que o email ou telefone corresponde ao CPF
-    if (hasEmail && user.email !== email) {
-      return NextResponse.json(
-        { error: 'Email não corresponde ao CPF' },
-        { status: 401 }
-      )
-    }
-
-    if (hasPhone && (!user.phone || user.phone !== phone.replace(/\D/g, ''))) {
+    // Validar que o telefone corresponde ao CPF
+    if (!user.phone || user.phone !== phone.replace(/\D/g, '')) {
       return NextResponse.json(
         { error: 'Telefone não corresponde ao CPF' },
         { status: 401 }

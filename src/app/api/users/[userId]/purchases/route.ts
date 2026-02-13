@@ -21,7 +21,7 @@ export async function GET(
         r.winner
        FROM "rafflePurchase" rp
        JOIN raffle r ON rp."raffleId" = r.id
-       WHERE rp."userId" = $1 AND rp.status = 'confirmed'
+       WHERE rp."userId" = $1
        ORDER BY rp."createdAt" DESC`,
       [userId]
     )

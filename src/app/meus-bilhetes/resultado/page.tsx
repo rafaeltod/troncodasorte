@@ -187,49 +187,68 @@ export default function TicketsResultPage() {
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
-              {ticketData.purchases.map((purchase) => (
-                <div
-                  key={purchase.id}
-                  className="p-6 hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">
-                        {purchase.raffleTitle}
-                      </h3>
-                      <p className="text-sm text-gray-600 mt-1">
-                        {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
-                      </p>
-                    </div>
-                    <div className="text-right">
-                      <p className="text-2xl font-black text-emerald-600">
-                        R$ {Number(purchase.amount).toFixed(2)}
-                      </p>
-                      <p className="text-xs font-bold text-gray-600 mt-1">
-                        {purchase.quotas} cotas
-                      </p>
-                    </div>
-                  </div>
+              {ticketData.purchases.map((purchase) => {
+                const handlePurchaseClick = () => {
+                  // Armazenar dados da compra em localStorage para acesso sem login
+                  localStorage.setItem(
+                    `purchase_${purchase.id}`,
+                    JSON.stringify({
+                      purchase,
+                      user: ticketData.user,
+                    })
+                  )
+                }
 
-                  <div className="flex items-center gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                        purchase.status === 'completed'
-                          ? 'bg-emerald-100 text-emerald-700'
-                          : purchase.status === 'pending'
-                          ? 'bg-yellow-100 text-yellow-700'
-                          : 'bg-gray-100 text-gray-700'
-                      }`}
+                return (
+                  <Link
+                    key={purchase.id}
+                    href={`/compra/${purchase.id}`}
+                    onClick={handlePurchaseClick}
+                  >
+                    <div
+                      className="p-6 hover:bg-emerald-50 transition-colors cursor-pointer border-l-4 border-transparent hover:border-emerald-600"
                     >
-                      {purchase.status === 'completed' && '✅ Pagamento confirmado'}
-                      {purchase.status === 'pending' && '⏳ Aguardando confirmação'}
-                      {purchase.status !== 'completed' &&
-                        purchase.status !== 'pending' &&
-                        purchase.status}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900">
+                            {purchase.raffleTitle}
+                          </h3>
+                          <p className="text-sm text-gray-600 mt-1">
+                            {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <p className="text-2xl font-black text-emerald-600">
+                            R$ {Number(purchase.amount).toFixed(2)}
+                          </p>
+                          <p className="text-xs font-bold text-gray-600 mt-1">
+                            {purchase.quotas} cotas
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span
+                          className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
+                            purchase.status === 'completed'
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : purchase.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-700'
+                              : 'bg-gray-100 text-gray-700'
+                          }`}
+                        >
+                          {purchase.status === 'completed' && '✅ Pagamento confirmado'}
+                          {purchase.status === 'pending' && '⏳ Aguardando confirmação'}
+                          {purchase.status !== 'completed' &&
+                            purchase.status !== 'pending' &&
+                            purchase.status}
+                        </span>
+                        <Eye className="w-5 h-5 text-emerald-600" />
+                      </div>
+                    </div>
+                  </Link>
+                )
+              })}
             </div>
           )}
         </div>
