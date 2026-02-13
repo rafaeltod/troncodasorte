@@ -25,22 +25,31 @@ export async function POST(req: NextRequest) {
       purchases = await queryMany(
         `SELECT 
           rp.id,
+          rp."raffleId",
           rp.quotas,
           rp.amount,
           rp.status,
+          rp.numbers,
           rp."createdAt",
           r.title as "raffleTitle",
           r.status as "raffleStatus"
         FROM "rafflePurchase" rp
         JOIN raffle r ON rp."raffleId" = r.id
-        WHERE rp."userId" = $1 AND rp.status = 'confirmed'
+        WHERE rp."userId" = $1
         ORDER BY rp."createdAt" DESC`,
         [user.id]
       )
 
+      // Mapear números como array
+      purchases = purchases.map(p => ({
+        ...p,
+        numbers: p.numbers ? p.numbers.split(',') : []
+      }))
+
       return NextResponse.json({
         user: {
           name: user.name,
+          email: user.email,
           phone: user.phone,
           cpf: user.cpf,
         },
@@ -52,18 +61,26 @@ export async function POST(req: NextRequest) {
     purchases = await queryMany(
       `SELECT 
         rp.id,
+        rp."raffleId",
         rp.quotas,
         rp.amount,
         rp.status,
+        rp.numbers,
         rp."createdAt",
         r.title as "raffleTitle",
         r.status as "raffleStatus"
       FROM "rafflePurchase" rp
       JOIN raffle r ON rp."raffleId" = r.id
-      WHERE rp.phone = $1 AND rp."userId" IS NULL AND rp.status = 'confirmed'
+      WHERE rp.phone = $1 AND rp."userId" IS NULL
       ORDER BY rp."createdAt" DESC`,
       [phone]
     )
+
+    // Mapear números como array
+    purchases = purchases.map(p => ({
+      ...p,
+      numbers: p.numbers ? p.numbers.split(',') : []
+    }))
 
     if (purchases.length === 0) {
       return NextResponse.json(

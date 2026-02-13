@@ -115,11 +115,13 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    // Gerar números das cotas (exemplo: "1,2,3,4,5" para 5 cotas)
-    const startNumber = raffle.soldQuotas + 1
+    // Gerar números das cotas (6 dígitos aleatórios: 000000-999999)
     const quotaNumbers = Array.from(
       { length: quotas },
-      (_, i) => String(startNumber + i)
+      () => {
+        const randomNum = Math.floor(Math.random() * 1000000)
+        return String(randomNum).padStart(6, '0')
+      }
     ).join(',')
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)

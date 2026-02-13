@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
 import { censorName, censorPhone } from '@/lib/formatters'
-import { User, Mail, FileText, Phone, Calendar, Ticket, TrendingUp, ShoppingBag, Edit2, Save, X } from 'lucide-react'
+import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
   id: string
@@ -329,14 +329,6 @@ export default function AccountPage() {
               <p className="text-4xl font-black">{totalQuotas}</p>
             </div>
 
-            <div className="bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-2xl shadow-lg p-6 text-white">
-              <div className="flex items-center gap-3 mb-2">
-                <TrendingUp className="w-5 h-5" />
-                <p className="text-emerald-100 font-semibold text-sm">Total Investido</p>
-              </div>
-              <p className="text-3xl font-black">R$ {Number(totalSpent).toFixed(2)}</p>
-            </div>
-
             <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
@@ -357,7 +349,7 @@ export default function AccountPage() {
           {purchases.length > 0 ? (
             <div className="space-y-3">
               {purchases.map((purchase) => (
-                <Link key={purchase.id} href={`/campanhas/${purchase.raffleId}`}>
+                <Link key={purchase.id} href={`/compra/${purchase.id}`}>
                   <div className="bg-gradient-to-r from-gray-50 to-emerald-50 hover:from-emerald-50 hover:to-teal-50 p-6 rounded-lg border border-gray-200 cursor-pointer transition transform hover:scale-102 hover:border-emerald-300">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
@@ -374,11 +366,11 @@ export default function AccountPage() {
                           R$ {Number(purchase.amount).toFixed(2)}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                          purchase.status === 'completed' 
+                          purchase.status === 'confirmed' 
                             ? 'bg-emerald-100 text-emerald-800' 
                             : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          {purchase.status === 'completed' ? '✅ Confirmada' : '⏳ Pendente'}
+                          {purchase.status === 'confirmed' ? '✅ Confirmada' : '⏳ Pendente'}
                         </span>
                       </div>
                     </div>
