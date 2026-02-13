@@ -366,11 +366,11 @@ export default function AccountPage() {
                           R$ {Number(purchase.amount).toFixed(2)}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                          purchase.status === 'completed' 
+                          purchase.status === 'confirmed' 
                             ? 'bg-emerald-100 text-emerald-800' 
                             : 'bg-yellow-100 text-yellow-800'
                         }`}>
-                          {purchase.status === 'completed' ? '✅ Confirmada' : '⏳ Pendente'}
+                          {purchase.status === 'confirmed' ? '✅ Confirmada' : '⏳ Pendente'}
                         </span>
                       </div>
                     </div>

@@ -25,6 +25,7 @@ export async function POST(req: NextRequest) {
       purchases = await queryMany(
         `SELECT 
           rp.id,
+          rp."raffleId",
           rp.quotas,
           rp.amount,
           rp.status,
@@ -52,6 +53,7 @@ export async function POST(req: NextRequest) {
     purchases = await queryMany(
       `SELECT 
         rp.id,
+        rp."raffleId",
         rp.quotas,
         rp.amount,
         rp.status,
