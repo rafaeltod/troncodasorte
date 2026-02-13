@@ -6,6 +6,7 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get('token')?.value
 
     if (!token) {
+      console.error('[Admin API] Token não encontrado no cookie')
       return NextResponse.json(
         { error: 'Não autenticado' },
         { status: 401 }
@@ -18,7 +19,16 @@ export async function GET(req: NextRequest) {
       [token]
     )
 
-    if (!user || !user.isAdmin) {
+    if (!user) {
+      console.error('[Admin API] Usuário não encontrado:', token)
+      return NextResponse.json(
+        { error: 'Usuário não encontrado' },
+        { status: 404 }
+      )
+    }
+
+    if (!user.isAdmin) {
+      console.error('[Admin API] Usuário não é admin:', token)
       return NextResponse.json(
         { error: 'Acesso negado. Apenas administradores podem acessar esta área.' },
         { status: 403 }
@@ -36,7 +46,7 @@ export async function GET(req: NextRequest) {
         COALESCE(
           (SELECT COUNT(DISTINCT "userId")::int 
            FROM "rafflePurchase" 
-           WHERE "raffleId" = r.id AND status = 'paid'),
+           WHERE "raffleId" = r.id AND status = 'confirmed'),
           0
         ) as participants
        FROM raffle r

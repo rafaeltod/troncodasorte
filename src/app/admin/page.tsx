@@ -36,7 +36,12 @@ export default function AdminDashboardPage() {
       })
       
       if (!response.ok) {
-        throw new Error('Erro ao buscar campanhas')
+        const errorData = await response.json().catch(() => ({}))
+        console.error('API Error:', {
+          status: response.status,
+          error: errorData.error || 'Erro ao buscar campanhas'
+        })
+        throw new Error(errorData.error || 'Erro ao buscar campanhas')
       }
 
       const data = await response.json()
