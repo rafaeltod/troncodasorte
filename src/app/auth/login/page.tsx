@@ -145,27 +145,6 @@ export default function LoginPage() {
                 />
               </div>
 
-<<<<<<< HEAD
-              {/* Email Input */}
-              <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-emerald-600" />
-                  Email
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="seu@email.com"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
-                />
-              </div>
-
-              <div className="text-center text-sm text-gray-600">ou</div>
-
-=======
->>>>>>> b6e24c6cd940ccfc8611bb1a29cb074169b88f42
               {/* Phone Input */}
               <div>
                 <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">

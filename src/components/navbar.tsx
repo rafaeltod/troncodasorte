@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut } from 'lucide-react'
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -20,7 +20,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -64,12 +64,21 @@ export function Navbar() {
                   {censorName(user.name)}
                 </Link>
                 {user.isAdmin && (
-                  <Link
-                    href="/criar-campanha"
-                    className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
-                  >
-                    + Criar Campanha
-                  </Link>
+                  <>
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Painel Admin
+                    </Link>
+                    <Link
+                      href="/criar-campanha"
+                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                    >
+                      + Criar Campanha
+                    </Link>
+                  </>
                 )}
                 <button
                   onClick={handleLogout}
@@ -129,13 +138,23 @@ export function Navbar() {
                     Minha Conta
                   </Link>
                   {user.isAdmin && (
-                    <Link
-                      href="/criar-campanha"
-                      className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      + Criar Campanha
-                    </Link>
+                    <>
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Shield className="w-4 h-4" />
+                        Painel Admin
+                      </Link>
+                      <Link
+                        href="/criar-campanha"
+                        className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        + Criar Campanha
+                      </Link>
+                    </>
                   )}
                   <button
                     onClick={handleLogout}

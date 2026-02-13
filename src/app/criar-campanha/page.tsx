@@ -104,7 +104,7 @@ export default function CreateRafflePageContent() {
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-4 mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-emerald-600 to-teal-600">
               <Plus className="w-8 h-8 text-white" />
             </div>
             <div>
@@ -117,7 +117,7 @@ export default function CreateRafflePageContent() {
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 space-y-8 border border-gray-200">
           {error && (
             <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg flex gap-3">
-              <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold">Erro</p>
                 <p className="text-sm">{error}</p>
@@ -132,7 +132,7 @@ export default function CreateRafflePageContent() {
           )}
 
           <div>
-            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-600" />
               Título da Campanha
             </label>
@@ -149,7 +149,7 @@ export default function CreateRafflePageContent() {
           </div>
 
           <div>
-            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-600" />
               Descrição
             </label>
@@ -165,7 +165,7 @@ export default function CreateRafflePageContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-emerald-600" />
                 Valor do Prêmio (R$)
               </label>
@@ -182,7 +182,7 @@ export default function CreateRafflePageContent() {
               />
             </div>
             <div>
-              <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-emerald-600" />
                 Total de Cotas
               </label>
@@ -200,7 +200,7 @@ export default function CreateRafflePageContent() {
           </div>
 
           <div>
-            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-emerald-600" />
               Preço da Cota (R$)
             </label>
@@ -217,7 +217,7 @@ export default function CreateRafflePageContent() {
           </div>
 
           <div>
-            <label className="block text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <ImageIcon className="w-5 h-5 text-emerald-600" />
               Imagens da Campanha (Opcional)
             </label>
@@ -227,7 +227,7 @@ export default function CreateRafflePageContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-extrabold text-lg hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-xl font-extrabold text-lg hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -243,7 +243,7 @@ export default function CreateRafflePageContent() {
           </button>
 
           <p className="text-center text-gray-600 text-sm bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-2 items-start">
-            <AlertCircle className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
             <span><strong>Dica:</strong> Quanto mais atrativo seu prêmio e descrição, mais pessoas vão querer participar!</span>
           </p>
         </form>

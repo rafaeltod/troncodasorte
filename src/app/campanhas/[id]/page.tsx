@@ -79,7 +79,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </span>
               )}
 
-              <h1 className="text-4xl font-black text-gray-900 mt-4">Sorteio: {raffle.title}</h1>
+              <h1 className="text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
             </div>
 
             {raffle.description && (
