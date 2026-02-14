@@ -70,6 +70,15 @@ export default function Home() {
       )
     }
 
+    // Quando mostrar "Todas", ordena: abertos primeiro, depois fechados/sorteados
+    if (status === 'all') {
+      filtered = filtered.sort((a, b) => {
+        if (a.status === 'open' && b.status !== 'open') return -1
+        if (a.status !== 'open' && b.status === 'open') return 1
+        return 0
+      })
+    }
+
     setFilteredRaffles(filtered)
   }
 

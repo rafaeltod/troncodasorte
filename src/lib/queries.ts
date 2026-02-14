@@ -53,7 +53,7 @@ export async function getRaffleById(id: string) {
       ) FILTER (WHERE rp.id IS NOT NULL), '[]'::json) as purchases
     FROM lotes r
     LEFT JOIN "user" u ON r."creatorId" = u.id
-    LEFT JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    LEFT JOIN livros rp ON r.id = rp."raffleId"
     LEFT JOIN "user" u2 ON rp."userId" = u2.id
     WHERE r.id = $1
     GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
@@ -78,7 +78,7 @@ export async function getUserRaffles(userId: string) {
         )
       ) FILTER (WHERE rp.id IS NOT NULL), '[]'::json) as purchases
     FROM lotes r
-    LEFT JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    LEFT JOIN livros rp ON r.id = rp."raffleId"
     WHERE r."creatorId" = $1
     GROUP BY r.id
     ORDER BY r."createdAt" DESC
@@ -93,7 +93,7 @@ export async function getUserPurchases(userId: string) {
       rp.*,
       json_build_object('title', r.title, 'status', r.status, 'winner', r.winner) as raffle
     FROM livros rp
-    JOIN raffle r ON rp."raffleId" = r.id
+    JOIN lotes r ON rp."raffleId" = r.id
     WHERE rp."userId" = $1
     ORDER BY rp."createdAt" DESC
   `
@@ -136,7 +136,7 @@ export async function getUserParticipatingRaffles(userId: string) {
       (SELECT COALESCE(SUM(livros), 0) FROM livros WHERE "raffleId" = r.id AND "userId" = $1) as userLivros
     FROM lotes r
     JOIN "user" u ON r."creatorId" = u.id
-    JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    JOIN livros rp ON r.id = rp."raffleId"
     WHERE rp."userId" = $1 AND r.status = 'open'
     ORDER BY r."createdAt" DESC
   `
@@ -153,7 +153,7 @@ export async function getUserFinishedRaffles(userId: string) {
       (SELECT COALESCE(SUM(livros), 0) FROM livros WHERE "raffleId" = r.id AND "userId" = $1) as userLivros
     FROM lotes r
     JOIN "user" u ON r."creatorId" = u.id
-    JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
+    JOIN livros rp ON r.id = rp."raffleId"
     WHERE rp."userId" = $1 AND r.status != 'open'
     ORDER BY r."createdAt" DESC
   `
