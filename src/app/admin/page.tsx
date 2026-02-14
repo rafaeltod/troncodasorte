@@ -149,7 +149,7 @@ export default function AdminDashboardPage() {
 
             <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-gray-600 font-bold">Livros Vendidas</h3>
+                <h3 className="text-gray-600 font-bold">Livros Vendidos</h3>
                 <Users className="text-blue-600" size={24} />
               </div>
               <p className="text-3xl font-black text-blue-600">{stats.totalSold}</p>
@@ -167,10 +167,10 @@ export default function AdminDashboardPage() {
           {/* Filters */}
           <div className="flex gap-2 mb-6 flex-wrap">
             {[
-              { id: 'all', label: `Todas (${stats.total})` },
-              { id: 'open', label: `Abertas (${stats.open})` },
-              { id: 'closed', label: `Fechadas (${stats.closed})` },
-              { id: 'finished', label: `Finalizadas (${stats.finished})` },
+              { id: 'all', label: `Todos (${stats.total})` },
+              { id: 'open', label: `Abertos (${stats.open})` },
+              { id: 'closed', label: `Fechados (${stats.closed})` },
+              { id: 'finished', label: `Finalizados (${stats.finished})` },
             ].map((f) => (
               <button
                 key={f.id}
