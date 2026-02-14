@@ -38,7 +38,7 @@ export async function GET(
           'name', u.name,
           'email', u.email
         ) as creator
-       FROM raffle r
+       FROM lotes r
        JOIN "user" u ON r."creatorId" = u.id
        WHERE r.id = $1 AND r."creatorId" = $2`,
       [id, token]
@@ -95,7 +95,7 @@ export async function PUT(
 
     // Verificar se a lote pertence ao admin
     const lote = await queryOne(
-      `SELECT id FROM raffle WHERE id = $1 AND "creatorId" = $2`,
+      `SELECT id FROM lotes WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
     )
 
@@ -108,7 +108,7 @@ export async function PUT(
 
     // Atualizar lote
     const updated = await queryOne(
-      `UPDATE raffle 
+      `UPDATE lotes 
        SET 
          title = COALESCE($1, title),
          description = COALESCE($2, description),
@@ -176,7 +176,7 @@ export async function DELETE(
 
     // Verificar se a lote pertence ao admin
     const lote = await queryOne(
-      `SELECT id FROM raffle WHERE id = $1 AND "creatorId" = $2`,
+      `SELECT id FROM lotes WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
     )
 
@@ -189,13 +189,13 @@ export async function DELETE(
 
     // Deletar compras associadas primeiro
     await query(
-      `DELETE FROM "rafflePurchase" WHERE "raffleId" = $1`,
+      `DELETE FROM livros WHERE "raffleId" = $1`,
       [id]
     )
 
     // Deletar lote
     await query(
-      `DELETE FROM raffle WHERE id = $1 AND "creatorId" = $2`,
+      `DELETE FROM lotes WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
     )
 

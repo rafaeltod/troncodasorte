@@ -45,11 +45,11 @@ export async function GET(req: NextRequest) {
         ) as creator,
         COALESCE(
           (SELECT COUNT(DISTINCT "userId")::int 
-           FROM "rafflePurchase" 
+           FROM livros 
            WHERE "raffleId" = r.id AND status = 'confirmed'),
           0
         ) as participants
-       FROM raffle r
+       FROM lotes r
        JOIN "user" u ON r."creatorId" = u.id
        WHERE r."creatorId" = $1
        ORDER BY r."createdAt" DESC`,

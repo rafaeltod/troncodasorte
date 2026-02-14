@@ -4,7 +4,7 @@ import { queryMany } from '@/lib/db'
 export async function GET() {
   try {
     const raffles = await queryMany(
-      `SELECT id, title, image, images, "createdAt" FROM raffle ORDER BY "createdAt" DESC LIMIT 5`
+      `SELECT id, title, image, images, "createdAt" FROM lotes ORDER BY "createdAt" DESC LIMIT 5`
     )
 
     return NextResponse.json({

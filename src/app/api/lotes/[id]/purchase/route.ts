@@ -52,7 +52,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     }
 
     // Verificar se a lote existe
-    const raffle = await queryOne("SELECT * FROM raffle WHERE id = $1", [id]);
+    const raffle = await queryOne("SELECT * FROM lotes WHERE id = $1", [id]);
 
     if (!raffle) {
       return NextResponse.json(
@@ -64,7 +64,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, livros, amount, no último minuto)
     // Isso previne "cotas fantasmas" causadas por retry automático do cliente
     const recentDuplicate = await queryOne(
-      `SELECT id FROM "rafflePurchase" 
+      `SELECT id FROM livros 
        WHERE "raffleId" = $1 
        AND "userId" = $2 
        AND livros = $3 
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     // Gerar números das cotas únicos
     const existingNumbers = await queryMany(
-      `SELECT numbers FROM "rafflePurchase" WHERE "raffleId" = $1`,
+      `SELECT numbers FROM livros WHERE "raffleId" = $1`,
       [id]
     );
 
@@ -142,7 +142,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
+      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", livros, amount, status`,
       [userId, id, livros, amount, livroNumbersString, phone],
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     // Atualizar quantidade de cotas vendidas
     const updatedRaffle = await queryOne(
-      `UPDATE raffle 
+      `UPDATE lotes 
        SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
        WHERE id = $2
        RETURNING *`,

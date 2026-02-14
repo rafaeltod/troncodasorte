@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     // IMPORTANTE: Buscar os dados reais da compra do banco
     // NÃO confiar no amount enviado pelo cliente
     const purchase = await queryOne(
-      'SELECT "livros", "amount", "userId", "raffleId", "status" FROM "rafflePurchase" WHERE id = $1',
+      'SELECT "livros", "amount", "userId", "raffleId", "status" FROM livros WHERE id = $1',
       [purchaseId]
     )
 
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
           // Salvar payment_id na compra para referência futura
           if (data.id) {
             await queryOne(
-              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              'UPDATE livros SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
               [String(data.id), purchaseId]
             )
             console.log('[Payment] payment_id salvo:', data.id)
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
           // Salvar payment_id na compra para referência futura
           if (data.id) {
             await queryOne(
-              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              'UPDATE livros SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
               [String(data.id), purchaseId]
             )
             console.log('[Payment] 💾 payment_id salvo:', data.id)

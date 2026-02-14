@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
           rp."createdAt",
           r.title as "raffleTitle",
           r.status as "raffleStatus"
-        FROM "rafflePurchase" rp
+        FROM livros rp
         JOIN raffle r ON rp."raffleId" = r.id
         WHERE rp."userId" = $1
         ORDER BY rp."createdAt" DESC`,
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
         rp."createdAt",
         r.title as "raffleTitle",
         r.status as "raffleStatus"
-      FROM "rafflePurchase" rp
+      FROM livros rp
       JOIN raffle r ON rp."raffleId" = r.id
       WHERE rp.phone = $1 AND rp."userId" IS NULL
       ORDER BY rp."createdAt" DESC`,

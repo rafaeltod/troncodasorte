@@ -17,7 +17,7 @@ export async function createRaffle(
 ) {
   const { title, description, prizeAmount, totalLivros, livroPrice, images } = data
   const queryStr = `
-    INSERT INTO raffle (
+    INSERT INTO lotes (
       id, title, description, "prizeAmount", "totalLivros", "livroPrice",
       "creatorId", status, image, images, "createdAt", "updatedAt"
     )
@@ -50,7 +50,7 @@ export async function purchaseLivros(
 ) {
   // Buscar a rifa
   const raffle = await queryOne(
-    'SELECT * FROM raffle WHERE id = $1',
+    'SELECT * FROM lotes WHERE id = $1',
     [raffleId]
   )
 
@@ -70,7 +70,7 @@ export async function purchaseLivros(
 
   // Criar compra
   const purchaseQuery = `
-    INSERT INTO "rafflePurchase" (
+    INSERT INTO livros (
       id, "userId", "raffleId", livros, amount, numbers, status, "createdAt", "updatedAt"
     )
     VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'completed', NOW(), NOW())
@@ -86,7 +86,7 @@ export async function purchaseLivros(
   ])
 
   // Atualizar cotas vendidas na rifa
-  await query('UPDATE raffle SET "soldLivros" = "soldLivros" + $1 WHERE id = $2', [
+  await query('UPDATE lotes SET "soldLivros" = "soldLivros" + $1 WHERE id = $2', [
     livros,
     raffleId,
   ])

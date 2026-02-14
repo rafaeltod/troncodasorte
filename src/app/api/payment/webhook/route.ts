@@ -68,7 +68,7 @@ export async function POST(req: NextRequest) {
 
         // Buscar a compra
         const purchase = await queryOne(
-          'SELECT * FROM "rafflePurchase" WHERE id = $1',
+          'SELECT * FROM livros WHERE id = $1',
           [purchaseId]
         )
 
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest) {
 
         // Atualizar status da compra para 'confirmed'
         const updatedPurchase = await queryOne(
-          `UPDATE "rafflePurchase" 
+          `UPDATE livros 
            SET status = 'confirmed', "statusPago" = true, "updatedAt" = NOW()
            WHERE id = $1
            RETURNING *`,
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
 
         // ✅ Agora sim atualizar soldLivros da rifa pois o pagamento foi confirmado
         await queryOne(
-          `UPDATE raffle 
+          `UPDATE lotes 
            SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
            WHERE id = $2`,
           [updatedPurchase.livros, updatedPurchase.raffleId]

@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       console.log('[Webhook Sim] Confirmando compra específica:', purchaseId)
       
       const purchase = await queryOne(
-        'SELECT * FROM "rafflePurchase" WHERE id = $1 AND "raffleId" = $2',
+        'SELECT * FROM livros WHERE id = $1 AND "raffleId" = $2',
         [purchaseId, raffleId]
       )
 
@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       }
 
       await queryOne(
-        'UPDATE "rafflePurchase" SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
+        'UPDATE livros SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
         ['confirmed', purchaseId]
       )
 
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
 
       // ✅ Atualizar soldLivros da rifa com o pagamento confirmado
       await queryOne(
-        `UPDATE raffle 
+        `UPDATE lotes 
          SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
          WHERE id = $2`,
         [purchase.livros, purchase.raffleId]
@@ -91,7 +91,7 @@ export async function POST(req: NextRequest) {
       console.log('[Webhook Sim] Confirmando todos os pagamentos pendentes...')
       
       const pendingPurchases = await queryMany(
-        `SELECT id, "raffleId" FROM "rafflePurchase" WHERE status = 'pending' LIMIT 100`,
+        `SELECT id, "raffleId" FROM livros WHERE status = 'pending' LIMIT 100`,
         []
       )
 
@@ -106,13 +106,13 @@ export async function POST(req: NextRequest) {
       let confirmed = 0
       for (const purchase of pendingPurchases) {
         await queryOne(
-          'UPDATE "rafflePurchase" SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
+          'UPDATE livros SET status = $1, "statusPago" = true, "updatedAt" = NOW() WHERE id = $2',
           ['confirmed', purchase.id]
         )
 
         // ✅ Atualizar soldLivros da rifa
         await queryOne(
-          `UPDATE raffle 
+          `UPDATE lotes 
            SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
            WHERE id = $2`,
           [purchase.livros, purchase.raffleId]
@@ -120,7 +120,7 @@ export async function POST(req: NextRequest) {
 
         // Buscar detalhes da compra para atualizar topBuyer
         const fullPurchase = await queryOne(
-          'SELECT * FROM "rafflePurchase" WHERE id = $1',
+          'SELECT * FROM livros WHERE id = $1',
           [purchase.id]
         )
 

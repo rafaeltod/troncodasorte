@@ -17,7 +17,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
 
     // Buscar a compra
     const purchase = await queryOne(
-      'SELECT * FROM "rafflePurchase" WHERE id = $1 AND "raffleId" = $2',
+      'SELECT * FROM livros WHERE id = $1 AND "raffleId" = $2',
       [purchaseId, raffleId]
     )
 
@@ -56,7 +56,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
 
     // Buscar a compra
     const purchase = await queryOne(
-      'SELECT * FROM "rafflePurchase" WHERE id = $1 AND "raffleId" = $2',
+      'SELECT * FROM livros WHERE id = $1 AND "raffleId" = $2',
       [purchaseId, raffleId]
     )
 
@@ -80,13 +80,13 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
 
     // Deletar a compra
     await queryOne(
-      'DELETE FROM "rafflePurchase" WHERE id = $1',
+      'DELETE FROM livros WHERE id = $1',
       [purchaseId]
     )
 
     // Reverter quantidades vendidas da rifa
     await queryOne(
-      `UPDATE raffle 
+      `UPDATE lotes 
        SET "soldLivros" = "soldLivros" - $1, "updatedAt" = NOW()
        WHERE id = $2`,
       [livrosToCancel, raffleId]

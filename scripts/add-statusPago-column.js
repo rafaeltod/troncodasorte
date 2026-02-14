@@ -33,7 +33,7 @@ async function addStatusPagoColumn() {
     
     // Atualizar compras confirmadas (status = 'confirmed') para statusPago = true
     const result = await pool.query(`
-      UPDATE "rafflePurchase"
+      UPDATE livros
       SET "statusPago" = true
       WHERE status = 'confirmed'
     `)

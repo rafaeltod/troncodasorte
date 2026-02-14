@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // Buscar a compra
     const purchase = await queryOne(
-      'SELECT * FROM "rafflePurchase" WHERE id = $1 AND "raffleId" = $2',
+      'SELECT * FROM livros WHERE id = $1 AND "raffleId" = $2',
       [purchaseId, raffleId]
     )
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
     // Confirmar pagamento
     const updated = await queryOne(
-      'UPDATE "rafflePurchase" SET status = $1, "updatedAt" = NOW() WHERE id = $2 RETURNING *',
+      'UPDATE livros SET status = $1, "updatedAt" = NOW() WHERE id = $2 RETURNING *',
       ['confirmed', purchaseId]
     )
 

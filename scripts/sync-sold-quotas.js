@@ -14,7 +14,7 @@ async function syncSoldQuotas() {
     // Buscar todas as rifas
     const raffles = await pool.query(`
       SELECT id, title, "totalLivros", "soldLivros"
-      FROM raffle
+      FROM lotes
       ORDER BY "createdAt" DESC
     `)
     
@@ -26,7 +26,7 @@ async function syncSoldQuotas() {
       // Contar compras pagas (statusPago = true)
       const purchases = await pool.query(`
         SELECT COALESCE(SUM(quotas), 0) as total
-        FROM "rafflePurchase"
+        FROM livros
         WHERE "raffleId" = $1 AND "statusPago" = true
       `, [raffle.id])
       
@@ -39,7 +39,7 @@ async function syncSoldQuotas() {
         
         // Atualizar
         await pool.query(`
-          UPDATE raffle
+          UPDATE lotes
           SET "soldQuotas" = $1, "updatedAt" = NOW()
           WHERE id = $2
         `, [totalQuotas, raffle.id])

@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
 
     // Create raffle com o userId do token
     const raffle = await queryOne(
-      `INSERT INTO raffle (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
+      `INSERT INTO lotes (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
        RETURNING *`,
       [
@@ -78,7 +78,7 @@ export async function GET() {
   try {
     const raffles = await queryMany(
       `SELECT r.*, json_build_object('name', u.name, 'email', u.email) as creator
-       FROM raffle r
+       FROM lotes r
        JOIN "user" u ON r."creatorId" = u.id
        ORDER BY r."createdAt" DESC`
     )

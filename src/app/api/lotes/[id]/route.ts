@@ -11,7 +11,7 @@ export async function GET(
       `SELECT 
         r.*,
         json_build_object('name', u.name, 'email', u.email) as creator
-      FROM raffle r
+      FROM lotes r
       LEFT JOIN "user" u ON r."creatorId" = u.id
       WHERE r.id = $1
       GROUP BY r.id, u.id`,
