@@ -23,44 +23,44 @@ export async function POST(
 
     if (!user || !user.isAdmin) {
       return NextResponse.json(
-        { error: 'Acesso negado. Apenas administradores podem finalizar campanhas.' },
+        { error: 'Acesso negado. Apenas administradores podem finalizar lotes.' },
         { status: 403 }
       )
     }
 
     const { id } = await params
 
-    // Verificar se a campanha existe
-    const campanha = await queryOne(
-      `SELECT id, status FROM raffle WHERE id = $1`,
+    // Verificar se o lote existe
+    const lote = await queryOne(
+      `SELECT id, status FROM lotes WHERE id = $1`,
       [id]
     )
 
-    if (!campanha) {
+    if (!lote) {
       return NextResponse.json(
-        { error: 'Campanha não encontrada' },
+        { error: 'Lote não encontrado' },
         { status: 404 }
       )
     }
 
-    // Verificar se a campanha já está fechada
-    if (campanha.status === 'closed') {
+    // Verificar se o lote já está fechado
+    if (lote.status === 'closed') {
       return NextResponse.json(
-        { error: 'Esta campanha já está finalizada' },
+        { error: 'Este lote já está finalizado' },
         { status: 400 }
       )
     }
 
-    if (campanha.status === 'drawn') {
+    if (lote.status === 'drawn') {
       return NextResponse.json(
-        { error: 'Esta campanha já foi finalizada' },
+        { error: 'Este lote já foi finalizado' },
         { status: 400 }
       )
     }
 
-    // Finalizar a campanha (mudar status para 'closed')
+    // Finalizar o lote (mudar status para 'closed')
     const updated = await queryOne(
-      `UPDATE raffle 
+      `UPDATE lotes 
        SET status = 'closed', "updatedAt" = NOW()
        WHERE id = $1
        RETURNING id, title, status, "updatedAt"`,
@@ -68,8 +68,8 @@ export async function POST(
     )
 
     return NextResponse.json({
-      message: 'Campanha finalizada com sucesso',
-      campanha: updated,
+      message: 'Lote finalizado com sucesso',
+      lote: updated,
     })
   } catch (error) {
     console.error('Erro ao finalizar campanha:', error)

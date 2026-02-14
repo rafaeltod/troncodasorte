@@ -11,8 +11,8 @@ export const createRaffleSchema = z.object({
   title: z.string().min(5, 'Título deve ter pelo menos 5 caracteres'),
   description: z.string().optional(),
   prizeAmount: z.number().positive('Valor do prêmio deve ser positivo'),
-  totalLivros: z.number().int().positive('Número de cotas deve ser positivo'),
-  livroPrice: z.number().positive('Preço da cota deve ser positivo').default(0.50),
+  totalLivros: z.number().int().positive('Número de livros deve ser positivo'),
+  livroPrice: z.number().positive('Preço do livro deve ser positivo').default(0.50),
   images: z.array(z.string()).max(20, 'Máximo 20 imagens').optional(),
 })
 

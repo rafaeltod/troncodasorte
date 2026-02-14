@@ -9,9 +9,9 @@ interface RaffleCardProps {
   title: string
   image?: string | null
   prizeAmount: number | string
-  totalQuotas: number | string
-  soldQuotas: number | string
-  quotaPrice: number | string
+  totalLivros: number | string
+  soldLivros: number | string
+  livroPrice: number | string
   status: string
 }
 
@@ -20,16 +20,16 @@ export function RaffleCard({
   title,
   image,
   prizeAmount,
-  totalQuotas,
-  soldQuotas,
-  quotaPrice,
+  totalLivros,
+  soldLivros,
+  livroPrice,
   status,
 }: RaffleCardProps) {
-  const percentageSold = (Number(soldQuotas) / Number(totalQuotas)) * 100
-  const remainingQuotas = Number(totalQuotas) - Number(soldQuotas)
+  const percentageSold = (Number(soldLivros) / Number(totalLivros)) * 100
+  const remainingQuotas = Number(totalLivros) - Number(soldLivros)
 
   return (
-    <Link href={`/campanhas/${id}`} className="block">
+    <Link href={`/lotes/${id}`} className="block">
       <div className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
@@ -49,7 +49,7 @@ export function RaffleCard({
             </div>
           )}
           <div className={`absolute top-3 right-3 ${status === 'closed' ? 'bg-gray-400' : 'bg-emerald-600'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
-            R$ {Number(quotaPrice).toFixed(2)}
+            R$ {Number(livroPrice).toFixed(2)}
           </div>
           {percentageSold >= 80 && (
             <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
@@ -94,18 +94,18 @@ export function RaffleCard({
               disabled
               className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold "
             >
-              Campanha Fechada
+              Lote Fechado
             </button>
           ) : status === 'drawn' ? (
             <button
               disabled
               className="w-full bg-emerald-400 text-white py-3 rounded-lg font-semibold "
             >
-              Campanha Sorteada
+              Lote Sorteado
             </button>
           ) : (
             <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
-              Comprar Cotas
+              Comprar Livros
             </button>
           )}
         </div>

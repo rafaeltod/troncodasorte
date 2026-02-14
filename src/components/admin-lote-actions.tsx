@@ -1,15 +1,15 @@
 'use client'
 
-import { FinalizarCampanhaButton } from './finalizar-campanha-button'
+import { FinalizarLoteButton } from './finalizar-lote-button'
 import { useAuth } from '@/context/auth-context'
 import { Settings } from 'lucide-react'
 
-interface AdminCampanhaActionsProps {
+interface AdminLoteActionsProps {
   raffleId: string
   raffleStatus: string
 }
 
-export function AdminCampanhaActions({ raffleId, raffleStatus }: AdminCampanhaActionsProps) {
+export function AdminLoteActions({ raffleId, raffleStatus }: AdminLoteActionsProps) {
   const { user } = useAuth()
 
   // Só exibir para admins
@@ -26,14 +26,14 @@ export function AdminCampanhaActions({ raffleId, raffleStatus }: AdminCampanhaAc
       
       <div className="flex flex-wrap gap-3">
         <a
-          href={`/admin/campanhas/${raffleId}/editar`}
+          href={`/admin/lotes/${raffleId}/editar`}
           className="flex-1 min-w-[140px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold py-2 px-4 rounded-lg transition text-center"
         >
           ✏️ Editar
         </a>
       </div>
       
-      <FinalizarCampanhaButton 
+      <FinalizarLoteButton 
         raffleId={raffleId} 
         raffleStatus={raffleStatus}
       />

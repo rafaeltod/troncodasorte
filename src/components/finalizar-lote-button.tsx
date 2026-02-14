@@ -4,17 +4,17 @@ import { useState } from 'react'
 import { useAuth } from '@/context/auth-context'
 import { XCircle, Loader2, CheckCircle2 } from 'lucide-react'
 
-interface FinalizarCampanhaButtonProps {
+interface FinalizarLoteButtonProps {
   raffleId: string
   raffleStatus: string
   onFinalized?: () => void
 }
 
-export function FinalizarCampanhaButton({ 
+export function FinalizarLoteButton({ 
   raffleId, 
   raffleStatus,
   onFinalized 
-}: FinalizarCampanhaButtonProps) {
+}: FinalizarLoteButtonProps) {
   const { user } = useAuth()
   const [loading, setLoading] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -31,7 +31,7 @@ export function FinalizarCampanhaButton({
     setError(null)
 
     try {
-      const response = await fetch(`/api/admin/campanhas/${raffleId}/finalizar`, {
+      const response = await fetch(`/api/admin/lotes/${raffleId}/finalizar`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export function FinalizarCampanhaButton({
             ⚠️ Tem certeza que deseja finalizar esta campanha?
           </p>
           <p className="text-red-600 text-sm mb-4">
-            Após finalizada, não será mais possível comprar livros nesta campanha.
+            Após finalizada, não será mais possível comprar livros nesta lote.
           </p>
           
           {error && (

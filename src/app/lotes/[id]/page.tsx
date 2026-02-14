@@ -4,7 +4,7 @@ import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
 import { RaffleRegulation } from '@/components/raffle-regulation'
 import { RaffleDetailClient } from '@/components/raffle-detail-client'
 import { RaffleImageGallery } from '@/components/raffle-image-gallery'
-import { AdminCampanhaActions } from '@/components/admin-campanha-actions'
+import { AdminLoteActions } from '@/components/admin-lote-actions'
 
 interface DetailProps {
   params: Promise<{
@@ -168,7 +168,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
 
             {/* Ações de Admin */}
-            <AdminCampanhaActions raffleId={id} raffleStatus={raffle.status} />
+            <AdminLoteActions raffleId={id} raffleStatus={raffle.status} />
           </div>
         </div>
 
