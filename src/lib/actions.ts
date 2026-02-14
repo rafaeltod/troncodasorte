@@ -55,6 +55,9 @@ export async function purchaseQuotas(
   )
 
   if (!raffle) throw new Error('Rifa não encontrada')
+  if (raffle.status !== 'open') {
+    throw new Error('Esta campanha não está aberta para compras')
+  }
   if (raffle.soldQuotas + quotas > raffle.totalQuotas) {
     throw new Error('Cotas insuficientes')
   }

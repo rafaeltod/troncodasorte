@@ -48,7 +48,7 @@ export function RaffleCard({
               <div className="text-emerald-400 text-5xl">📦</div>
             </div>
           )}
-          <div className="absolute top-3 right-3 bg-emerald-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+          <div className={`absolute top-3 right-3 ${status === 'closed' ? 'bg-gray-400' : 'bg-emerald-600'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
             R$ {Number(quotaPrice).toFixed(2)}
           </div>
           {percentageSold >= 80 && (
@@ -89,9 +89,25 @@ export function RaffleCard({
           </div>
 
           {/* Button */}
-          <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
-            Comprar Cotas
-          </button>
+          {status === 'closed' ? (
+            <button
+              disabled
+              className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold "
+            >
+              Campanha Fechada
+            </button>
+          ) : status === 'drawn' ? (
+            <button
+              disabled
+              className="w-full bg-emerald-400 text-white py-3 rounded-lg font-semibold "
+            >
+              Campanha Sorteada
+            </button>
+          ) : (
+            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
+              Comprar Cotas
+            </button>
+          )}
         </div>
       </div>
     </Link>

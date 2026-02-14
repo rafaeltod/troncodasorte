@@ -61,6 +61,14 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       );
     }
 
+    // Verificar se a campanha está aberta para compras
+    if (raffle.status !== 'open') {
+      return NextResponse.json(
+        { error: "Esta campanha não está aberta para compras" },
+        { status: 400 },
+      );
+    }
+
     // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, quotas, amount, no último minuto)
     // Isso previne "cotas fantasmas" causadas por retry automático do cliente
     const recentDuplicate = await queryOne(
