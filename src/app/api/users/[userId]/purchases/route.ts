@@ -20,7 +20,7 @@ export async function GET(
         r.status as "raffleStatus",
         r.winner
        FROM livros rp
-       JOIN raffle r ON rp."raffleId" = r.id
+       JOIN lotes r ON rp."raffleId" = r.id
        WHERE rp."userId" = $1
        ORDER BY rp."createdAt" DESC`,
       [userId]
