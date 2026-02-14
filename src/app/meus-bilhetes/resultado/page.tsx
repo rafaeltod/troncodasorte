@@ -231,7 +231,7 @@ export default function TicketsResultPage() {
                             R$ {Number(purchase.amount).toFixed(2)}
                           </p>
                           <p className="text-xs font-bold text-gray-600 mt-1">
-                            {purchase.livros} cotas
+                            {purchase.livros} livros
                           </p>
                         </div>
                       </div>

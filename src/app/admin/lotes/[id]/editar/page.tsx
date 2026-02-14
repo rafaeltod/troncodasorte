@@ -287,7 +287,7 @@ export default function EditLotePage() {
               />
               {lote.soldLivros > 0 && (
                 <p className="text-sm text-gray-600 mt-2">
-                  Não é possível alterar o total de cotas após vendas realizadas ({lote.soldLivros} vendidas)
+                  Não é possível alterar o total de livros após vendas realizadas ({lote.soldLivros} vendidos)
                 </p>
               )}
             </div>

@@ -95,7 +95,7 @@ export default function Home() {
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha uma Lote</h1>
             <p className="text-lg md:text-xl text-emerald-100 mb-8">
-              Selecione as cotas e a quantidade que deseja. Quanto mais cotas, maior sua chance de ganhar!
+              Selecione os livros e a quantidade que deseja. Quanto mais livros, maior sua chance de ganhar!
             </p>
             
             {/* Search Bar */}

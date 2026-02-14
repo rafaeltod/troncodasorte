@@ -273,7 +273,7 @@ export function CheckoutFlow({
               className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900 font-semibold"
             />
             <p className="text-xs text-gray-600 mt-2">
-              Se você já comprou cotas conosco, vamos reconhecê-lo automaticamente
+              Se você já comprou livros conosco, vamos reconhecê-lo automaticamente
             </p>
           </div>
 

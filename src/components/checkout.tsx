@@ -287,7 +287,7 @@ export function Checkout({
                 <Plus className="w-5 h-5 text-gray-700" />
               </button>
             </div>
-            <p className="text-xs text-gray-600 mb-4">{availableLivros} cotas disponíveis</p>
+            <p className="text-xs text-gray-600 mb-4">{availableLivros} livros disponíveis</p>
           </div>
 
           {/* Resumo de preço */}

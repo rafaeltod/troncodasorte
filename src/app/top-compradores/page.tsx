@@ -67,7 +67,7 @@ export default function TopBuyersPage() {
                   <div>
                     <div className="font-black text-lg text-gray-900">{censorName(buyer.name)}</div>
                     <div className="text-sm text-gray-600">
-                      {buyer.raffleBought} lote{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalLivros} cotas
+                      {buyer.raffleBought} lote{buyer.raffleBought !== 1 ? 's' : ''} • {buyer.totalLivros} livros
                     </div>
                   </div>
                 </div>

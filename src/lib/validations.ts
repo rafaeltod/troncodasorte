@@ -18,7 +18,7 @@ export const createRaffleSchema = z.object({
 
 export const purchaseRaffleSchema = z.object({
   raffleId: z.string(),
-  livros: z.number().int().positive('Número de cotas deve ser positivo'),
+  livros: z.number().int().positive('Número de livros deve ser positivo'),
 })
 
 export type CreateUserInput = z.infer<typeof createUserSchema>

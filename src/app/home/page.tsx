@@ -115,7 +115,7 @@ export default function HomePage() {
               <div className="text-5xl mb-4">3️⃣</div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Ganhe Prêmios!</h3>
               <p className="text-gray-600">
-                Compre cotas e acompanhe o sorteio em tempo real. Se ganhar, receba seu prêmio do jeito que escolher.
+                Compre livros e acompanhe o sorteio em tempo real. Se ganhar, receba seu prêmio do jeito que escolher.
               </p>
             </div>
           </div>

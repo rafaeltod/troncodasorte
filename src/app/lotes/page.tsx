@@ -75,7 +75,7 @@ export default function RafflesPage() {
               Lotes em Destaque
             </h1>
             <p className="text-xl text-emerald-100 mb-8">
-              Escolha uma lote e comece a participar! Quanto mais cotas, maior sua chance de ganhar!
+              Escolha um lote e comece a participar! Quanto mais livros, maior sua chance de ganhar!
             </p>
             
             {/* Search Bar */}
