@@ -13,7 +13,7 @@ async function syncSoldQuotas() {
     
     // Buscar todas as rifas
     const raffles = await pool.query(`
-      SELECT id, title, "totalQuotas", "soldQuotas"
+      SELECT id, title, "totalLivros", "soldLivros"
       FROM raffle
       ORDER BY "createdAt" DESC
     `)
