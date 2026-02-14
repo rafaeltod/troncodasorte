@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const { livros, amount, phone } = body;
+    const { quotas, amount, phone } = body;
 
     // Token é opcional (permite compras anônimas)
     const token = req.cookies.get("token")?.value || null;
@@ -39,8 +39,8 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       }
     }
 
-    // Validar dados - livros deve ser inteiro positivo, amount deve ser positivo
-    if (!Number.isInteger(livros) || livros < 1) {
+    // Validar dados - quotas deve ser inteiro positivo, amount deve ser positivo
+    if (!Number.isInteger(quotas) || quotas < 1) {
       return NextResponse.json(
         { error: "Quantidade de cotas inválida" },
         { status: 400 },
@@ -51,27 +51,35 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       return NextResponse.json({ error: "Valor inválido" }, { status: 400 });
     }
 
-    // Verificar se a lote existe
-    const raffle = await queryOne("SELECT * FROM lotes WHERE id = $1", [id]);
+    // Verificar se a campanha existe
+    const raffle = await queryOne("SELECT * FROM raffle WHERE id = $1", [id]);
 
     if (!raffle) {
       return NextResponse.json(
-        { error: "Lote não encontrada" },
+        { error: "Campanha não encontrada" },
         { status: 404 },
       );
     }
 
-    // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, livros, amount, no último minuto)
+    // Verificar se a campanha está aberta para compras
+    if (raffle.status !== 'open') {
+      return NextResponse.json(
+        { error: "Esta campanha não está aberta para compras" },
+        { status: 400 },
+      );
+    }
+
+    // 🛡️ IDEMPOTÊNCIA: Verificar se há compra duplicada recente (mesma rifa, quotas, amount, no último minuto)
     // Isso previne "cotas fantasmas" causadas por retry automático do cliente
     const recentDuplicate = await queryOne(
-      `SELECT id FROM livros 
+      `SELECT id FROM "rafflePurchase" 
        WHERE "raffleId" = $1 
        AND "userId" = $2 
-       AND livros = $3 
+       AND quotas = $3 
        AND amount = $4
        AND "createdAt" > NOW() - INTERVAL '1 minute'
        LIMIT 1`,
-      [id, userId, livros, amount],
+      [id, userId, quotas, amount],
     );
 
     if (recentDuplicate) {
@@ -93,31 +101,31 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // Se está logado, verificar se não é o criador
     if (userId && raffle.creatorId === userId) {
       return NextResponse.json(
-        { error: "Você não pode comprar cotas da sua própria lote" },
+        { error: "Você não pode comprar cotas da sua própria campanha" },
         { status: 403 },
       );
     }
 
     // Verificar se há cotas disponíveis
-    const availableLivros = raffle.totalLivros - raffle.soldLivros;
-    if (livros > availableLivros) {
+    const availableQuotas = raffle.totalQuotas - raffle.soldQuotas;
+    if (quotas > availableQuotas) {
       return NextResponse.json(
         { error: "Quantidade de cotas indisponível" },
         { status: 400 },
       );
     }
 
-    // Verificar se a lote está aberta
+    // Verificar se a campanha está aberta
     if (raffle.status !== "open") {
       return NextResponse.json(
-        { error: "Esta lote não está aberta para compras" },
+        { error: "Esta campanha não está aberta para compras" },
         { status: 400 },
       );
     }
 
     // Gerar números das cotas únicos
     const existingNumbers = await queryMany(
-      `SELECT numbers FROM livros WHERE "raffleId" = $1`,
+      `SELECT numbers FROM "rafflePurchase" WHERE "raffleId" = $1`,
       [id]
     );
 
@@ -125,27 +133,27 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       existingNumbers.flatMap((row) => row.numbers.split(","))
     );
 
-    const livroNumbers: string[] = [];
-    while (livroNumbers.length < livros) {
+    const quotaNumbers: string[] = [];
+    while (quotaNumbers.length < quotas) {
       const randomNum = Math.floor(Math.random() * 1000000);
       const formatted = String(randomNum).padStart(6, "0");
 
-      if (!usedNumbers.has(formatted) && !livroNumbers.includes(formatted)) {
-        livroNumbers.push(formatted);
+      if (!usedNumbers.has(formatted) && !quotaNumbers.includes(formatted)) {
+        quotaNumbers.push(formatted);
         usedNumbers.add(formatted);
       }
     }
 
-    const livroNumbersString = livroNumbers.join(",");
+    const quotaNumbersString = quotaNumbers.join(",");
 
     // Criar registro de compra (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
+      `INSERT INTO "rafflePurchase" (id, "userId", "raffleId", quotas, amount, numbers, phone, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
-       RETURNING id, "raffleId", "userId", livros, amount, status`,
-      [userId, id, livros, amount, livroNumbersString, phone],
+       RETURNING id, "raffleId", "userId", quotas, amount, status`,
+      [userId, id, quotas, amount, quotaNumbersString, phone],
     );
 
     if (!purchase) {
@@ -154,15 +162,15 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     // Atualizar quantidade de cotas vendidas
     const updatedRaffle = await queryOne(
-      `UPDATE lotes 
-       SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
+      `UPDATE raffle 
+       SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
        WHERE id = $2
        RETURNING *`,
-      [livros, id],
+      [quotas, id],
     );
 
     if (!updatedRaffle) {
-      throw new Error("Erro ao atualizar lote");
+      throw new Error("Erro ao atualizar campanha");
     }
 
     // ✅ A compra fica como 'pending' até que o webhook do Mercado Pago confirme
