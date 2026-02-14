@@ -73,7 +73,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // Isso previne "livros fantasmas" causados por retry automático do cliente
     const recentDuplicate = await queryOne(
       `SELECT id FROM livros 
-       WHERE "loteId" = $1 
+       WHERE "raffleId" = $1 
        AND "userId" = $2 
        AND livros = $3 
        AND amount = $4
@@ -125,7 +125,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     // Gerar números dos livros únicos
     const existingNumbers = await queryMany(
-      `SELECT numbers FROM livros WHERE "loteId" = $1`,
+      `SELECT numbers FROM livros WHERE "raffleId" = $1`,
       [id]
     );
 
@@ -150,9 +150,9 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO livros (id, "userId", "loteId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
+      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
        VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
-       RETURNING id, "loteId", "userId", livros, amount, status`,
+       RETURNING id, "raffleId", "userId", livros, amount, status`,
       [userId, id, livros, amount, livroNumbersString, phone],
     );
 

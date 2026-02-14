@@ -74,7 +74,7 @@ export async function purchaseQuotas(
   // Criar compra
   const purchaseQuery = `
     INSERT INTO livros (
-      id, "userId", "loteId", livros, amount, numbers, status, "createdAt", "updatedAt"
+      id, "userId", "raffleId", livros, amount, numbers, status, "createdAt", "updatedAt"
     )
     VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'completed', NOW(), NOW())
     RETURNING *
