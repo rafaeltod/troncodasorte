@@ -33,7 +33,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     return NextResponse.json({
       purchaseId: purchase.id,
       status: purchase.status,
-      quotas: purchase.quotas,
+      livros: purchase.livros,
       amount: purchase.amount,
       createdAt: purchase.createdAt,
       updatedAt: purchase.updatedAt,
@@ -75,7 +75,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
       )
     }
 
-    const quotasToCancel = Number(purchase.quotas)
+    const livrosToCancel = Number(purchase.livros)
     const amountToCancel = Number(purchase.amount)
 
     // Deletar a compra
@@ -87,9 +87,9 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
     // Reverter quantidades vendidas da rifa
     await queryOne(
       `UPDATE raffle 
-       SET "soldQuotas" = "soldQuotas" - $1, "updatedAt" = NOW()
+       SET "soldLivros" = "soldLivros" - $1, "updatedAt" = NOW()
        WHERE id = $2`,
-      [quotasToCancel, raffleId]
+      [livrosToCancel, raffleId]
     )
 
     // Atualizar top buyer (subtrair cotas e valor gasto)
@@ -100,10 +100,10 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
 
     if (topBuyer) {
       const newTotalSpent = Math.max(0, Number(topBuyer.totalSpent) - amountToCancel)
-      const newTotalQuotas = Math.max(0, Number(topBuyer.totalQuotas) - quotasToCancel)
+      const newTotalLivros = Math.max(0, Number(topBuyer.totalLivros) - livrosToCancel)
       const newRaffleBought = Math.max(0, Number(topBuyer.raffleBought) - 1)
 
-      if (newTotalSpent === 0 && newTotalQuotas === 0 && newRaffleBought === 0) {
+      if (newTotalSpent === 0 && newTotalLivros === 0 && newRaffleBought === 0) {
         // Deletar o top buyer se não tiver mais compras
         await queryOne(
           `DELETE FROM "topBuyer" WHERE "userId" = $1`,
@@ -114,11 +114,11 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
         await queryOne(
           `UPDATE "topBuyer" 
            SET "totalSpent" = $1,
-               "totalQuotas" = $2,
+               "totalLivros" = $2,
                "raffleBought" = $3,
                "updatedAt" = NOW()
            WHERE "userId" = $4`,
-          [newTotalSpent, newTotalQuotas, newRaffleBought, token]
+          [newTotalSpent, newTotalLivros, newRaffleBought, token]
         )
       }
     }
@@ -126,7 +126,7 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
     console.log('[Purchase] Compra cancelada:', {
       purchaseId,
       raffleId,
-      quotasCanceled: quotasToCancel,
+      livrosCanceled: livrosToCancel,
       amountCanceled: amountToCancel,
     })
 

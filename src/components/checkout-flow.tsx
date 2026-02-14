@@ -10,8 +10,8 @@ import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
 
 interface CheckoutFlowProps {
   raffleId: string
-  quotaPrice: number
-  availableQuotas: number
+  livroPrice: number
+  availableLivros: number
   isOpen: boolean
   selectedQuantity: number
 }
@@ -26,8 +26,8 @@ interface ExistingCustomerData {
 
 export function CheckoutFlow({
   raffleId,
-  quotaPrice,
-  availableQuotas,
+  livroPrice,
+  availableLivros,
   isOpen,
   selectedQuantity,
 }: CheckoutFlowProps) {
@@ -55,8 +55,8 @@ export function CheckoutFlow({
   const [showPixModal, setShowPixModal] = useState(false)
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
 
-  const numericQuotaPrice = Number(quotaPrice)
-  const totalPrice = selectedQuantity * numericQuotaPrice
+  const numericLivroPrice = Number(livroPrice)
+  const totalPrice = selectedQuantity * numericLivroPrice
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -197,12 +197,12 @@ export function CheckoutFlow({
     setLoading(true)
 
     try {
-      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/lotes/${raffleId}/purchase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          quotas: selectedQuantity,
+          livros: selectedQuantity,
           amount: totalPrice,
           phone: formData.phone.replace(/\D/g, ''), // Enviar telefone sem formatação
         }),
@@ -244,7 +244,7 @@ export function CheckoutFlow({
       <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Preço por cota:</p>
-          <p className="font-bold text-gray-900">R$ {numericQuotaPrice.toFixed(2)}</p>
+          <p className="font-bold text-gray-900">R$ {numericLivroPrice.toFixed(2)}</p>
         </div>
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Quantidade:</p>
@@ -424,7 +424,7 @@ export function CheckoutFlow({
                 <strong>Telefone:</strong> {formData.phone.slice(-4).padStart(formData.phone.length, '*')}
               </p>
               <p>
-                <strong>Cotas:</strong> {selectedQuantity}x
+                <strong>Livros:</strong> {selectedQuantity}x
               </p>
               <p className="border-t border-emerald-200 pt-2">
                 <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {totalPrice.toFixed(2)}</span>
@@ -479,7 +479,7 @@ export function CheckoutFlow({
               id: purchaseId,
               raffleId,
               amount: totalPrice,
-              quotas: selectedQuantity,
+              livros: selectedQuantity,
               status: 'confirmed',
               createdAt: new Date().toISOString(),
             }
@@ -491,8 +491,8 @@ export function CheckoutFlow({
           if (user) {
             router.push('/historico')
           } else {
-            // Usuário anônimo - voltar para campanhas
-            router.push('/campanhas')
+            // Usuário anônimo - voltar para lotes
+            router.push('/lotes')
           }
         }}
       />

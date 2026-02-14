@@ -29,9 +29,9 @@ export async function getRaffleById(id: string) {
       r.image,
       r.images,
       r."prizeAmount",
-      r."totalQuotas",
-      r."soldQuotas",
-      r."quotaPrice",
+      r."totalLivros",
+      r."soldLivros",
+      r."livroPrice",
       r.status,
       r.winner,
       r."creatorId",
@@ -43,7 +43,7 @@ export async function getRaffleById(id: string) {
           'id', rp.id,
           'userId', rp."userId",
           'raffleId', rp."raffleId",
-          'quotas', rp.quotas,
+          'livros', rp.livros,
           'amount', rp.amount,
           'numbers', rp.numbers,
           'status', rp.status,
@@ -56,7 +56,7 @@ export async function getRaffleById(id: string) {
     LEFT JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
     LEFT JOIN "user" u2 ON rp."userId" = u2.id
     WHERE r.id = $1
-    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalQuotas", r."soldQuotas", r."quotaPrice", r.status, r.winner, r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
+    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
   `
 
   return queryOne(query, [id])
@@ -71,7 +71,7 @@ export async function getUserRaffles(userId: string) {
           'id', rp.id,
           'userId', rp."userId",
           'raffleId', rp."raffleId",
-          'quotas', rp.quotas,
+          'livros', rp.livros,
           'amount', rp.amount,
           'numbers', rp.numbers,
           'status', rp.status
@@ -133,7 +133,7 @@ export async function getUserParticipatingRaffles(userId: string) {
     SELECT DISTINCT
       r.*,
       json_build_object('name', u.name, 'email', u.email) as creator,
-      (SELECT COALESCE(SUM(quotas), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userQuotas
+      (SELECT COALESCE(SUM(livros), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userLivros
     FROM raffle r
     JOIN "user" u ON r."creatorId" = u.id
     JOIN "rafflePurchase" rp ON r.id = rp."raffleId"
@@ -150,7 +150,7 @@ export async function getUserFinishedRaffles(userId: string) {
     SELECT DISTINCT
       r.*,
       json_build_object('name', u.name, 'email', u.email) as creator,
-      (SELECT COALESCE(SUM(quotas), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userQuotas
+      (SELECT COALESCE(SUM(livros), 0) FROM "rafflePurchase" WHERE "raffleId" = r.id AND "userId" = $1) as userLivros
     FROM raffle r
     JOIN "user" u ON r."creatorId" = u.id
     JOIN "rafflePurchase" rp ON r.id = rp."raffleId"

@@ -14,8 +14,8 @@ export default function CreateRafflePageContent() {
     title: '',
     description: '',
     prizeAmount: '',
-    totalQuotas: '',
-    quotaPrice: '0.50',
+    totalLivros: '',
+    livroPrice: '0.50',
     images: [] as string[],
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -65,7 +65,7 @@ export default function CreateRafflePageContent() {
     setSuccess(false)
 
     try {
-      const response = await fetch('/api/campanhas', {
+      const response = await fetch('/api/lotes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -74,14 +74,14 @@ export default function CreateRafflePageContent() {
         body: JSON.stringify({
           ...formData,
           prizeAmount: parseFloat(formData.prizeAmount),
-          totalQuotas: parseInt(formData.totalQuotas),
-          quotaPrice: parseFloat(formData.quotaPrice),
+          totalLivros: parseInt(formData.totalLivros),
+          livroPrice: parseFloat(formData.livroPrice),
         }),
       })
 
       if (!response.ok) {
         const errorData = await response.json()
-        throw new Error(errorData.error || `Erro ao criar campanha (${response.status})`)
+        throw new Error(errorData.error || `Erro ao criar lote (${response.status})`)
       }
 
       const data = await response.json()
@@ -89,11 +89,11 @@ export default function CreateRafflePageContent() {
       setIsSubmitting(false)
       
       setTimeout(() => {
-        router.push(`/campanhas/${data.id}`)
+        router.push(`/lotes/${data.id}`)
       }, 1500)
     } catch (err) {
       console.error('Error creating raffle:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao criar campanha')
+      setError(err instanceof Error ? err.message : 'Erro ao criar lote')
       setIsSubmitting(false)
     }
   }
@@ -108,8 +108,8 @@ export default function CreateRafflePageContent() {
               <Plus className="w-8 h-8 text-white" />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-gray-900">Criar Nova Campanha</h1>
-              <p className="text-gray-600">Preencha os dados para criar sua campanha e ganhar!</p>
+              <h1 className="text-4xl font-black text-gray-900">Criar Nova Lote</h1>
+              <p className="text-gray-600">Preencha os dados para criar sua lote e ganhar!</p>
             </div>
           </div>
         </div>
@@ -127,14 +127,14 @@ export default function CreateRafflePageContent() {
 
           {success && (
             <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg">
-              <p className="font-bold">✅ Campanha criada com sucesso! Redirecionando...</p>
+              <p className="font-bold">✅ Lote criada com sucesso! Redirecionando...</p>
             </div>
           )}
 
           <div>
             <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <FileText className="w-5 h-5 text-emerald-600" />
-              Título da Campanha
+              Título da Lote
             </label>
             <input
               type="text"
@@ -144,7 +144,7 @@ export default function CreateRafflePageContent() {
               required
               minLength={5}
               className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
-              placeholder="Ex: Campanha do iPhone 15 Pro"
+              placeholder="Ex: Lote do iPhone 15 Pro"
             />
           </div>
 
@@ -159,7 +159,7 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 resize-none"
               rows={5}
-              placeholder="Descreva sua campanha em detalhes... (condição, especificações, etc)"
+              placeholder="Descreva sua lote em detalhes... (condição, especificações, etc)"
             ></textarea>
           </div>
 
@@ -184,12 +184,12 @@ export default function CreateRafflePageContent() {
             <div>
               <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
                 <Ticket className="w-5 h-5 text-emerald-600" />
-                Total de Cotas
+                Total de Livros
               </label>
               <input
                 type="number"
-                name="totalQuotas"
-                value={formData.totalQuotas}
+                name="totalLivros"
+                value={formData.totalLivros}
                 onChange={handleInputChange}
                 required
                 min="1"
@@ -202,12 +202,12 @@ export default function CreateRafflePageContent() {
           <div>
             <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <DollarSign className="w-5 h-5 text-emerald-600" />
-              Preço da Cota (R$)
+              Preço da Livro (R$)
             </label>
             <input
               type="number"
-              name="quotaPrice"
-              value={formData.quotaPrice}
+              name="livroPrice"
+              value={formData.livroPrice}
               onChange={handleInputChange}
               step="0.01"
               min="0.01"
@@ -219,7 +219,7 @@ export default function CreateRafflePageContent() {
           <div>
             <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
               <ImageIcon className="w-5 h-5 text-emerald-600" />
-              Imagens da Campanha (Opcional)
+              Imagens da Lote (Opcional)
             </label>
             <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
           </div>
@@ -232,12 +232,12 @@ export default function CreateRafflePageContent() {
             {isSubmitting ? (
               <>
                 <span className="animate-spin">⏳</span>
-                Criando sua campanha...
+                Criando sua lote...
               </>
             ) : (
               <>
                 <Plus className="w-5 h-5" />
-                Criar Campanha Agora
+                Criar Lote Agora
               </>
             )}
           </button>

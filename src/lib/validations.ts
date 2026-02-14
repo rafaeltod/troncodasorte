@@ -11,14 +11,14 @@ export const createRaffleSchema = z.object({
   title: z.string().min(5, 'Título deve ter pelo menos 5 caracteres'),
   description: z.string().optional(),
   prizeAmount: z.number().positive('Valor do prêmio deve ser positivo'),
-  totalQuotas: z.number().int().positive('Número de cotas deve ser positivo'),
-  quotaPrice: z.number().positive('Preço da cota deve ser positivo').default(0.50),
+  totalLivros: z.number().int().positive('Número de cotas deve ser positivo'),
+  livroPrice: z.number().positive('Preço da cota deve ser positivo').default(0.50),
   images: z.array(z.string()).max(20, 'Máximo 20 imagens').optional(),
 })
 
 export const purchaseRaffleSchema = z.object({
   raffleId: z.string(),
-  quotas: z.number().int().positive('Número de cotas deve ser positivo'),
+  livros: z.number().int().positive('Número de cotas deve ser positivo'),
 })
 
 export type CreateUserInput = z.infer<typeof createUserSchema>

@@ -107,18 +107,18 @@ export async function POST(req: NextRequest) {
         console.log('[MP Webhook] ✅ Compra confirmada:', {
           purchaseId: updatedPurchase.id,
           status: updatedPurchase.status,
-          quotas: updatedPurchase.quotas,
+          livros: updatedPurchase.livros,
           amount: updatedPurchase.amount,
         })
 
-        // ✅ Agora sim atualizar soldQuotas da rifa pois o pagamento foi confirmado
+        // ✅ Agora sim atualizar soldLivros da rifa pois o pagamento foi confirmado
         await queryOne(
           `UPDATE raffle 
-           SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+           SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
            WHERE id = $2`,
-          [updatedPurchase.quotas, updatedPurchase.raffleId]
+          [updatedPurchase.livros, updatedPurchase.raffleId]
         )
-        console.log('[MP Webhook] ✅ Cotas da rifa atualizadas')
+        console.log('[MP Webhook] ✅ Livros da rifa atualizadas')
 
         // Atualizar top buyer agora que a compra foi confirmada
         if (updatedPurchase.userId) {
@@ -132,19 +132,19 @@ export async function POST(req: NextRequest) {
             await queryOne(
               `UPDATE "topBuyer" 
                SET "totalSpent" = "totalSpent" + $1,
-                   "totalQuotas" = "totalQuotas" + $2,
+                   "totalLivros" = "totalLivros" + $2,
                    "raffleBought" = "raffleBought" + 1,
                    "updatedAt" = NOW()
                WHERE "userId" = $3`,
-              [updatedPurchase.amount, updatedPurchase.quotas, updatedPurchase.userId]
+              [updatedPurchase.amount, updatedPurchase.livros, updatedPurchase.userId]
             )
             console.log('[MP Webhook] ✅ TopBuyer atualizado (existente):', updatedPurchase.userId)
           } else {
             // Criar novo comprador
             await queryOne(
-              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalLivros", "raffleBought", "createdAt", "updatedAt")
                VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-              [updatedPurchase.userId, updatedPurchase.amount, updatedPurchase.quotas]
+              [updatedPurchase.userId, updatedPurchase.amount, updatedPurchase.livros]
             )
             console.log('[MP Webhook] ✅ TopBuyer criado (novo):', updatedPurchase.userId)
           }

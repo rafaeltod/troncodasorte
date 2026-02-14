@@ -1,34 +1,34 @@
 'use client'
 
 import { useState } from 'react'
-import { QuotaSelector } from './quota-selector'
+import { LivroSelector } from './livro-selector'
 import { CheckoutFlow } from './checkout-flow'
 import { Drawer } from './drawer'
 
 interface RaffleDetailClientProps {
   raffleId: string
-  quotaPrice: number
-  availableQuotas: number
+  livroPrice: number
+  availableLivros: number
   isOpen: boolean
 }
 
 export function RaffleDetailClient({
   raffleId,
-  quotaPrice,
-  availableQuotas,
+  livroPrice,
+  availableLivros,
   isOpen,
 }: RaffleDetailClientProps) {
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const totalPrice = selectedQuantity * Number(quotaPrice)
+  const totalPrice = selectedQuantity * Number(livroPrice)
 
   return (
     <>
-      <QuotaSelector
+      <LivroSelector
         selectedQuantity={selectedQuantity}
         onSelect={setSelectedQuantity}
-        availableQuotas={availableQuotas}
+        availableLivros={availableLivros}
       />
       
       <div className="mt-8 bg-linear-to-br from-emerald-50 to-green-50 p-6 rounded-xl border-2 border-emerald-300">
@@ -55,8 +55,8 @@ onClick={() => setIsDrawerOpen(true)} disabled={!isOpen} className="w-full bg-em
       >
         <CheckoutFlow
           raffleId={raffleId}
-          quotaPrice={quotaPrice}
-          availableQuotas={availableQuotas}
+          livroPrice={livroPrice}
+          availableLivros={availableLivros}
           isOpen={isOpen}
           selectedQuantity={selectedQuantity}
         />

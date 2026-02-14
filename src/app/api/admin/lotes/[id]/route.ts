@@ -30,8 +30,8 @@ export async function GET(
 
     const { id } = await params
 
-    // Buscar campanha
-    const campanha = await queryOne(
+    // Buscar lote
+    const lote = await queryOne(
       `SELECT 
         r.*,
         json_build_object(
@@ -44,18 +44,18 @@ export async function GET(
       [id, token]
     )
 
-    if (!campanha) {
+    if (!lote) {
       return NextResponse.json(
-        { error: 'Campanha não encontrada' },
+        { error: 'Lote não encontrada' },
         { status: 404 }
       )
     }
 
-    return NextResponse.json(campanha)
+    return NextResponse.json(lote)
   } catch (error) {
-    console.error('Error fetching campanha:', error)
+    console.error('Error fetching lote:', error)
     return NextResponse.json(
-      { error: 'Erro ao buscar campanha' },
+      { error: 'Erro ao buscar lote' },
       { status: 500 }
     )
   }
@@ -91,30 +91,30 @@ export async function PUT(
     const { id } = await params
     const body = await req.json()
     
-    const { title, description, prizeAmount, totalQuotas, quotaPrice, status, images } = body
+    const { title, description, prizeAmount, totalLivros, livroPrice, status, images } = body
 
-    // Verificar se a campanha pertence ao admin
-    const campanha = await queryOne(
+    // Verificar se a lote pertence ao admin
+    const lote = await queryOne(
       `SELECT id FROM raffle WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
     )
 
-    if (!campanha) {
+    if (!lote) {
       return NextResponse.json(
-        { error: 'Campanha não encontrada ou você não tem permissão para editá-la' },
+        { error: 'Lote não encontrada ou você não tem permissão para editá-la' },
         { status: 404 }
       )
     }
 
-    // Atualizar campanha
+    // Atualizar lote
     const updated = await queryOne(
       `UPDATE raffle 
        SET 
          title = COALESCE($1, title),
          description = COALESCE($2, description),
          "prizeAmount" = COALESCE($3, "prizeAmount"),
-         "totalQuotas" = COALESCE($4, "totalQuotas"),
-         "quotaPrice" = COALESCE($5, "quotaPrice"),
+         "totalLivros" = COALESCE($4, "totalLivros"),
+         "livroPrice" = COALESCE($5, "livroPrice"),
          status = COALESCE($6, status),
          images = COALESCE($7, images),
          image = COALESCE($8, image),
@@ -125,8 +125,8 @@ export async function PUT(
         title,
         description,
         prizeAmount,
-        totalQuotas,
-        quotaPrice,
+        totalLivros,
+        livroPrice,
         status,
         images || null,
         images?.[0] || null,
@@ -137,9 +137,9 @@ export async function PUT(
 
     return NextResponse.json(updated)
   } catch (error) {
-    console.error('Error updating campanha:', error)
+    console.error('Error updating lote:', error)
     return NextResponse.json(
-      { error: 'Erro ao atualizar campanha' },
+      { error: 'Erro ao atualizar lote' },
       { status: 500 }
     )
   }
@@ -174,15 +174,15 @@ export async function DELETE(
 
     const { id } = await params
 
-    // Verificar se a campanha pertence ao admin
-    const campanha = await queryOne(
+    // Verificar se a lote pertence ao admin
+    const lote = await queryOne(
       `SELECT id FROM raffle WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
     )
 
-    if (!campanha) {
+    if (!lote) {
       return NextResponse.json(
-        { error: 'Campanha não encontrada ou você não tem permissão para deletá-la' },
+        { error: 'Lote não encontrada ou você não tem permissão para deletá-la' },
         { status: 404 }
       )
     }
@@ -193,7 +193,7 @@ export async function DELETE(
       [id]
     )
 
-    // Deletar campanha
+    // Deletar lote
     await query(
       `DELETE FROM raffle WHERE id = $1 AND "creatorId" = $2`,
       [id, token]
@@ -201,9 +201,9 @@ export async function DELETE(
 
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error('Error deleting campanha:', error)
+    console.error('Error deleting lote:', error)
     return NextResponse.json(
-      { error: 'Erro ao deletar campanha' },
+      { error: 'Erro ao deletar lote' },
       { status: 500 }
     )
   }

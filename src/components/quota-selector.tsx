@@ -1,17 +1,17 @@
 'use client'
 
-interface QuotaSelectorProps {
+interface LivroSelectorProps {
   onSelect: (quantity: number) => void
   selectedQuantity: number
-  availableQuotas: number
+  availableLivros: number
 }
 
-export function QuotaSelector({ onSelect, selectedQuantity, availableQuotas }: QuotaSelectorProps) {
+export function LivroSelector({ onSelect, selectedQuantity, availableLivros }: LivroSelectorProps) {
   const presetOptions = [1, 50, 100, 200, 300, 500]
 
   const handleAddQuantity = (quantity: number) => {
     const newTotal = selectedQuantity + quantity
-    if (newTotal <= availableQuotas) {
+    if (newTotal <= availableLivros) {
       onSelect(newTotal)
     }
   }
@@ -23,7 +23,7 @@ export function QuotaSelector({ onSelect, selectedQuantity, availableQuotas }: Q
       <div className="grid grid-cols-2 gap-3 mb-8">
         {presetOptions.map((quantity) => {
           const newTotal = selectedQuantity + quantity
-          const isDisabled = newTotal > availableQuotas
+          const isDisabled = newTotal > availableLivros
           return (
             <button
               key={quantity}
@@ -47,7 +47,7 @@ export function QuotaSelector({ onSelect, selectedQuantity, availableQuotas }: Q
           <input
             type="number"
             min="1"
-            max={availableQuotas}
+            max={availableLivros}
             value={selectedQuantity}
             onChange={(e) => onSelect(Number(e.target.value) || 1)}
             className="flex-1 text-center text-3xl font-black text-gray-900 bg-transparent border-0 focus:outline-none"

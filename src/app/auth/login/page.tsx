@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/campanhas')
+      router.push('/lotes')
     }
   }, [user, router])
 
@@ -84,7 +84,7 @@ export default function LoginPage() {
 
       setSuccess('✅ Login realizado com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
-      router.push('/campanhas')
+      router.push('/lotes')
     } catch (err) {
       console.error('[LoginPage] Error:', err)
       setError(err instanceof Error ? err.message : 'Erro ao fazer login')

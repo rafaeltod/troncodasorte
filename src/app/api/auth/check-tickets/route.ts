@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
         `SELECT 
           rp.id,
           rp."raffleId",
-          rp.quotas,
+          rp.livros,
           rp.amount,
           rp.status,
           rp.numbers,
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
       `SELECT 
         rp.id,
         rp."raffleId",
-        rp.quotas,
+        rp.livros,
         rp.amount,
         rp.status,
         rp.numbers,

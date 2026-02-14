@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/campanhas')
+      router.push('/lotes')
     }
   }, [user, router])
 
@@ -113,7 +113,7 @@ export default function RegisterPage() {
 
       setSuccess('✅ Conta criada com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
-      router.push('/campanhas')
+      router.push('/lotes')
     } catch (err) {
       console.error('[RegisterPage] Error:', err)
       setError(err instanceof Error ? err.message : 'Erro ao criar conta')

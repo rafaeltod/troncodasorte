@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      router.push('/campanhas')
+      router.push('/lotes')
     }
   }, [user, loading, router])
 
@@ -40,7 +40,7 @@ export default function HomePage() {
               Concorra a Prêmios Incríveis
             </h1>
             <p className="text-xl text-emerald-100 mb-8">
-              Cotas a partir de R$ 0,50 • Sorteios transparentes • Prêmios garantidos
+              Livros a partir de R$ 0,50 • Sorteios transparentes • Prêmios garantidos
             </p>
             
             {/* Search Bar */}
@@ -72,7 +72,7 @@ export default function HomePage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-emerald-600 mb-1">50K+</div>
-              <div className="text-gray-600">Cotas Vendidas</div>
+              <div className="text-gray-600">Livros Vendidas</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-emerald-600 mb-1">2.547</div>
@@ -150,7 +150,7 @@ export default function HomePage() {
             <div className="flex gap-4">
               <DollarSign className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Cotas Acessíveis</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">Livros Acessíveis</h3>
                 <p className="text-gray-300">A partir de R$ 0,50 por cota. Todos podem participar e ganhar prêmios incríveis.</p>
               </div>
             </div>

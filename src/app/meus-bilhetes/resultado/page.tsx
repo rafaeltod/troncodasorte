@@ -8,7 +8,7 @@ import { censorName, censorPhone } from '@/lib/formatters'
 
 interface Purchase {
   id: string
-  quotas: number
+  livros: number
   amount: number
   status: string
   createdAt: string
@@ -231,7 +231,7 @@ export default function TicketsResultPage() {
                             R$ {Number(purchase.amount).toFixed(2)}
                           </p>
                           <p className="text-xs font-bold text-gray-600 mt-1">
-                            {purchase.quotas} cotas
+                            {purchase.livros} cotas
                           </p>
                         </div>
                       </div>
@@ -265,11 +265,11 @@ export default function TicketsResultPage() {
         {/* Action Button */}
         <div className="mt-6">
           <Link
-            href="/campanhas"
+            href="/lotes"
             onClick={() => localStorage.removeItem('ticketQuery')}
             className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
           >
-            Voltar para Campanhas
+            Voltar para Lotes
           </Link>
         </div>
       </div>

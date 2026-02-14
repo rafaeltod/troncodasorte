@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
       title: body.title,
       description: body.description?.substring(0, 50),
       prizeAmount: body.prizeAmount,
-      totalQuotas: body.totalQuotas,
-      quotaPrice: body.quotaPrice,
+      totalLivros: body.totalLivros,
+      livroPrice: body.livroPrice,
       imagesCount: body.images?.length || 0,
       imageSizes: body.images?.map((img: string) => img.length) || [],
     })
@@ -32,15 +32,15 @@ export async function POST(req: NextRequest) {
 
     // Create raffle com o userId do token
     const raffle = await queryOne(
-      `INSERT INTO raffle (title, description, "prizeAmount", "totalQuotas", "quotaPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
+      `INSERT INTO raffle (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
        VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
        RETURNING *`,
       [
         validatedData.title,
         validatedData.description,
         validatedData.prizeAmount,
-        validatedData.totalQuotas,
-        validatedData.quotaPrice,
+        validatedData.totalLivros,
+        validatedData.livroPrice,
         token, // userId do token autenticado
         validatedData.images?.[0] || null,
         validatedData.images || [],

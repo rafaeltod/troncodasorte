@@ -13,9 +13,9 @@ interface Raffle {
   title: string
   description: string
   prizeAmount: number
-  quotaPrice: number
-  totalQuotas: number
-  soldQuotas: number
+  livroPrice: number
+  totalLivros: number
+  soldLivros: number
   status: string
   image?: string
   createdAt: string
@@ -23,7 +23,7 @@ interface Raffle {
     name: string
     email: string
   }
-  userQuotas?: number
+  userLivros?: number
 }
 
 export default function DashboardPage() {
@@ -61,7 +61,7 @@ export default function DashboardPage() {
         setFinishedRaffles(Array.isArray(finished) ? finished : [])
         setAvailableRaffles(Array.isArray(available) ? available : [])
       } catch (err) {
-        console.error('Erro ao buscar campanhas:', err)
+        console.error('Erro ao buscar lotes:', err)
       } finally {
         setLoading(false)
       }
@@ -100,13 +100,13 @@ export default function DashboardPage() {
   const getTabLabel = () => {
     switch (activeTab) {
       case 'created':
-        return `Minhas Campanhas (${createdRaffles.length})`
+        return `Minhas Lotes (${createdRaffles.length})`
       case 'participating':
         return `Participando (${participatingRaffles.length})`
       case 'finished':
         return `Finalizadas (${finishedRaffles.length})`
       case 'available':
-        return `Campanhas Disponíveis (${availableRaffles.length})`
+        return `Lotes Disponíveis (${availableRaffles.length})`
       default:
         return ''
     }
@@ -130,12 +130,12 @@ export default function DashboardPage() {
             👋 Olá, {censorName(user.name).split(' ')[0]}!
           </h1>
           <p className="text-lg text-gray-600 mb-6">
-            Bem-vindo ao seu painel de campanhas. Explore, participe e crie suas próprias campanhas!
+            Bem-vindo ao seu painel de lotes. Explore, participe e crie suas próprias lotes!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Link
-              href="/criar-campanha"
+              href="/criar-lote"
               className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg text-center"
             >
               <Plus className="inline mr-2" size={20} /> Criar Nova Rifa
@@ -207,7 +207,7 @@ export default function DashboardPage() {
               </p>
               {(activeTab === 'available' || activeTab === 'created') && (
                 <Link
-                  href="/criar-campanha"
+                  href="/criar-lote"
                   className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition"
                 >
                   Começar Agora 🚀

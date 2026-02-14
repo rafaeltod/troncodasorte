@@ -43,14 +43,14 @@ export async function POST(req: NextRequest) {
 
       console.log('[Webhook Sim] ✅ Compra confirmada:', purchaseId)
 
-      // ✅ Atualizar soldQuotas da rifa com o pagamento confirmado
+      // ✅ Atualizar soldLivros da rifa com o pagamento confirmado
       await queryOne(
         `UPDATE raffle 
-         SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+         SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
          WHERE id = $2`,
-        [purchase.quotas, purchase.raffleId]
+        [purchase.livros, purchase.raffleId]
       )
-      console.log('[Webhook Sim] ✅ Cotas da rifa atualizadas')
+      console.log('[Webhook Sim] ✅ Livros da rifa atualizadas')
 
       // Atualizar top buyer
       if (purchase.userId) {
@@ -63,18 +63,18 @@ export async function POST(req: NextRequest) {
           await queryOne(
             `UPDATE "topBuyer" 
              SET "totalSpent" = "totalSpent" + $1,
-                 "totalQuotas" = "totalQuotas" + $2,
+                 "totalLivros" = "totalLivros" + $2,
                  "raffleBought" = "raffleBought" + 1,
                  "updatedAt" = NOW()
              WHERE "userId" = $3`,
-            [purchase.amount, purchase.quotas, purchase.userId]
+            [purchase.amount, purchase.livros, purchase.userId]
           )
           console.log('[Webhook Sim] ✅ TopBuyer atualizado:', purchase.userId)
         } else {
           await queryOne(
-            `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+            `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalLivros", "raffleBought", "createdAt", "updatedAt")
              VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-            [purchase.userId, purchase.amount, purchase.quotas]
+            [purchase.userId, purchase.amount, purchase.livros]
           )
           console.log('[Webhook Sim] ✅ TopBuyer criado:', purchase.userId)
         }
@@ -110,12 +110,12 @@ export async function POST(req: NextRequest) {
           ['confirmed', purchase.id]
         )
 
-        // ✅ Atualizar soldQuotas da rifa
+        // ✅ Atualizar soldLivros da rifa
         await queryOne(
           `UPDATE raffle 
-           SET "soldQuotas" = "soldQuotas" + $1, "updatedAt" = NOW()
+           SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
            WHERE id = $2`,
-          [purchase.quotas, purchase.raffleId]
+          [purchase.livros, purchase.raffleId]
         )
 
         // Buscar detalhes da compra para atualizar topBuyer
@@ -135,17 +135,17 @@ export async function POST(req: NextRequest) {
             await queryOne(
               `UPDATE "topBuyer" 
                SET "totalSpent" = "totalSpent" + $1,
-                   "totalQuotas" = "totalQuotas" + $2,
+                   "totalLivros" = "totalLivros" + $2,
                    "raffleBought" = "raffleBought" + 1,
                    "updatedAt" = NOW()
                WHERE "userId" = $3`,
-              [fullPurchase.amount, fullPurchase.quotas, fullPurchase.userId]
+              [fullPurchase.amount, fullPurchase.livros, fullPurchase.userId]
             )
           } else {
             await queryOne(
-              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+              `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalLivros", "raffleBought", "createdAt", "updatedAt")
                VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-              [fullPurchase.userId, fullPurchase.amount, fullPurchase.quotas]
+              [fullPurchase.userId, fullPurchase.amount, fullPurchase.livros]
             )
           }
         }

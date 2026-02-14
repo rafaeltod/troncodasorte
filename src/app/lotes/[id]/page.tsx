@@ -19,16 +19,16 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4 text-gray-900">Campanha não encontrada</h1>
-          <a href="/campanhas" className="text-emerald-600 hover:text-emerald-700 font-semibold">
-            ← Voltar para campanhas
+          <h1 className="text-2xl font-bold mb-4 text-gray-900">Lote não encontrada</h1>
+          <a href="/lotes" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+            ← Voltar para lotes
           </a>
         </div>
       </div>
     )
   }
 
-  const progress = (raffle.soldQuotas / raffle.totalQuotas) * 100
+  const progress = (raffle.soldLivros / raffle.totalLivros) * 100
   const isOpen = raffle.status === 'open'
   
   // Garantir que images é sempre um array
@@ -39,7 +39,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <a href="/campanhas" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+          <a href="/lotes" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
@@ -101,10 +101,10 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                   <div className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
                     <Ticket className="w-4 h-4" />
-                    Cota
+                    Livro
                   </div>
                   <div className="text-2xl font-black text-emerald-700">
-                    R$ {Number(raffle.quotaPrice).toFixed(2)}
+                    R$ {Number(raffle.livroPrice).toFixed(2)}
                   </div>
                 </div>
               </div>
@@ -146,8 +146,8 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
                 <RaffleDetailClient
                   raffleId={id}
-                  quotaPrice={Number(raffle.quotaPrice)}
-                  availableQuotas={raffle.totalQuotas - raffle.soldQuotas}
+                  livroPrice={Number(raffle.livroPrice)}
+                  availableLivros={raffle.totalLivros - raffle.soldLivros}
                   isOpen={true}
                 />
               </>
@@ -156,7 +156,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             {progress >= 100 && isOpen && (
               <div className="w-full bg-emerald-100 text-emerald-900 py-4 rounded-lg font-black text-center flex items-center justify-center gap-2">
                 <span>✅</span>
-                Todas as Cotas Vendidas
+                Todas as Livros Vendidas
               </div>
             )}
 
@@ -179,7 +179,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
               Os sorteios e entrega dos prêmios serão realizados de acordo com os critérios estabelecidos neste site, nos termos seguintes: O adquirente concorrerá em todos os sorteios previstos no bilhete digital emitido, mesmo sendo contemplado em alguns deles.
             </p>
             <p>
-              Ao contribuir, o titular do BILHETE Digital concorda desde já e sem ônus a utilização de seu nome, sua voz e imagem para a divulgação desta campanha social.
+              Ao contribuir, o titular do BILHETE Digital concorda desde já e sem ônus a utilização de seu nome, sua voz e imagem para a divulgação desta lote social.
             </p>
           </div>
         </div>

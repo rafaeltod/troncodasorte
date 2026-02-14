@@ -11,7 +11,7 @@ import { ArrowLeft, Ticket, Calendar, DollarSign, CheckCircle2, AlertCircle } fr
 interface Purchase {
   id: string
   raffleId: string
-  quotas: number
+  livros: number
   amount: number
   status: string
   numbers?: string[]
@@ -190,10 +190,10 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
             <div className="mb-8">
               <h2 className="text-sm font-bold text-gray-600 mb-4 flex items-center gap-2">
                 <Ticket className="w-4 h-4 text-emerald-600" />
-                Informações da Campanha
+                Informações da Lote
               </h2>
               <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                <p className="text-2xl font-black text-gray-900">{purchase.raffle?.title || 'Campanha'}</p>
+                <p className="text-2xl font-black text-gray-900">{purchase.raffle?.title || 'Lote'}</p>
                 <p className="text-gray-600 mt-2">Status: <span className="font-bold capitalize">{purchase.raffle?.status ? (purchase.raffle.status === 'open' ? 'Aberta' : purchase.raffle.status === 'closed' ? 'Fechada' : purchase.raffle.status === 'finished' ? 'Finalizada' : purchase.raffle.status) : 'N/A'}</span></p>
               </div>
             </div>
@@ -203,9 +203,9 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
                 <p className="text-gray-600 font-semibold text-sm mb-1 flex items-center gap-2">
                   <Ticket className="w-4 h-4 text-emerald-600" />
-                  Cotas
+                  Livros
                 </p>
-                <p className="text-3xl font-black text-gray-900">{purchase.quotas}</p>
+                <p className="text-3xl font-black text-gray-900">{purchase.livros}</p>
               </div>
 
               <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
@@ -231,7 +231,7 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
             {/* Numbers */}
             {purchase.numbers && purchase.numbers.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-600 mb-3">Números das Cotas ({purchase.numbers.length})</h3>
+                <h3 className="text-sm font-bold text-gray-600 mb-3">Números das Livros ({purchase.numbers.length})</h3>
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
                   {purchase.numbers.map((number, index) => (
                     <div
@@ -280,10 +280,10 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
               </Link>
               {purchase.raffleId && (
                 <Link
-                  href={`/campanhas/${purchase.raffleId}`}
+                  href={`/lotes/${purchase.raffleId}`}
                   className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
                 >
-                  Ver Campanha →
+                  Ver Lote →
                 </Link>
               )}
             </div>
@@ -298,10 +298,10 @@ export default function PurchaseDetailPage({ params }: { params: Promise<{ purch
               </Link>
               {purchase.raffleId && (
                 <Link
-                  href={`/campanhas/${purchase.raffleId}`}
+                  href={`/lotes/${purchase.raffleId}`}
                   className="flex-1 text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
                 >
-                  Ver Campanha →
+                  Ver Lote →
                 </Link>
               )}
             </div>

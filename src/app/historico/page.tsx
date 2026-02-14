@@ -15,7 +15,7 @@ interface Purchase {
     status: string
     winner: string | null
   }
-  quotas: number
+  livros: number
   amount: number
   status: string
   createdAt: string
@@ -88,10 +88,10 @@ export default function HistoricoPage() {
             Você não tem nenhuma compra salva. Faça uma compra ou <Link href="/auth/login" className="text-emerald-600 font-bold">faça login</Link> para ver seu histórico.
           </p>
           <Link
-            href="/campanhas"
+            href="/lotes"
             className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
-            Explorar Campanhas 🎯
+            Explorar Lotes 🎯
           </Link>
         </div>
       </div>
@@ -107,10 +107,10 @@ export default function HistoricoPage() {
             Você ainda não comprou nenhuma cota
           </p>
           <Link
-            href="/campanhas"
+            href="/lotes"
             className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
-            Explorar Campanhas 🎯
+            Explorar Lotes 🎯
           </Link>
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function HistoricoPage() {
   }
 
   const totalSpent = purchases.reduce((acc, p) => acc + p.amount, 0)
-  const totalQuotas = purchases.reduce((acc, p) => acc + p.quotas, 0)
+  const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -131,8 +131,8 @@ export default function HistoricoPage() {
             <p className="text-2xl font-black mt-1">R$ {Number(totalSpent).toFixed(2)}</p>
           </div>
           <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-teal-100 text-sm font-semibold">Cotas</p>
-            <p className="text-2xl font-black mt-1">{totalQuotas}</p>
+            <p className="text-teal-100 text-sm font-semibold">Livros</p>
+            <p className="text-2xl font-black mt-1">{totalLivros}</p>
           </div>
           <div className="bg-gradient-to-br from-cyan-500 to-cyan-600 rounded-lg shadow-lg p-4 text-white">
             <p className="text-cyan-100 text-sm font-semibold">Participações</p>
@@ -142,13 +142,13 @@ export default function HistoricoPage() {
 
         <div className="space-y-3">
           {purchases.map((purchase) => (
-            <Link key={purchase.id} href={`/campanhas/${purchase.raffleId}`}>
+            <Link key={purchase.id} href={`/lotes/${purchase.raffleId}`}>
               <div className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 cursor-pointer transition transform hover:scale-102">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
                     <h3 className="font-black text-gray-900 text-lg">{purchase.raffle?.title || 'Rifa'}</h3>
                     <p className="text-gray-600 text-sm mt-1">
-                      {purchase.quotas} cota{purchase.quotas !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
+                      {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                     </p>
                   </div>
                   <div className="text-right">

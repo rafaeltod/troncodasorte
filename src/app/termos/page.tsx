@@ -31,7 +31,7 @@ export default function TermosPage() {
               </p>
               <ul className="list-disc pl-6 mt-3 space-y-2">
                 <li>Criação e participação em rifas online</li>
-                <li>Gerenciamento de compras e quotas</li>
+                <li>Gerenciamento de compras e livros</li>
                 <li>Registro de resultados e vencedores</li>
                 <li>Histórico de transações</li>
               </ul>

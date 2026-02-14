@@ -35,8 +35,8 @@ export async function GET(req: NextRequest) {
       )
     }
 
-    // Buscar todas as campanhas criadas por este admin
-    const campanhas = await queryMany(
+    // Buscar todas as lotes criadas por este admin
+    const lotes = await queryMany(
       `SELECT 
         r.*,
         json_build_object(
@@ -56,11 +56,11 @@ export async function GET(req: NextRequest) {
       [token]
     )
 
-    return NextResponse.json(campanhas)
+    return NextResponse.json(lotes)
   } catch (error) {
-    console.error('Error fetching admin campanhas:', error)
+    console.error('Error fetching admin lotes:', error)
     return NextResponse.json(
-      { error: 'Erro ao buscar campanhas' },
+      { error: 'Erro ao buscar lotes' },
       { status: 500 }
     )
   }

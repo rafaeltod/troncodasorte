@@ -15,10 +15,10 @@ export async function createRaffle(
   creatorId: string,
   data: CreateRaffleInput
 ) {
-  const { title, description, prizeAmount, totalQuotas, quotaPrice, images } = data
+  const { title, description, prizeAmount, totalLivros, livroPrice, images } = data
   const queryStr = `
     INSERT INTO raffle (
-      id, title, description, "prizeAmount", "totalQuotas", "quotaPrice",
+      id, title, description, "prizeAmount", "totalLivros", "livroPrice",
       "creatorId", status, image, images, "createdAt", "updatedAt"
     )
     VALUES (
@@ -34,18 +34,18 @@ export async function createRaffle(
     title,
     description,
     prizeAmount,
-    totalQuotas,
-    quotaPrice,
+    totalLivros,
+    livroPrice,
     creatorId,
     firstImage,
     JSON.stringify(imageArray),
   ])
 }
 
-export async function purchaseQuotas(
+export async function purchaseLivros(
   userId: string,
   raffleId: string,
-  quotas: number,
+  livros: number,
   amount: number
 ) {
   // Buscar a rifa
@@ -55,13 +55,13 @@ export async function purchaseQuotas(
   )
 
   if (!raffle) throw new Error('Rifa não encontrada')
-  if (raffle.soldQuotas + quotas > raffle.totalQuotas) {
-    throw new Error('Cotas insuficientes')
+  if (raffle.soldLivros + livros > raffle.totalLivros) {
+    throw new Error('Livros insuficientes')
   }
 
   // Gerar números aleatórios (6 dígitos: 000000-999999)
   const numbers = Array.from(
-    { length: quotas },
+    { length: livros },
     () => {
       const randomNum = Math.floor(Math.random() * 1000000)
       return String(randomNum).padStart(6, '0')
@@ -71,7 +71,7 @@ export async function purchaseQuotas(
   // Criar compra
   const purchaseQuery = `
     INSERT INTO "rafflePurchase" (
-      id, "userId", "raffleId", quotas, amount, numbers, status, "createdAt", "updatedAt"
+      id, "userId", "raffleId", livros, amount, numbers, status, "createdAt", "updatedAt"
     )
     VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, 'completed', NOW(), NOW())
     RETURNING *
@@ -80,19 +80,19 @@ export async function purchaseQuotas(
   const purchase = await queryOne(purchaseQuery, [
     userId,
     raffleId,
-    quotas,
+    livros,
     amount,
     JSON.stringify(numbers),
   ])
 
   // Atualizar cotas vendidas na rifa
-  await query('UPDATE raffle SET "soldQuotas" = "soldQuotas" + $1 WHERE id = $2', [
-    quotas,
+  await query('UPDATE raffle SET "soldLivros" = "soldLivros" + $1 WHERE id = $2', [
+    livros,
     raffleId,
   ])
 
   // Atualizar top buyer
-  await updateTopBuyer(userId, amount, quotas)
+  await updateTopBuyer(userId, amount, livros)
 
   return purchase
 }
@@ -100,7 +100,7 @@ export async function purchaseQuotas(
 export async function updateTopBuyer(
   userId: string,
   amount: number,
-  quotas: number
+  livros: number
 ) {
   const existing = await queryOne(
     'SELECT * FROM "topBuyer" WHERE "userId" = $1',
@@ -111,20 +111,20 @@ export async function updateTopBuyer(
     return queryOne(
       `
       UPDATE "topBuyer"
-      SET "totalSpent" = "totalSpent" + $1, "totalQuotas" = "totalQuotas" + $2, "updatedAt" = NOW()
+      SET "totalSpent" = "totalSpent" + $1, "totalLivros" = "totalLivros" + $2, "updatedAt" = NOW()
       WHERE "userId" = $3
       RETURNING *
       `,
-      [amount, quotas, userId]
+      [amount, livros, userId]
     )
   }
 
   return queryOne(
     `
-    INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalQuotas", "raffleBought", "createdAt", "updatedAt")
+    INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalLivros", "raffleBought", "createdAt", "updatedAt")
     VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())
     RETURNING *
     `,
-    [userId, amount, quotas]
+    [userId, amount, livros]
   )
 }

@@ -11,7 +11,7 @@
 
 ### 1. Objetivo do Projeto 
 
-O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de rifas digitais. Automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Permitindo que o administrador crie campanhas, gerencie recebimentos via Pix e realize sorteios por meio da loteria federal.
+O projeto tem como objetivo a criação de uma plataforma web para a gestão e comercialização de rifas digitais. Automatizando o processo de reserva, venda e sorteio de cotas para os clientes. Permitindo que o administrador crie lotes, gerencie recebimentos via Pix e realize sorteios por meio da loteria federal.
  
 
 ### 2. Descrição do problema 

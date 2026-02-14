@@ -10,15 +10,15 @@ import { Ticket, Minus, Plus, User, Mail, FileText, Phone, Calendar } from 'luci
 
 interface CheckoutProps {
   raffleId: string
-  quotaPrice: number
-  availableQuotas: number
+  livroPrice: number
+  availableLivros: number
   isOpen: boolean
 }
 
 export function Checkout({
   raffleId,
-  quotaPrice,
-  availableQuotas,
+  livroPrice,
+  availableLivros,
   isOpen,
 }: CheckoutProps) {
   const router = useRouter()
@@ -38,11 +38,11 @@ export function Checkout({
 
   const [showPixModal, setShowPixModal] = useState(false)
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
-  const numericQuotaPrice = Number(quotaPrice)
-  const totalPrice = quantity * numericQuotaPrice
+  const numericLivroPrice = Number(livroPrice)
+  const totalPrice = quantity * numericLivroPrice
 
   const handleQuantityChange = (newQuantity: number) => {
-    if (newQuantity >= 1 && newQuantity <= availableQuotas) {
+    if (newQuantity >= 1 && newQuantity <= availableLivros) {
       setQuantity(newQuantity)
     }
   }
@@ -133,14 +133,14 @@ export function Checkout({
       }
 
       // Fazer a compra
-      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/lotes/${raffleId}/purchase`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
         body: JSON.stringify({
-          quotas: quantity,
+          livros: quantity,
           amount: totalPrice,
         }),
       })
@@ -261,7 +261,7 @@ export function Checkout({
 
           {/* Seleção de quantidade */}
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-3">Quantidade de Cotas</label>
+            <label className="block text-sm font-bold text-gray-900 mb-3">Quantidade de Livros</label>
             <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-2 border border-gray-200 mb-4">
               <button
                 onClick={() => handleQuantityChange(quantity - 1)}
@@ -273,7 +273,7 @@ export function Checkout({
               <input
                 type="number"
                 min="1"
-                max={availableQuotas}
+                max={availableLivros}
                 value={quantity}
                 onChange={(e) => handleQuantityChange(Number(e.target.value))}
                 disabled={loading}
@@ -281,20 +281,20 @@ export function Checkout({
               />
               <button
                 onClick={() => handleQuantityChange(quantity + 1)}
-                disabled={quantity >= availableQuotas || loading}
+                disabled={quantity >= availableLivros || loading}
                 className="p-2 hover:bg-gray-200 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition"
               >
                 <Plus className="w-5 h-5 text-gray-700" />
               </button>
             </div>
-            <p className="text-xs text-gray-600 mb-4">{availableQuotas} cotas disponíveis</p>
+            <p className="text-xs text-gray-600 mb-4">{availableLivros} cotas disponíveis</p>
           </div>
 
           {/* Resumo de preço */}
           <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
             <div className="flex justify-between items-center mb-2">
               <p className="text-sm text-gray-700">Preço por cota:</p>
-              <p className="font-bold text-gray-900">R$ {numericQuotaPrice.toFixed(2)}</p>
+              <p className="font-bold text-gray-900">R$ {numericLivroPrice.toFixed(2)}</p>
             </div>
             <div className="flex justify-between items-center mb-2">
               <p className="text-sm text-gray-700">Quantidade:</p>
