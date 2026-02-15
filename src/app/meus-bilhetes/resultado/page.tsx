@@ -17,7 +17,7 @@ interface Purchase {
   raffleTitle: string
   raffleStatus: string
   raffleImage: string
-  numbers: string[]
+  numbers: string[] | string
 }
 
 interface TicketData {
