@@ -334,7 +334,10 @@ export function Checkout({
         onPaymentConfirmed={() => {
           setShowPixModal(false)
           setPurchaseId(null)
-          router.push('/historico')
+          // Redirecionar para página da compra para ver os bilhetes gerados
+          if (purchaseId) {
+            router.push(`/compra/${purchaseId}`)
+          }
         }}
       />
     </div>

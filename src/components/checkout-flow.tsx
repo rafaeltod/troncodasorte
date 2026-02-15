@@ -487,12 +487,9 @@ export function CheckoutFlow({
             localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
           }
           
-          // Redirecionar apropriadamente
-          if (user) {
-            router.push('/historico')
-          } else {
-            // Usuário anônimo - voltar para lotes
-            router.push('/lotes')
+          // Redirecionar para página da compra para ver os bilhetes gerados
+          if (purchaseId) {
+            router.push(`/compra/${purchaseId}`)
           }
         }}
       />

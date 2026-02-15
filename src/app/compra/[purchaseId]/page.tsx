@@ -119,6 +119,45 @@ export default function PurchaseDetailPage({
     fetchPurchaseDetails();
   }, [loading, authUser, purchaseId]);
 
+  // ✅ Auto-refresh: se compra está pendente (sem números), fazer polling para atualizar
+  useEffect(() => {
+    if (!purchase || purchase.status !== 'pending' || !authUser) return;
+
+    const pollForUpdates = async () => {
+      try {
+        const response = await fetch(`/api/users/${authUser.id}/purchases`, {
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const purchases = await response.json();
+          const updatedPurchase = purchases.find(
+            (p: Purchase) => p.id === purchaseId,
+          );
+
+          if (updatedPurchase) {
+            setPurchase(updatedPurchase);
+            // Se agora tá confirmado (números foram gerados), para o polling
+            if (updatedPurchase.status === 'confirmed') {
+              console.log('[PurchaseDetail] ✅ Números gerados! Parando polling');
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error polling purchase status:', err);
+      }
+    };
+
+    // Fazer polling a cada 2 segundos enquanto status for 'pending'
+    const interval = setInterval(() => {
+      if (purchase.status === 'pending') {
+        pollForUpdates();
+      }
+    }, 2000);
+
+    return () => clearInterval(interval);
+  }, [purchase, authUser, purchaseId]);
+
   if (loading || pageLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
