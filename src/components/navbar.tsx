@@ -42,7 +42,7 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/lotes"
+              href="/"
               className="hover:text-emerald-100 transition-colors"
             >
               Lotes
@@ -113,7 +113,7 @@ export function Navbar() {
           <nav className="md:hidden py-4 border-t border-white/20">
             <div className="flex flex-col gap-3">
               <Link
-                href="/lotes"
+                href="/"
                 className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
