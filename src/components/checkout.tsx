@@ -334,9 +334,19 @@ export function Checkout({
         onPaymentConfirmed={() => {
           setShowPixModal(false)
           setPurchaseId(null)
-          // Redirecionar para página da compra para ver os bilhetes gerados
+          
+          // Redirecionar automaticamente para Meus Bilhetes
           if (purchaseId) {
-            router.push(`/compra/${purchaseId}`)
+            // Se é compra anônima, salva dados para não precisar preencher novamente
+            if (!user) {
+              localStorage.setItem('ticketQuery', JSON.stringify({
+                phone: formData.phone.replace(/\D/g, ''),
+                cpf: formData.cpf.replace(/\D/g, ''),
+              }))
+            }
+            
+            // Redirecionar para visualizar bilhetes confirmados
+            router.push('/meus-bilhetes/resultado')
           }
         }}
       />

@@ -472,24 +472,18 @@ export function CheckoutFlow({
           setShowPixModal(false)
           setPurchaseId(null)
           
-          // Salvar compra anônima no localStorage para visualizar depois
-          if (!user && purchaseId) {
-            const anonymousPurchases = JSON.parse(localStorage.getItem('anonymousPurchases') || '[]')
-            const purchaseData = {
-              id: purchaseId,
-              raffleId,
-              amount: totalPrice,
-              livros: selectedQuantity,
-              status: 'confirmed',
-              createdAt: new Date().toISOString(),
-            }
-            anonymousPurchases.push(purchaseData)
-            localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
-          }
-          
-          // Redirecionar para página da compra para ver os bilhetes gerados
+          // Redirecionar automaticamente para Meus Bilhetes
           if (purchaseId) {
-            router.push(`/compra/${purchaseId}`)
+            // Se é compra anônima, salva dados para não precisar preencher novamente
+            if (!user) {
+              localStorage.setItem('ticketQuery', JSON.stringify({
+                phone: formData.phone.replace(/\D/g, ''),
+                cpf: formData.cpf.replace(/\D/g, ''),
+              }))
+            }
+            
+            // Redirecionar para visualizar bilhetes confirmados
+            router.push('/meus-bilhetes/resultado')
           }
         }}
       />
