@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
             email: payerEmail,
           },
           metadata: {
-            purchaseId,
-            raffleId,
+            purchase_id: purchaseId,  // snake_case para consistência com MP
+            raffle_id: raffleId,      // snake_case para consistência com MP
           },
         }
 
