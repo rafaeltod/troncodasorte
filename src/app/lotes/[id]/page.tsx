@@ -163,7 +163,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
             {!isOpen && (
               <div className="w-full bg-gray-200 text-gray-900 py-4 rounded-lg font-black text-center">
-                Rifa {raffle.status === 'drawn' ? 'Sorteada' : 'Fechada'}
+                Lote {raffle.status === 'drawn' ? 'Sorteada' : 'Fechada'}
               </div>
             )}
 
