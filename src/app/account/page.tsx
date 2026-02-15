@@ -384,7 +384,7 @@ export default function AccountPage() {
               <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma lote</p>
               <Link
-                href="/lotes"
+                href="/"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105"
               >
                 <Ticket className="w-5 h-5" />

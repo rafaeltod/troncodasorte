@@ -22,7 +22,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4 text-gray-900">Lote não encontrada</h1>
-          <a href="/lotes" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+          <a href="/" className="text-emerald-600 hover:text-emerald-700 font-semibold">
             ← Voltar para lotes
           </a>
         </div>
@@ -41,7 +41,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-6">
-          <a href="/lotes" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+          <a href="/" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>

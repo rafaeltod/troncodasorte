@@ -88,7 +88,7 @@ export default function HistoricoPage() {
             Você não tem nenhuma compra salva. Faça uma compra ou <Link href="/auth/login" className="text-emerald-600 font-bold">faça login</Link> para ver seu histórico.
           </p>
           <Link
-            href="/lotes"
+            href="/"
             className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
             Explorar Lotes 🎯
@@ -107,7 +107,7 @@ export default function HistoricoPage() {
             Você ainda não comprou nenhuma cota
           </p>
           <Link
-            href="/lotes"
+            href="/"
             className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
             Explorar Lotes 🎯
