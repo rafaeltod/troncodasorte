@@ -43,19 +43,20 @@ export function censorName(name: string): string {
 }
 
 /**
- * Censura o email mostrando apenas primeiro caractere + domínio
- * Ex: "rafael@email.com" → "r***@email.com"
- * Ex: "usuario.name@empresa.com.br" → "u***@empresa.com.br"
+ * Censura o email mostrando apenas primeiros 4 caracteres + últimos 4 do domínio
+ * Ex: "rafael@email.com" → "rafa***@email.com"
+ * Ex: "usuario.name@empresa.com.br" → "usua***@empresa.com.br"
  */
 export function censorEmail(email: string): string {
-  if (!email || !email.includes('@')) return '***@***'
+  if (!email || !email.includes('@')) return '****@****'
   
   const [name, domain] = email.split('@')
   
-  if (name.length === 0) return `***@${domain}`
+  if (name.length === 0) return `****@${domain}`
   
-  // Primeiro caractere + *** + @domínio
-  return `${name[0]}***@${domain}`
+  // Mostrar primeiros 4 caracteres do nome + *** + @domínio
+  const displayName = name.substring(0, 4)
+  return `${displayName}***@${domain}`
 }
 
 /**
