@@ -106,7 +106,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     Livro
                   </div>
                   <div className="text-2xl font-black text-emerald-700">
-                    R$ {Number(raffle.livroPrice).toFixed(2)}
+                    R$ {formatDecimal(Number(raffle.livroPrice))}
                   </div>
                 </div>
               </div>
