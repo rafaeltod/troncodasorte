@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { useAuth } from "@/context/auth-context";
-import { censorName, censorPhone } from "@/lib/formatters";
+import { censorName, censorPhoneShort } from "@/lib/formatters";
 import {
   ArrowLeft,
   Ticket,
@@ -386,7 +386,7 @@ export default function PurchaseDetailPage({
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <p className="text-gray-600">Telefone:</p>
                   <p className="text-gray-900 font-bold">
-                    {censorPhone(user.phone)}
+                    {censorPhoneShort(user.phone)}
                   </p>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">

@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
 import { formatDecimal } from '@/lib/formatters'
-import { censorName, censorPhone } from '@/lib/formatters'
+import { censorName, censorPhoneShort } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -276,7 +276,7 @@ export default function AccountPage() {
                       <Phone className="w-4 h-4 text-emerald-600" />
                       Telefone
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{censorPhone(user.phone)}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorPhoneShort(user.phone)}</p>
                   </div>
                 </div>
 

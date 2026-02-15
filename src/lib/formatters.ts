@@ -64,6 +64,27 @@ export function censorPhone(phone: string): string {
 }
 
 /**
+ * Censura o telefone mostrando APENAS DDD + últimos 4 dígitos
+ * Ex: "11987654321" → "(11) ****-9999"
+ * Ex: "(11) 98765-4321" → "(11) ****-4321"
+ */
+export function censorPhoneShort(phone: string): string {
+  // Remove formatação
+  const clean = phone.replace(/\D/g, '')
+  
+  if (clean.length < 10) return '(##) ****-####'
+  
+  // DDD (primeiros 2 dígitos)
+  const ddd = clean.substring(0, 2)
+  
+  // Últimos 4 dígitos
+  const last4 = clean.substring(clean.length - 4)
+  
+  // Formatar: (DDD) ****-LAST4
+  return `(${ddd}) ****-${last4}`
+}
+
+/**
  * Formata um número como moeda brasileira (BRL)
  * Ex: 1000 → "R$ 1.000,00"
  * Ex: 50.5 → "R$ 50,50"
