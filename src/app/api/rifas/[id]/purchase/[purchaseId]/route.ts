@@ -78,52 +78,15 @@ export async function DELETE(req: NextRequest, { params }: RouteProps) {
     const livrosToCancel = Number(purchase.livros)
     const amountToCancel = Number(purchase.amount)
 
-    // Deletar a compra
+    // Deletar a compra pendente
+    // OBS: Compras pendentes NÃO incrementam soldLivros nem topBuyer,
+    // então não precisamos reverter nada - apenas deletar
     await queryOne(
       'DELETE FROM livros WHERE id = $1',
       [purchaseId]
     )
 
-    // Reverter quantidades vendidas da rifa
-    await queryOne(
-      `UPDATE lotes 
-       SET "soldLivros" = "soldLivros" - $1, "updatedAt" = NOW()
-       WHERE id = $2`,
-      [livrosToCancel, raffleId]
-    )
-
-    // Atualizar top buyer (subtrair cotas e valor gasto)
-    const topBuyer = await queryOne(
-      `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-      [token]
-    )
-
-    if (topBuyer) {
-      const newTotalSpent = Math.max(0, Number(topBuyer.totalSpent) - amountToCancel)
-      const newTotalLivros = Math.max(0, Number(topBuyer.totalLivros) - livrosToCancel)
-      const newRaffleBought = Math.max(0, Number(topBuyer.raffleBought) - 1)
-
-      if (newTotalSpent === 0 && newTotalLivros === 0 && newRaffleBought === 0) {
-        // Deletar o top buyer se não tiver mais compras
-        await queryOne(
-          `DELETE FROM "topBuyer" WHERE "userId" = $1`,
-          [token]
-        )
-      } else {
-        // Atualizar o top buyer
-        await queryOne(
-          `UPDATE "topBuyer" 
-           SET "totalSpent" = $1,
-               "totalLivros" = $2,
-               "raffleBought" = $3,
-               "updatedAt" = NOW()
-           WHERE "userId" = $4`,
-          [newTotalSpent, newTotalLivros, newRaffleBought, token]
-        )
-      }
-    }
-
-    console.log('[Purchase] Compra cancelada:', {
+    console.log('[Purchase] Compra pendente cancelada/expirada:', {
       purchaseId,
       raffleId,
       livrosCanceled: livrosToCancel,
