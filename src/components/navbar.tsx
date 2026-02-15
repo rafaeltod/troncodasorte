@@ -47,13 +47,6 @@ export function Navbar() {
             >
               Lotes
             </Link>
-            <Link
-              href="/top-compradores"
-              className="flex items-center gap-1 hover:text-emerald-100 transition-colors"
-            >
-              <Trophy className="w-4 h-4" />
-              Top Compradores
-            </Link>
             {user ? (
               <>
                 <Link
@@ -118,14 +111,6 @@ export function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Lotes
-              </Link>
-              <Link
-                href="/top-compradores"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Trophy className="w-4 h-4" />
-                Top Compradores
               </Link>
               {user ? (
                 <>

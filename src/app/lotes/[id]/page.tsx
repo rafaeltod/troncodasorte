@@ -6,6 +6,7 @@ import { RaffleRegulation } from '@/components/raffle-regulation'
 import { RaffleDetailClient } from '@/components/raffle-detail-client'
 import { RaffleImageGallery } from '@/components/raffle-image-gallery'
 import { AdminLoteActions } from '@/components/admin-lote-actions'
+import { RaffleTopBuyers } from '@/components/raffle-top-buyers'
 
 interface DetailProps {
   params: Promise<{
@@ -49,7 +50,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Images */}
-          <div>
+          <div className="space-y-6">
             {mainImage && (
               <RaffleImageGallery
                 mainImage={mainImage}
@@ -57,6 +58,11 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 status={raffle.status}
               />
             )}
+            
+            {/* Top Compradores do Lote - Mobile/Tablet Below, PC on side */}
+            <div className="lg:block">
+              <RaffleTopBuyers raffleId={id} />
+            </div>
           </div>
 
           {/* Info */}
