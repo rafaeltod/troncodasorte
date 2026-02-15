@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 import { ArrowLeft, Ticket, Eye, ChevronDown, X } from 'lucide-react'
-import { censorName, censorPhoneShort, formatDecimal } from '@/lib/formatters'
+import { censorName, censorPhoneShort, censorEmail, formatDecimal } from '@/lib/formatters'
 
 interface Purchase {
   id: string
@@ -225,7 +225,7 @@ export default function TicketsResultPage() {
             </div>
             <div>
               <p className="text-xs font-bold text-gray-600 mb-1">Email</p>
-              <p className="text-lg font-bold text-gray-900">{ticketData.user.email}</p>
+              <p className="text-lg font-bold text-gray-900">{censorEmail(ticketData.user.email)}</p>
             </div>
             <div>
               <p className="text-xs font-bold text-gray-600 mb-1">Telefone</p>

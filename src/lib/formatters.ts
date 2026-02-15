@@ -43,6 +43,22 @@ export function censorName(name: string): string {
 }
 
 /**
+ * Censura o email mostrando apenas primeiro caractere + domínio
+ * Ex: "rafael@email.com" → "r***@email.com"
+ * Ex: "usuario.name@empresa.com.br" → "u***@empresa.com.br"
+ */
+export function censorEmail(email: string): string {
+  if (!email || !email.includes('@')) return '***@***'
+  
+  const [name, domain] = email.split('@')
+  
+  if (name.length === 0) return `***@${domain}`
+  
+  // Primeiro caractere + *** + @domínio
+  return `${name[0]}***@${domain}`
+}
+
+/**
  * Censura o telefone mostrando DDD + dígitos do meio + **
  * Ex: "(11) 98765-4321" → "(11) 98765-**"
  * Ex: "11987654321" → "(11) 98765-**"
