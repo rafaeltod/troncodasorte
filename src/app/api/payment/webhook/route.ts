@@ -15,11 +15,21 @@ export async function POST(req: NextRequest) {
     })
 
     // O Mercado Pago envia o tipo de evento via query param "topic" ou no body "action"
-    const topic = searchParams.get('topic') || body.action
+    // action pode ser: "payment.created", "payment.updated", etc.
+    // type pode ser: "payment"
+    const topic = searchParams.get('topic') || body.type || body.action
     const paymentId = searchParams.get('id') || body.data?.id
 
-    // Se for um evento de pagamento
-    if (topic === 'payment' && paymentId) {
+    // Se for um evento de pagamento (topic pode ser "payment" ou "payment.created"/"payment.updated")
+    const isPaymentEvent = topic === 'payment' || (typeof topic === 'string' && topic.startsWith('payment.'))
+    
+    console.log('[MP Webhook] Análise do evento:', {
+      topic,
+      isPaymentEvent,
+      paymentId,
+    })
+    
+    if (isPaymentEvent && paymentId) {
       console.log(`[MP Webhook] Processando pagamento: ${paymentId}`)
 
       // Buscar detalhes do pagamento no Mercado Pago
