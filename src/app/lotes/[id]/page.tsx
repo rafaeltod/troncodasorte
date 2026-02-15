@@ -8,6 +8,10 @@ import { RaffleImageGallery } from '@/components/raffle-image-gallery'
 import { AdminLoteActions } from '@/components/admin-lote-actions'
 import { RaffleTopBuyers } from '@/components/raffle-top-buyers'
 
+// ✅ Desabilitar cache e revalidação - sempre buscar dados frescos do BD
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 interface DetailProps {
   params: Promise<{
     id: string
