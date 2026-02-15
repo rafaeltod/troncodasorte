@@ -79,7 +79,7 @@ export default function MyTicketsPage() {
       <div className="max-w-md mx-auto px-4 py-8">
         <Link
           href="/"
-          className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
+          className="items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar
@@ -138,19 +138,20 @@ export default function MyTicketsPage() {
             <button
               type="submit"
               disabled={loading || !formData.phone || !formData.cpf}
-              className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+              className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
             >
-              {loading ? '⏳ Consultando...' : 'Consultar Bilhetes'}
+              {loading ? "⏳ Consultando..." : "Consultar Bilhetes"}
             </button>
           </form>
 
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
             <p className="text-sm text-blue-900 font-semibold">
-              ℹ️ Seus dados são protegidos e usados apenas para localizar suas compras.
+              ℹ️ Seus dados são protegidos e usados apenas para localizar suas
+              compras.
             </p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

@@ -38,10 +38,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    // Gerar números das cotas AGORA (após confirmação do pagamento)
     const livros = purchase.livros;
 
-    // Buscar números já usados neste lote (apenas de compras confirmadas)
+
     const existingNumbers = await queryMany(
       `SELECT numbers FROM livros WHERE "raffleId" = $1 AND numbers != '' AND numbers IS NOT NULL`,
       [raffleId],

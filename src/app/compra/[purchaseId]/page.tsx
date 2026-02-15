@@ -177,7 +177,7 @@ export default function PurchaseDetailPage({
           {/* Purchase Card */}
           <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 mb-8">
             <div className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 overflow-hidden">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 overflow-hidden">
                 <Image
                   src="/troncodasorte.png"
                   alt="Tronco da Sorte"
@@ -285,7 +285,7 @@ export default function PurchaseDetailPage({
                   {purchase.numbers.map((number, index) => (
                     <div
                       key={index}
-                      className="bg-gradient-to-br from-emerald-100 to-teal-100 border border-emerald-300 rounded p-2 text-center"
+                      className="bg-linear-to-br from-emerald-100 to-teal-100 border border-emerald-300 rounded p-2 text-center"
                     >
                       <p className="text-xs font-bold text-emerald-800">
                         {number}
@@ -350,7 +350,7 @@ export default function PurchaseDetailPage({
               {purchase.raffleId && (
                 <Link
                   href={`/lotes/${purchase.raffleId}`}
-                  className="text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                  className="text-center bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
                 >
                   Ver Lote →
                 </Link>
@@ -372,7 +372,7 @@ export default function PurchaseDetailPage({
               {purchase.raffleId && (
                 <Link
                   href={`/lotes/${purchase.raffleId}`}
-                  className="flex-1 text-center bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                  className="flex-1 text-center bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
                 >
                   Ver Lote →
                 </Link>
