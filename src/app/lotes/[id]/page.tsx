@@ -64,19 +64,19 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
               {raffle.status === 'drawn' && (
                 <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <Trophy className="w-4 h-4" />
-                  SORTEADA
+                  SORTEADO
                 </span>
               )}
               {raffle.status === 'closed' && (
                 <span className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <span>🔒</span>
-                  FECHADA
+                  FECHADO
                 </span>
               )}
               {isOpen && (
                 <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <Ticket className="w-4 h-4" />
-                  ABERTA
+                  ABERTO
                 </span>
               )}
 
@@ -163,7 +163,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
             {!isOpen && (
               <div className="w-full bg-gray-200 text-gray-900 py-4 rounded-lg font-black text-center">
-                Lote {raffle.status === 'drawn' ? 'Sorteada' : 'Fechada'}
+                Lote {raffle.status === 'drawn' ? 'Sorteado' : 'Fechado'}
               </div>
             )}
 
