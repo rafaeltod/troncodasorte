@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
+import { formatDecimal } from '@/lib/formatters'
 import { censorName, censorPhone } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
@@ -363,7 +364,7 @@ export default function AccountPage() {
                       </div>
                       <div className="text-right">
                         <p className="font-black text-emerald-700 text-lg mb-2">
-                          R$ {Number(purchase.amount).toFixed(2)}
+                          R$ {formatDecimal(Number(purchase.amount))}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
                           purchase.status === 'confirmed' 

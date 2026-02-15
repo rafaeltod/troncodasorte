@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ArrowLeft, Ticket, Eye } from 'lucide-react'
-import { censorName, censorPhone } from '@/lib/formatters'
+import { censorName, censorPhone, formatDecimal } from '@/lib/formatters'
 
 interface Purchase {
   id: string
@@ -228,7 +228,7 @@ export default function TicketsResultPage() {
                         </div>
                         <div className="text-right">
                           <p className="text-2xl font-black text-emerald-600">
-                            R$ {Number(purchase.amount).toFixed(2)}
+                            R$ {formatDecimal(Number(purchase.amount))}
                           </p>
                           <p className="text-xs font-bold text-gray-600 mt-1">
                             {purchase.livros} livros

@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
 import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
+import { formatDecimal } from '@/lib/formatters'
 import { RaffleRegulation } from '@/components/raffle-regulation'
 import { RaffleDetailClient } from '@/components/raffle-detail-client'
 import { RaffleImageGallery } from '@/components/raffle-image-gallery'
@@ -94,7 +95,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                   Prêmio
                 </div>
                 <div className="text-4xl font-black text-emerald-700">
-                  R$ {Number(raffle.prizeAmount).toFixed(2)}
+                  R$ {formatDecimal(Number(raffle.prizeAmount))}
                 </div>
               </div>
 

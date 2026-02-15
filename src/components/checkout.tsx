@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone, formatDecimal } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Minus, Plus, User, Mail, FileText, Phone, Calendar } from 'lucide-react'
 
@@ -294,7 +294,7 @@ export function Checkout({
           <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
             <div className="flex justify-between items-center mb-2">
               <p className="text-sm text-gray-700">Preço por cota:</p>
-              <p className="font-bold text-gray-900">R$ {numericLivroPrice.toFixed(2)}</p>
+              <p className="font-bold text-gray-900">R$ {formatDecimal(numericLivroPrice)}</p>
             </div>
             <div className="flex justify-between items-center mb-2">
               <p className="text-sm text-gray-700">Quantidade:</p>
@@ -302,7 +302,7 @@ export function Checkout({
             </div>
             <div className="border-t border-emerald-200 pt-2 flex justify-between items-center">
               <p className="font-black text-gray-900">Total:</p>
-              <p className="text-2xl font-black text-emerald-600">R$ {totalPrice.toFixed(2)}</p>
+              <p className="text-2xl font-black text-emerald-600">R$ {formatDecimal(totalPrice)}</p>
             </div>
           </div>
 
@@ -312,7 +312,7 @@ export function Checkout({
             disabled={loading || quantity === 0}
             className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
-            {loading ? '⏳ Processando...' : `💳 Comprar Agora - R$ ${totalPrice.toFixed(2)}`}
+            {loading ? '⏳ Processando...' : `💳 Comprar Agora - R$ ${formatDecimal(totalPrice)}`}
           </button>
 
           <p className="text-xs text-gray-600 text-center mt-3">
