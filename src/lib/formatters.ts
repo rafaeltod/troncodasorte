@@ -75,3 +75,13 @@ export function formatCurrency(value: number): string {
   }).format(value)
 }
 
+/**
+ * Formata um número com separador de decimal em vírgula (padrão brasileiro)
+ * Ex: 50.50 → "50,50"
+ * Ex: 1000.00 → "1000,00"
+ * Ex: 123.4 → "123,4"
+ */
+export function formatDecimal(value: number, decimals: number = 2): string {
+  return value.toFixed(decimals).replace('.', ',')
+}
+

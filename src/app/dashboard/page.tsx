@@ -152,12 +152,6 @@ export default function DashboardPage() {
             >
               👤 Meu Perfil
             </Link>
-            <Link
-              href="/top-compradores"
-              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
-            >
-              <Trophy className="inline mr-2" size={20} /> Top Compradores
-            </Link>
           </div>
         </div>
 

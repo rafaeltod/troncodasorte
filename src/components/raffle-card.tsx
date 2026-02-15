@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Calendar, Users, TrendingUp } from 'lucide-react'
+import { formatDecimal } from '@/lib/formatters'
 
 interface RaffleCardProps {
   id: string
@@ -49,7 +50,7 @@ export function RaffleCard({
             </div>
           )}
           <div className={`absolute top-3 right-3 ${status === 'closed' ? 'bg-gray-400' : 'bg-emerald-600'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
-            R$ {Number(livroPrice).toFixed(2)}
+            R$ {formatDecimal(Number(livroPrice))}
           </div>
           {percentageSold >= 80 && (
             <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
@@ -84,7 +85,7 @@ export function RaffleCard({
           <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
             <div className="text-sm text-gray-600">Prêmio Principal</div>
             <div className="text-2xl font-bold text-emerald-600">
-              R$ {Number(prizeAmount).toFixed(2)}
+              R$ {formatDecimal(Number(prizeAmount))}
             </div>
           </div>
 

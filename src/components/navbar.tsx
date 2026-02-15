@@ -42,17 +42,10 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/lotes"
+              href="/"
               className="hover:text-emerald-100 transition-colors"
             >
               Lotes
-            </Link>
-            <Link
-              href="/top-compradores"
-              className="flex items-center gap-1 hover:text-emerald-100 transition-colors"
-            >
-              <Trophy className="w-4 h-4" />
-              Top Compradores
             </Link>
             {user ? (
               <>
@@ -113,19 +106,11 @@ export function Navbar() {
           <nav className="md:hidden py-4 border-t border-white/20">
             <div className="flex flex-col gap-3">
               <Link
-                href="/lotes"
+                href="/"
                 className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Lotes
-              </Link>
-              <Link
-                href="/top-compradores"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Trophy className="w-4 h-4" />
-                Top Compradores
               </Link>
               {user ? (
                 <>

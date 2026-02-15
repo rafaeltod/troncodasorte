@@ -92,8 +92,13 @@ export default function HistoricoPage() {
             para ver seu histórico.
           </p>
           <Link
+<<<<<<< HEAD
             href="/lotes"
             className="inline-block bg-linear-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+=======
+            href="/"
+            className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+>>>>>>> f57280fe9be2250f859ec1cd544f42effed9d2fc
           >
             Explorar Lotes 🎯
           </Link>

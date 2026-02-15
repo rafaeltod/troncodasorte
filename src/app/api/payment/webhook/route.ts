@@ -62,16 +62,19 @@ export async function POST(req: NextRequest) {
         id: payment.id,
         status: payment.status,
         transaction_amount: payment.transaction_amount,
-        purchaseId: payment.metadata?.purchase_id,
-        raffleId: payment.metadata?.raffle_id,
+        metadata: payment.metadata,
       });
 
-      // Extrair purchaseId dos metadata
-      const purchaseId =
-        payment.metadata?.purchase_id || payment.metadata?.purchaseId;
+      // Extrair purchaseId dos metadata com múltiplas tentativas
+      let purchaseId = 
+        payment.metadata?.purchase_id ||      // snake_case (padrão MP)
+        payment.metadata?.purchaseId ||       // camelCase (fallback)
+        payment.external_reference;           // último recurso
 
       if (!purchaseId) {
-        console.warn("[MP Webhook] purchaseId não encontrado nos metadados");
+        console.warn("[MP Webhook] purchaseId não encontrado nos metadados:", 
+          JSON.stringify(payment.metadata, null, 2)
+        );
         return NextResponse.json(
           { error: "purchaseId não encontrado" },
           { status: 400 },

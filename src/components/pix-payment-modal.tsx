@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { X, Copy, CheckCircle2, Clock } from 'lucide-react'
 import QRCode from 'qrcode'
 import { usePurchaseStatus } from '@/hooks/use-purchase-status'
+import { formatDecimal } from '@/lib/formatters'
 
 interface PixPaymentModalProps {
   isOpen: boolean
@@ -191,7 +192,7 @@ export function PixPaymentModal({
         {!pixData ? (
         <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
           <p className="text-sm text-gray-700 mb-3">
-            💰 <span className="font-bold">Valor a pagar:</span> R$ {(backendAmount || amount).toFixed(2)}
+            💰 <span className="font-bold">Valor a pagar:</span> R$ {formatDecimal(backendAmount || amount)}
           </p>
           <p className="text-xs text-gray-600">
             Gerando QR Code PIX para você...

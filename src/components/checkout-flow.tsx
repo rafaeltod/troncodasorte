@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone, formatDecimal } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
 
@@ -244,7 +244,7 @@ export function CheckoutFlow({
       <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Preço por cota:</p>
-          <p className="font-bold text-gray-900">R$ {numericLivroPrice.toFixed(2)}</p>
+          <p className="font-bold text-gray-900">R$ {formatDecimal(numericLivroPrice)}</p>
         </div>
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Quantidade:</p>
@@ -252,7 +252,7 @@ export function CheckoutFlow({
         </div>
         <div className="border-t border-emerald-200 pt-2 flex justify-between items-center">
           <p className="font-black text-gray-900">Total:</p>
-          <p className="text-2xl font-black text-emerald-600">R$ {totalPrice.toFixed(2)}</p>
+          <p className="text-2xl font-black text-emerald-600">R$ {formatDecimal(totalPrice)}</p>
         </div>
       </div>
 
@@ -427,7 +427,7 @@ export function CheckoutFlow({
                 <strong>Livros:</strong> {selectedQuantity}x
               </p>
               <p className="border-t border-emerald-200 pt-2">
-                <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {totalPrice.toFixed(2)}</span>
+                <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {formatDecimal(totalPrice)}</span>
               </p>
             </div>
           </div>
@@ -487,12 +487,9 @@ export function CheckoutFlow({
             localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
           }
           
-          // Redirecionar apropriadamente
-          if (user) {
-            router.push('/historico')
-          } else {
-            // Usuário anônimo - voltar para lotes
-            router.push('/lotes')
+          // Redirecionar para página da compra para ver os bilhetes gerados
+          if (purchaseId) {
+            router.push(`/compra/${purchaseId}`)
           }
         }}
       />
