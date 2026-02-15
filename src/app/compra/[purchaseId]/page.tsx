@@ -80,14 +80,28 @@ export default function PurchaseDetailPage({
               (p: Purchase) => p.id === purchaseId,
             );
 
-            if (!foundPurchase) {
-              setError("Compra não encontrada");
+            if (foundPurchase) {
+              setPurchase(foundPurchase);
+              setUser(authUser);
               setPageLoading(false);
               return;
             }
 
-            setPurchase(foundPurchase);
-            setUser(authUser);
+            // Se não encontrou na lista do usuário, tenta buscar a compra diretamente
+            // (pode ser uma compra anônima que foi redirecionada após confirmação)
+            const directResponse = await fetch(`/api/purchases/${purchaseId}`, {
+              credentials: "include",
+            });
+
+            if (directResponse.ok) {
+              const directPurchase = await directResponse.json();
+              setPurchase(directPurchase);
+              setUser(authUser);
+              setPageLoading(false);
+              return;
+            }
+
+            setError("Compra não encontrada");
             setPageLoading(false);
           } else {
             setError("Erro ao carregar detalhes da compra");
@@ -103,6 +117,16 @@ export default function PurchaseDetailPage({
             setReferrer(data.referrer || null);
             setPageLoading(false);
           } else {
+            // Último recurso: tentar buscar a compra diretamente
+            const directResponse = await fetch(`/api/purchases/${purchaseId}`);
+
+            if (directResponse.ok) {
+              const directPurchase = await directResponse.json();
+              setPurchase(directPurchase);
+              setPageLoading(false);
+              return;
+            }
+
             setError(
               'Compra não encontrada. Acesse por "Meus Bilhetes" para visualizar.',
             );
