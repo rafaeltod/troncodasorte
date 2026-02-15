@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { queryOne, queryMany } from "@/lib/db";
+import { queryOne } from "@/lib/db";
 
 interface RouteProps {
   params: Promise<{
@@ -62,7 +62,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     }
 
     // Verificar se o lote está aberto para compras
-    if (lote.status !== 'open') {
+    if (lote.status !== "open") {
       return NextResponse.json(
         { error: "Este lote não está aberto para compras" },
         { status: 400 },
@@ -123,56 +123,23 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       );
     }
 
-    // Gerar números dos livros únicos
-    const existingNumbers = await queryMany(
-      `SELECT numbers FROM livros WHERE "raffleId" = $1`,
-      [id]
-    );
-
-    const usedNumbers = new Set(
-      existingNumbers.flatMap((row) => row.numbers.split(","))
-    );
-
-    const livroNumbers: string[] = [];
-    while (livroNumbers.length < livros) {
-      const randomNum = Math.floor(Math.random() * 1000000);
-      const formatted = String(randomNum).padStart(6, "0");
-
-      if (!usedNumbers.has(formatted) && !livroNumbers.includes(formatted)) {
-        livroNumbers.push(formatted);
-        usedNumbers.add(formatted);
-      }
-    }
-
-    const livroNumbersString = livroNumbers.join(",");
-
-    // Criar registro de compra (userId pode ser NULL para compras anônimas)
+    // NÃO gerar números aqui - os números só são gerados após confirmação do pagamento
+    // Criar registro de compra com numbers vazio (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
       `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
-       VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, $6, 'pending', NOW(), NOW())
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, '', $5, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", livros, amount, status`,
-      [userId, id, livros, amount, livroNumbersString, phone],
+      [userId, id, livros, amount, phone],
     );
 
     if (!purchase) {
       throw new Error("Erro ao criar compra");
     }
 
-    // Atualizar quantidade de livros vendidos
-    const updatedLote = await queryOne(
-      `UPDATE lotes 
-       SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
-       WHERE id = $2
-       RETURNING *`,
-      [livros, id],
-    );
-
-    if (!updatedLote) {
-      throw new Error("Erro ao atualizar lote");
-    }
-
+    // ✅ NÃO incrementar soldLivros aqui - só após confirmação do pagamento
+    // Os números das cotas também só são gerados após confirmação
     // ✅ A compra fica como 'pending' até que o webhook do Mercado Pago confirme
     // NÃO marcar como 'confirmed' automaticamente!
     // A confirmação happen quando o pagamento PIX é realmente confirmado

@@ -1,141 +1,194 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { queryOne } from '@/lib/db'
+import { NextRequest, NextResponse } from "next/server";
+import { queryOne, queryMany } from "@/lib/db";
 
-const MERCADO_PAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN
+const MERCADO_PAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
 export async function POST(req: NextRequest) {
   try {
     // Mercado Pago envia via query params ou form data
-    const searchParams = req.nextUrl.searchParams
-    const body = await req.json().catch(() => ({}))
+    const searchParams = req.nextUrl.searchParams;
+    const body = await req.json().catch(() => ({}));
 
-    console.log('[MP Webhook] Recebido evento:', {
+    console.log("[MP Webhook] Recebido evento:", {
       query: Object.fromEntries(searchParams),
       body,
-    })
+    });
 
     // O Mercado Pago envia o tipo de evento via query param "topic" ou no body "action"
     // action pode ser: "payment.created", "payment.updated", etc.
     // type pode ser: "payment"
-    const topic = searchParams.get('topic') || body.type || body.action
-    const paymentId = searchParams.get('id') || body.data?.id
+    const topic = searchParams.get("topic") || body.type || body.action;
+    const paymentId = searchParams.get("id") || body.data?.id;
 
     // Se for um evento de pagamento (topic pode ser "payment" ou "payment.created"/"payment.updated")
-    const isPaymentEvent = topic === 'payment' || (typeof topic === 'string' && topic.startsWith('payment.'))
-    
-    console.log('[MP Webhook] Análise do evento:', {
+    const isPaymentEvent =
+      topic === "payment" ||
+      (typeof topic === "string" && topic.startsWith("payment."));
+
+    console.log("[MP Webhook] Análise do evento:", {
       topic,
       isPaymentEvent,
       paymentId,
-    })
-    
+    });
+
     if (isPaymentEvent && paymentId) {
-      console.log(`[MP Webhook] Processando pagamento: ${paymentId}`)
+      console.log(`[MP Webhook] Processando pagamento: ${paymentId}`);
 
       // Buscar detalhes do pagamento no Mercado Pago
       const paymentResponse = await fetch(
         `https://api.mercadopago.com/v1/payments/${paymentId}`,
         {
-          method: 'GET',
+          method: "GET",
           headers: {
-            'Authorization': `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
+            Authorization: `Bearer ${MERCADO_PAGO_ACCESS_TOKEN}`,
           },
-        }
-      )
+        },
+      );
 
       if (!paymentResponse.ok) {
-        console.error('[MP Webhook] Erro ao buscar pagamento:', paymentResponse.statusText)
+        console.error(
+          "[MP Webhook] Erro ao buscar pagamento:",
+          paymentResponse.statusText,
+        );
         return NextResponse.json(
-          { error: 'Erro ao buscar pagamento' },
-          { status: 400 }
-        )
+          { error: "Erro ao buscar pagamento" },
+          { status: 400 },
+        );
       }
 
-      const payment = await paymentResponse.json()
+      const payment = await paymentResponse.json();
 
-      console.log('[MP Webhook] Detalhes do pagamento:', {
+      console.log("[MP Webhook] Detalhes do pagamento:", {
         id: payment.id,
         status: payment.status,
         transaction_amount: payment.transaction_amount,
         purchaseId: payment.metadata?.purchase_id,
         raffleId: payment.metadata?.raffle_id,
-      })
+      });
 
       // Extrair purchaseId dos metadata
-      const purchaseId = payment.metadata?.purchase_id || payment.metadata?.purchaseId
+      const purchaseId =
+        payment.metadata?.purchase_id || payment.metadata?.purchaseId;
 
       if (!purchaseId) {
-        console.warn('[MP Webhook] purchaseId não encontrado nos metadados')
+        console.warn("[MP Webhook] purchaseId não encontrado nos metadados");
         return NextResponse.json(
-          { error: 'purchaseId não encontrado' },
-          { status: 400 }
-        )
+          { error: "purchaseId não encontrado" },
+          { status: 400 },
+        );
       }
 
       // Se o pagamento foi aprovado/confirmado
-      if (payment.status === 'approved') {
-        console.log(`[MP Webhook] ✅ Pagamento aprovado! Confirmando compra: ${purchaseId}`)
+      if (payment.status === "approved") {
+        console.log(
+          `[MP Webhook] ✅ Pagamento aprovado! Confirmando compra: ${purchaseId}`,
+        );
 
         // Buscar a compra
-        const purchase = await queryOne(
-          'SELECT * FROM livros WHERE id = $1',
-          [purchaseId]
-        )
+        const purchase = await queryOne("SELECT * FROM livros WHERE id = $1", [
+          purchaseId,
+        ]);
 
         if (!purchase) {
-          console.error(`[MP Webhook] Compra não encontrada: ${purchaseId}`)
+          console.error(`[MP Webhook] Compra não encontrada: ${purchaseId}`);
           return NextResponse.json(
-            { error: 'Compra não encontrada' },
-            { status: 404 }
-          )
+            { error: "Compra não encontrada" },
+            { status: 404 },
+          );
         }
 
         // Verificar se o valor corresponde (segurança extra)
-        const expectedAmount = Number(purchase.amount)
-        const receivedAmount = payment.transaction_amount
+        const expectedAmount = Number(purchase.amount);
+        const receivedAmount = payment.transaction_amount;
 
         if (Math.abs(expectedAmount - receivedAmount) > 0.01) {
-          console.error('[MP Webhook] Valor do pagamento não corresponde:', {
+          console.error("[MP Webhook] Valor do pagamento não corresponde:", {
             esperado: expectedAmount,
             recebido: receivedAmount,
-          })
+          });
           return NextResponse.json(
-            { error: 'Valor do pagamento não corresponde' },
-            { status: 400 }
-          )
+            { error: "Valor do pagamento não corresponde" },
+            { status: 400 },
+          );
         }
 
-        // Atualizar status da compra para 'confirmed'
+        // Se já está confirmado, retornar sucesso (idempotência)
+        if (purchase.status === "confirmed") {
+          console.log(
+            "[MP Webhook] Compra já confirmada anteriormente:",
+            purchaseId,
+          );
+          return NextResponse.json({
+            success: true,
+            message: "Compra já confirmada",
+            purchaseId,
+          });
+        }
+
+        // Gerar números das cotas AGORA (após confirmação do pagamento)
+        const livros = purchase.livros;
+        const raffleId = purchase.raffleId;
+
+        // Buscar números já usados neste lote (apenas de compras confirmadas)
+        const existingNumbers = await queryMany(
+          `SELECT numbers FROM livros WHERE "raffleId" = $1 AND numbers != '' AND numbers IS NOT NULL`,
+          [raffleId],
+        );
+
+        const usedNumbers = new Set(
+          existingNumbers.flatMap((row: { numbers: string }) =>
+            row.numbers ? row.numbers.split(",") : [],
+          ),
+        );
+
+        const livroNumbers: string[] = [];
+        while (livroNumbers.length < livros) {
+          const randomNum = Math.floor(Math.random() * 1000000);
+          const formatted = String(randomNum).padStart(6, "0");
+
+          if (
+            !usedNumbers.has(formatted) &&
+            !livroNumbers.includes(formatted)
+          ) {
+            livroNumbers.push(formatted);
+            usedNumbers.add(formatted);
+          }
+        }
+
+        const livroNumbersString = livroNumbers.join(",");
+        console.log("[MP Webhook] Números gerados:", livroNumbersString);
+
+        // Atualizar status da compra para 'confirmed' e adicionar números
         const updatedPurchase = await queryOne(
           `UPDATE livros 
-           SET status = 'confirmed', "statusPago" = true, "updatedAt" = NOW()
+           SET status = 'confirmed', "statusPago" = true, numbers = $2, "updatedAt" = NOW()
            WHERE id = $1
            RETURNING *`,
-          [purchaseId]
-        )
+          [purchaseId, livroNumbersString],
+        );
 
-        console.log('[MP Webhook] ✅ Compra confirmada:', {
+        console.log("[MP Webhook] ✅ Compra confirmada:", {
           purchaseId: updatedPurchase.id,
           status: updatedPurchase.status,
           livros: updatedPurchase.livros,
           amount: updatedPurchase.amount,
-        })
+        });
 
         // ✅ Agora sim atualizar soldLivros da rifa pois o pagamento foi confirmado
         await queryOne(
           `UPDATE lotes 
            SET "soldLivros" = "soldLivros" + $1, "updatedAt" = NOW()
            WHERE id = $2`,
-          [updatedPurchase.livros, updatedPurchase.raffleId]
-        )
-        console.log('[MP Webhook] ✅ Livros da rifa atualizadas')
+          [updatedPurchase.livros, updatedPurchase.raffleId],
+        );
+        console.log("[MP Webhook] ✅ Livros da rifa atualizadas");
 
         // Atualizar top buyer agora que a compra foi confirmada
         if (updatedPurchase.userId) {
           const existingBuyer = await queryOne(
             `SELECT * FROM "topBuyer" WHERE "userId" = $1`,
-            [updatedPurchase.userId]
-          )
+            [updatedPurchase.userId],
+          );
 
           if (existingBuyer) {
             // Atualizar comprador existente
@@ -146,59 +199,78 @@ export async function POST(req: NextRequest) {
                    "raffleBought" = "raffleBought" + 1,
                    "updatedAt" = NOW()
                WHERE "userId" = $3`,
-              [updatedPurchase.amount, updatedPurchase.livros, updatedPurchase.userId]
-            )
-            console.log('[MP Webhook] ✅ TopBuyer atualizado (existente):', updatedPurchase.userId)
+              [
+                updatedPurchase.amount,
+                updatedPurchase.livros,
+                updatedPurchase.userId,
+              ],
+            );
+            console.log(
+              "[MP Webhook] ✅ TopBuyer atualizado (existente):",
+              updatedPurchase.userId,
+            );
           } else {
             // Criar novo comprador
             await queryOne(
               `INSERT INTO "topBuyer" (id, "userId", "totalSpent", "totalLivros", "raffleBought", "createdAt", "updatedAt")
                VALUES (gen_random_uuid(), $1, $2, $3, 1, NOW(), NOW())`,
-              [updatedPurchase.userId, updatedPurchase.amount, updatedPurchase.livros]
-            )
-            console.log('[MP Webhook] ✅ TopBuyer criado (novo):', updatedPurchase.userId)
+              [
+                updatedPurchase.userId,
+                updatedPurchase.amount,
+                updatedPurchase.livros,
+              ],
+            );
+            console.log(
+              "[MP Webhook] ✅ TopBuyer criado (novo):",
+              updatedPurchase.userId,
+            );
           }
         }
 
         return NextResponse.json({
           success: true,
-          message: 'Compra confirmada',
+          message: "Compra confirmada",
           purchaseId,
-        })
-      } else if (payment.status === 'pending') {
-        console.log(`[MP Webhook] ⏳ Pagamento pendente: ${purchaseId}`)
+        });
+      } else if (payment.status === "pending") {
+        console.log(`[MP Webhook] ⏳ Pagamento pendente: ${purchaseId}`);
         // Compra continua como pending
         return NextResponse.json({
           success: true,
-          message: 'Pagamento ainda pendente',
+          message: "Pagamento ainda pendente",
           purchaseId,
-        })
-      } else if (payment.status === 'rejected' || payment.status === 'cancelled') {
-        console.log(`[MP Webhook] ❌ Pagamento rejeitado/cancelado: ${purchaseId}`)
-        
+        });
+      } else if (
+        payment.status === "rejected" ||
+        payment.status === "cancelled"
+      ) {
+        console.log(
+          `[MP Webhook] ❌ Pagamento rejeitado/cancelado: ${purchaseId}`,
+        );
+
         // Opcionalmente, deletar a compra se o pagamento foi rejeitado
         // Por enquanto, apenas logar
-        
+
         return NextResponse.json({
           success: true,
-          message: 'Pagamento rejeitado/cancelado',
+          message: "Pagamento rejeitado/cancelado",
           purchaseId,
-        })
+        });
       }
     }
 
     // Se chegou aqui, é um tipo de evento que ignoramos
-    console.log('[MP Webhook] Evento ignorado:', topic)
+    console.log("[MP Webhook] Evento ignorado:", topic);
 
     return NextResponse.json({
       success: true,
-      message: 'Evento processado',
-    })
+      message: "Evento processado",
+    });
   } catch (error) {
-    console.error('[MP Webhook] Erro:', error)
+    console.error("[MP Webhook] Erro:", error);
     return NextResponse.json(
-      { error: 'Erro ao processar webhook' },
-      { status: 500 }
-    )
+      { error: "Erro ao processar webhook" },
+      { status: 500 },
+    );
   }
 }
