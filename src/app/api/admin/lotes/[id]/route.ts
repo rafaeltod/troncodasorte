@@ -93,6 +93,9 @@ export async function PUT(
     
     const { title, description, prizeAmount, totalLivros, livroPrice, status, images } = body
 
+    // ✅ Remover espaços em branco do status
+    const cleanStatus = status?.trim?.() || status
+
     // Verificar se a lote pertence ao admin
     const lote = await queryOne(
       `SELECT id FROM lotes WHERE id = $1 AND "creatorId" = $2`,
@@ -127,7 +130,7 @@ export async function PUT(
         prizeAmount,
         totalLivros,
         livroPrice,
-        status,
+        cleanStatus,
         images || null,
         images?.[0] || null,
         id,
