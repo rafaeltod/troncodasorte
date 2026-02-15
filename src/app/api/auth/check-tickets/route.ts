@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     let purchases = []
 
     if (user) {
-      // Se achou usuário, busca compras associadas ao userId
+      // Se achou usuário, busca APENAS compras confirmadas
       purchases = await queryMany(
         `SELECT 
           rp.id,
@@ -32,10 +32,11 @@ export async function POST(req: NextRequest) {
           rp.numbers,
           rp."createdAt",
           r.title as "raffleTitle",
-          r.status as "raffleStatus"
+          r.status as "raffleStatus",
+          r.image as "raffleImage"
         FROM livros rp
         JOIN lotes r ON rp."raffleId" = r.id
-        WHERE rp."userId" = $1
+        WHERE rp."userId" = $1 AND rp.status = 'confirmed'
         ORDER BY rp."createdAt" DESC`,
         [user.id]
       )
@@ -57,7 +58,7 @@ export async function POST(req: NextRequest) {
       })
     }
 
-    // Se não achou usuário, procura por compras anônimas com esse telefone
+    // Se não achou usuário, procura por compras anônimas confirmadas com esse telefone
     purchases = await queryMany(
       `SELECT 
         rp.id,
@@ -68,10 +69,11 @@ export async function POST(req: NextRequest) {
         rp.numbers,
         rp."createdAt",
         r.title as "raffleTitle",
-        r.status as "raffleStatus"
+        r.status as "raffleStatus",
+        r.image as "raffleImage"
       FROM livros rp
       JOIN lotes r ON rp."raffleId" = r.id
-      WHERE rp.phone = $1 AND rp."userId" IS NULL
+      WHERE rp.phone = $1 AND rp."userId" IS NULL AND rp.status = 'confirmed'
       ORDER BY rp."createdAt" DESC`,
       [phone]
     )
