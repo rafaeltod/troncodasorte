@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      router.push('/lotes')
+      router.push('/')
     }
   }, [user, loading, router])
 
