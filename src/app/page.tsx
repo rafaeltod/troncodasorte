@@ -81,7 +81,7 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50">
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-12">
+      <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha uma Campanha</h1>
