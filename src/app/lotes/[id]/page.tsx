@@ -54,7 +54,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Images */}
-          <div className="space-y-6">
+          <div className="w-full">
             {mainImage && (
               <RaffleImageGallery
                 mainImage={mainImage}
@@ -64,7 +64,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
             
             {/* Top Compradores do Lote - Mobile/Tablet Below, PC on side */}
-            <div className="lg:block">
+            <div className="lg:block md:hidden ">
               <RaffleTopBuyers raffleId={id} />
             </div>
           </div>
@@ -91,7 +91,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </span>
               )}
 
-              <h1 className="text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
             </div>
 
             {raffle.description && (
@@ -104,7 +104,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                   <Gift className="w-4 h-4" />
                   Prêmio
                 </div>
-                <div className="text-4xl font-black text-emerald-700">
+                <div className="text-2xl font-black text-emerald-700">
                   R$ {formatDecimal(Number(raffle.prizeAmount))}
                 </div>
               </div>
@@ -130,7 +130,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
+                    className="bg-linear-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
                   >
                     {progress > 10 && <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>}

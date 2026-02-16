@@ -67,7 +67,7 @@ export function RaffleCard({
 
         {/* Content */}
         <div className="p-5">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
             {title}
           </h3>
 
