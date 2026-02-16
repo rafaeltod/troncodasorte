@@ -20,7 +20,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -42,17 +42,10 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/campanhas"
+              href="/"
               className="hover:text-emerald-100 transition-colors"
             >
-              Campanhas
-            </Link>
-            <Link
-              href="/top-compradores"
-              className="flex items-center gap-1 hover:text-emerald-100 transition-colors"
-            >
-              <Trophy className="w-4 h-4" />
-              Top Compradores
+              Lotes
             </Link>
             {user ? (
               <>
@@ -73,10 +66,10 @@ export function Navbar() {
                       Painel Admin
                     </Link>
                     <Link
-                      href="/criar-campanha"
+                      href="/criar-lote"
                       className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
                     >
-                      + Criar Campanha
+                      + Criar Lote
                     </Link>
                   </>
                 )}
@@ -113,19 +106,11 @@ export function Navbar() {
           <nav className="md:hidden py-4 border-t border-white/20">
             <div className="flex flex-col gap-3">
               <Link
-                href="/campanhas"
+                href="/"
                 className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                Campanhas
-              </Link>
-              <Link
-                href="/top-compradores"
-                className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <Trophy className="w-4 h-4" />
-                Top Compradores
+                Lotes
               </Link>
               {user ? (
                 <>
@@ -148,11 +133,11 @@ export function Navbar() {
                         Painel Admin
                       </Link>
                       <Link
-                        href="/criar-campanha"
+                        href="/criar-lote"
                         className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        + Criar Campanha
+                        + Criar Lote
                       </Link>
                     </>
                   )}

@@ -11,7 +11,7 @@ export async function GET(
       `SELECT 
         rp.id,
         rp."raffleId",
-        rp.quotas,
+        rp.livros,
         rp.amount,
         rp.status,
         rp.numbers,
@@ -19,8 +19,8 @@ export async function GET(
         r.title as "raffleTitle",
         r.status as "raffleStatus",
         r.winner
-       FROM "rafflePurchase" rp
-       JOIN raffle r ON rp."raffleId" = r.id
+       FROM livros rp
+       JOIN lotes r ON rp."raffleId" = r.id
        WHERE rp."userId" = $1
        ORDER BY rp."createdAt" DESC`,
       [userId]
@@ -35,7 +35,7 @@ export async function GET(
         status: p.raffleStatus,
         winner: p.winner
       },
-      quotas: p.quotas,
+      livros: p.livros,
       amount: p.amount,
       status: p.status,
       numbers: p.numbers ? p.numbers.split(',') : [],

@@ -35,7 +35,7 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/campanhas')
+      router.push('/')
     }
   }, [user, router])
 
@@ -113,7 +113,7 @@ export default function RegisterPage() {
 
       setSuccess('✅ Conta criada com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
-      router.push('/campanhas')
+      router.push('/')
     } catch (err) {
       console.error('[RegisterPage] Error:', err)
       setError(err instanceof Error ? err.message : 'Erro ao criar conta')
@@ -263,7 +263,7 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+                className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
               >
                 {loading ? '⏳ Criando conta...' : '✨ Criar Conta'}
               </button>

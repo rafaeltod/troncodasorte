@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 interface UsePurchaseStatusProps {
-  purchaseId: string
-  raffleId: string
-  onConfirmed?: () => void
-  onCanceled?: () => void
-  enabled?: boolean
+  purchaseId: string;
+  raffleId: string;
+  onConfirmed?: () => void;
+  onCanceled?: () => void;
+  enabled?: boolean;
 }
 
 export function usePurchaseStatus({
@@ -15,80 +15,82 @@ export function usePurchaseStatus({
   onCanceled,
   enabled = true,
 }: UsePurchaseStatusProps) {
-  const [status, setStatus] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [retryCount, setRetryCount] = useState(0)
+  const [status, setStatus] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   const checkStatus = async () => {
-    if (!purchaseId || !raffleId) return
+    if (!purchaseId || !raffleId) return;
 
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await fetch(`/api/rifas/${raffleId}/purchase/${purchaseId}`, {
-        method: 'GET',
-        credentials: 'include',
-      })
+      const response = await fetch(
+        `/api/rifas/${raffleId}/purchase/${purchaseId}`,
+        {
+          method: "GET",
+          credentials: "include",
+        },
+      );
 
       if (!response.ok) {
         if (response.status === 404) {
-          console.log('[usePurchaseStatus] Compra cancelada')
-          setStatus('cancelled')
-          onCanceled?.()
-          return
+          console.log("[usePurchaseStatus] Compra cancelada");
+          setStatus("cancelled");
+          onCanceled?.();
+          return;
         }
-        throw new Error('Erro ao buscar status')
+        throw new Error("Erro ao buscar status");
       }
 
-      const data = await response.json()
-      console.log('[usePurchaseStatus] Status:', data.status)
+      const data = await response.json();
+      console.log("[usePurchaseStatus] Status:", data.status);
 
-      setStatus(data.status)
-      setError(null)
+      setStatus(data.status);
+      setError(null);
 
-      if (data.status === 'confirmed') {
-        console.log('[usePurchaseStatus] ✅ Compra confirmada!')
-        onConfirmed?.()
+      if (data.status === "confirmed") {
+        console.log("[usePurchaseStatus] ✅ Compra confirmada!");
+        onConfirmed?.();
       }
     } catch (err) {
-      console.error('[usePurchaseStatus] Erro:', err)
-      setError(err instanceof Error ? err.message : 'Erro ao buscar status')
+      console.error("[usePurchaseStatus] Erro:", err);
+      setError(err instanceof Error ? err.message : "Erro ao buscar status");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
-    if (!enabled || !purchaseId || !raffleId) return
+    if (!enabled || !purchaseId || !raffleId) return;
 
-    console.log('[usePurchaseStatus] Iniciando polling...')
+    console.log("[usePurchaseStatus] Iniciando polling...");
 
     // Fazer check imediato
-    checkStatus()
+    checkStatus();
 
-    // Polling a cada 3 segundos (máximo 40 tentativas = 2 minutos)
     const interval = setInterval(() => {
-      setRetryCount((prev) => prev + 1)
+      setRetryCount((prev) => prev + 1);
 
-      if (retryCount >= 40) {
-        console.log('[usePurchaseStatus] Timeout - parando polling')
-        clearInterval(interval)
-        return
+      if (retryCount >= 80) {
+        console.log("[usePurchaseStatus] Timeout - parando polling");
+        clearInterval(interval);
+        return;
       }
 
-      checkStatus()
-    }, 3000)
+      checkStatus();
+    }, 3000);
 
     return () => {
-      console.log('[usePurchaseStatus] Parando polling')
-      clearInterval(interval)
-    }
-  }, [enabled, purchaseId, raffleId, retryCount])
+      console.log("[usePurchaseStatus] Parando polling");
+      clearInterval(interval);
+    };
+  }, [enabled, purchaseId, raffleId, retryCount]);
 
   return {
     status,
     loading,
     error,
     retryCount,
-  }
+  };
 }

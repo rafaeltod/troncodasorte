@@ -46,9 +46,9 @@ export async function GET(
     const formattedRaffles = raffles?.map((r: any) => ({
       ...r,
       prizeAmount: Number(r.prizeAmount),
-      quotaPrice: Number(r.quotaPrice),
-      totalQuotas: Number(r.totalQuotas),
-      soldQuotas: Number(r.soldQuotas),
+      livroPrice: Number(r.livroPrice),
+      totalLivros: Number(r.totalLivros),
+      soldLivros: Number(r.soldLivros),
     })) || []
 
     return NextResponse.json(formattedRaffles)

@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      router.push('/campanhas')
+      router.push('/lotes')
     }
   }, [user, loading, router])
 
@@ -32,14 +32,15 @@ export default function HomePage() {
     <div className="min-h-screen bg-gray-50">
       
       {/* Hero Section */}
-      <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white py-12">
+      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-12">
+        {/* This div closes on line 40 */}
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">
               Concorra a Prêmios Incríveis
             </h1>
             <p className="text-xl text-emerald-100 mb-8">
-              Cotas a partir de R$ 0,50 • Sorteios transparentes • Prêmios garantidos
+              Livros a partir de R$ 0,50 • Sorteios transparentes • Prêmios garantidos
             </p>
             
             {/* Search Bar */}
@@ -71,7 +72,7 @@ export default function HomePage() {
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-emerald-600 mb-1">50K+</div>
-              <div className="text-gray-600">Cotas Vendidas</div>
+              <div className="text-gray-600">Livros Vendidas</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-emerald-600 mb-1">2.547</div>
@@ -114,7 +115,7 @@ export default function HomePage() {
               <div className="text-5xl mb-4">3️⃣</div>
               <h3 className="text-2xl font-semibold text-gray-900 mb-3">Ganhe Prêmios!</h3>
               <p className="text-gray-600">
-                Compre cotas e acompanhe o sorteio em tempo real. Se ganhar, receba seu prêmio do jeito que escolher.
+                Compre livros e acompanhe o sorteio em tempo real. Se ganhar, receba seu prêmio do jeito que escolher.
               </p>
             </div>
           </div>
@@ -149,7 +150,7 @@ export default function HomePage() {
             <div className="flex gap-4">
               <DollarSign className="w-10 h-10 text-emerald-400 shrink-0" />
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Cotas Acessíveis</h3>
+                <h3 className="text-xl font-semibold text-white mb-2">Livros Acessíveis</h3>
                 <p className="text-gray-300">A partir de R$ 0,50 por cota. Todos podem participar e ganhar prêmios incríveis.</p>
               </div>
             </div>
@@ -182,7 +183,7 @@ export default function HomePage() {
       </div>
 
       {/* CTA Section */}
-      <div className="bg-linear-to-r from-emerald-600 to-teal-600 py-20 sm:py-24">
+      <div className="bg-gradient-to-r from-emerald-600 to-teal-600 py-20 sm:py-24">
         <div className="max-w-4xl mx-auto text-center px-4">
           <h2 className="text-4xl sm:text-5xl font-black text-white mb-6">
             Pronto para começar?

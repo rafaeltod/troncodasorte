@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
-import { censorName, censorPhone } from '@/lib/formatters'
+import { formatDecimal } from '@/lib/formatters'
+import { censorName, censorPhoneShort } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -22,7 +23,7 @@ interface User {
 interface Purchase {
   id: string
   raffleId: string
-  quotas: number
+  livros: number
   amount: number
   status: string
   createdAt: string
@@ -132,7 +133,7 @@ export default function AccountPage() {
   }
 
   const totalSpent = purchases.reduce((acc, p) => acc + p.amount, 0)
-  const totalQuotas = purchases.reduce((acc, p) => acc + p.quotas, 0)
+  const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
     <div className="min-h-screen bg-gray-50 py-12">
@@ -275,7 +276,7 @@ export default function AccountPage() {
                       <Phone className="w-4 h-4 text-emerald-600" />
                       Telefone
                     </p>
-                    <p className="text-gray-900 font-black text-lg">{censorPhone(user.phone)}</p>
+                    <p className="text-gray-900 font-black text-lg">{censorPhoneShort(user.phone)}</p>
                   </div>
                 </div>
 
@@ -324,9 +325,9 @@ export default function AccountPage() {
             <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
-                <p className="text-emerald-100 font-semibold text-sm">Cotas Adquiridas</p>
+                <p className="text-emerald-100 font-semibold text-sm">Livros Adquiridas</p>
               </div>
-              <p className="text-4xl font-black">{totalQuotas}</p>
+              <p className="text-4xl font-black">{totalLivros}</p>
             </div>
 
             <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
@@ -358,12 +359,12 @@ export default function AccountPage() {
                         </p>
                         <p className="text-gray-600 text-sm flex items-center gap-2">
                           <Ticket className="w-4 h-4 text-emerald-600" />
-                          {purchase.quotas} cota{purchase.quotas !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
+                          {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="font-black text-emerald-700 text-lg mb-2">
-                          R$ {Number(purchase.amount).toFixed(2)}
+                          R$ {formatDecimal(Number(purchase.amount))}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
                           purchase.status === 'confirmed' 
@@ -381,13 +382,13 @@ export default function AccountPage() {
           ) : (
             <div className="text-center py-12">
               <ShoppingBag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma campanha</p>
+              <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma lote</p>
               <Link
-                href="/campanhas"
+                href="/"
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105"
               >
                 <Ticket className="w-5 h-5" />
-                Explorar Campanhas
+                Explorar Lotes
               </Link>
             </div>
           )}

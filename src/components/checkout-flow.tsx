@@ -4,14 +4,14 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
-import { formatCPF, formatPhone, censorName, censorPhone } from '@/lib/formatters'
+import { formatCPF, formatPhone, censorName, censorPhone, formatDecimal } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
 
 interface CheckoutFlowProps {
   raffleId: string
-  quotaPrice: number
-  availableQuotas: number
+  livroPrice: number
+  availableLivros: number
   isOpen: boolean
   selectedQuantity: number
 }
@@ -26,8 +26,8 @@ interface ExistingCustomerData {
 
 export function CheckoutFlow({
   raffleId,
-  quotaPrice,
-  availableQuotas,
+  livroPrice,
+  availableLivros,
   isOpen,
   selectedQuantity,
 }: CheckoutFlowProps) {
@@ -55,8 +55,8 @@ export function CheckoutFlow({
   const [showPixModal, setShowPixModal] = useState(false)
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
 
-  const numericQuotaPrice = Number(quotaPrice)
-  const totalPrice = selectedQuantity * numericQuotaPrice
+  const numericLivroPrice = Number(livroPrice)
+  const totalPrice = selectedQuantity * numericLivroPrice
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -197,12 +197,12 @@ export function CheckoutFlow({
     setLoading(true)
 
     try {
-      const purchaseResponse = await fetch(`/api/campanhas/${raffleId}/purchase`, {
+      const purchaseResponse = await fetch(`/api/lotes/${raffleId}/purchase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          quotas: selectedQuantity,
+          livros: selectedQuantity,
           amount: totalPrice,
           phone: formData.phone.replace(/\D/g, ''), // Enviar telefone sem formatação
         }),
@@ -244,7 +244,7 @@ export function CheckoutFlow({
       <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Preço por cota:</p>
-          <p className="font-bold text-gray-900">R$ {numericQuotaPrice.toFixed(2)}</p>
+          <p className="font-bold text-gray-900">R$ {formatDecimal(numericLivroPrice)}</p>
         </div>
         <div className="flex justify-between items-center mb-2">
           <p className="text-sm text-gray-700">Quantidade:</p>
@@ -252,7 +252,7 @@ export function CheckoutFlow({
         </div>
         <div className="border-t border-emerald-200 pt-2 flex justify-between items-center">
           <p className="font-black text-gray-900">Total:</p>
-          <p className="text-2xl font-black text-emerald-600">R$ {totalPrice.toFixed(2)}</p>
+          <p className="text-2xl font-black text-emerald-600">R$ {formatDecimal(totalPrice)}</p>
         </div>
       </div>
 
@@ -273,14 +273,14 @@ export function CheckoutFlow({
               className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900 font-semibold"
             />
             <p className="text-xs text-gray-600 mt-2">
-              Se você já comprou cotas conosco, vamos reconhecê-lo automaticamente
+              Se você já comprou livros conosco, vamos reconhecê-lo automaticamente
             </p>
           </div>
 
           <button
             onClick={handlePhoneSubmit}
             disabled={loading || !phoneInput}
-            className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
             {loading ? '⏳ Verificando...' : '➜ Continuar'}
           </button>
@@ -400,7 +400,7 @@ export function CheckoutFlow({
             <button
               onClick={handleRegisterAndContinue}
               disabled={loading}
-              className="flex-1 bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {loading ? '⏳ Registrando...' : 'Continuar ➜'}
             </button>
@@ -424,10 +424,10 @@ export function CheckoutFlow({
                 <strong>Telefone:</strong> {formData.phone.slice(-4).padStart(formData.phone.length, '*')}
               </p>
               <p>
-                <strong>Cotas:</strong> {selectedQuantity}x
+                <strong>Livros:</strong> {selectedQuantity}x
               </p>
               <p className="border-t border-emerald-200 pt-2">
-                <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {totalPrice.toFixed(2)}</span>
+                <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {formatDecimal(totalPrice)}</span>
               </p>
             </div>
           </div>
@@ -450,7 +450,7 @@ export function CheckoutFlow({
             <button
               onClick={handleConfirmAndProceed}
               disabled={loading}
-              className="flex-1 bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="flex-1 bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {loading ? '⏳ Processando...' : 'Concluir Reserva ➜'}
             </button>
@@ -472,27 +472,18 @@ export function CheckoutFlow({
           setShowPixModal(false)
           setPurchaseId(null)
           
-          // Salvar compra anônima no localStorage para visualizar depois
-          if (!user && purchaseId) {
-            const anonymousPurchases = JSON.parse(localStorage.getItem('anonymousPurchases') || '[]')
-            const purchaseData = {
-              id: purchaseId,
-              raffleId,
-              amount: totalPrice,
-              quotas: selectedQuantity,
-              status: 'confirmed',
-              createdAt: new Date().toISOString(),
+          // Redirecionar automaticamente para Meus Bilhetes
+          if (purchaseId) {
+            // Se é compra anônima, salva dados para não precisar preencher novamente
+            if (!user) {
+              localStorage.setItem('ticketQuery', JSON.stringify({
+                phone: formData.phone.replace(/\D/g, ''),
+                cpf: formData.cpf.replace(/\D/g, ''),
+              }))
             }
-            anonymousPurchases.push(purchaseData)
-            localStorage.setItem('anonymousPurchases', JSON.stringify(anonymousPurchases))
-          }
-          
-          // Redirecionar apropriadamente
-          if (user) {
-            router.push('/historico')
-          } else {
-            // Usuário anônimo - voltar para campanhas
-            router.push('/campanhas')
+            
+            // Redirecionar para visualizar bilhetes confirmados
+            router.push('/meus-bilhetes/resultado')
           }
         }}
       />

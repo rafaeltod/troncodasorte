@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Rotas públicas que não precisam de token
-  const publicRoutes = ['/', '/auth/login', '/auth/register', '/campanhas', '/top-compradores']
+  const publicRoutes = ['/', '/auth/login', '/auth/register', '/lotes', '/top-compradores']
   const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
 
   // Se não tem token e está tentando acessar rota protegida, redireciona para home
@@ -15,10 +15,19 @@ export function middleware(request: NextRequest) {
 
   // Se tem token e está na home, vai direto para rifas
   if (token && pathname === '/') {
-    return NextResponse.redirect(new URL('/campanhas', request.url))
+    return NextResponse.redirect(new URL('/lotes', request.url))
   }
 
-  return NextResponse.next()
+  const response = NextResponse.next()
+
+  // ✅ Desabilitar cache completamente para página de lotes (dinâmica)
+  if (pathname.startsWith('/lotes/')) {
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0, private')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+  }
+
+  return response
 }
 
 export const config = {

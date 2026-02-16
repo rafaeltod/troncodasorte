@@ -8,7 +8,7 @@
 
 ## 🎲 Rifas
 
-### GET `/campanhas`
+### GET `/lotes`
 Retorna todas as rifas.
 
 **Query Parameters:**
@@ -26,7 +26,7 @@ Retorna todas as rifas.
     "prizeAmount": 7000,
     "totalQuotas": 100,
     "soldQuotas": 45,
-    "quotaPrice": 0.50,
+    "livroPrice": 0.50,
     "status": "open",
     "winner": null,
     "creatorId": "uuid",
@@ -41,7 +41,7 @@ Retorna todas as rifas.
 
 ---
 
-### POST `/campanhas`
+### POST `/lotes`
 Cria uma nova rifa.
 
 **Request Body:**
@@ -51,7 +51,7 @@ Cria uma nova rifa.
   "description": "iPhone 15 Pro Max 256GB",
   "prizeAmount": 7000,
   "totalQuotas": 100,
-  "quotaPrice": 0.50,
+  "livroPrice": 0.50,
   "images": ["data:image/..."]
 }
 ```
@@ -67,7 +67,7 @@ Cria uma nova rifa.
 
 ---
 
-### GET `/campanhas/[id]`
+### GET `/lotes/[id]`
 Retorna detalhes de uma rifa específica.
 
 **Response:**
@@ -79,7 +79,7 @@ Retorna detalhes de uma rifa específica.
   "purchases": [
     {
       "id": "uuid",
-      "quotas": 10,
+      "livros": 10,
       "amount": 5.00,
       "status": "completed",
       "user": {
@@ -178,7 +178,7 @@ curl http://localhost:3000/api/rifas
 
 ### Pegar uma rifa específica
 ```bash
-curl http://localhost:3000/api/campanhas/[id]
+curl http://localhost:3000/api/lotes/[id]
 ```
 
 ### Top compradores
@@ -190,7 +190,7 @@ curl http://localhost:3000/api/top-buyers
 
 ## 🔄 Fluxo de Compra (Futuro)
 
-1. Cliente clica "Comprar Cotas"
+1. Cliente clica "Comprar Livros"
 2. Sistema gera QR Code via Mercado Pago
 3. Cliente escaneia QR e paga no Pix
 4. Webhook recebe confirmação

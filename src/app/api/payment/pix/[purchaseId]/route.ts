@@ -18,7 +18,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
 
     // Buscar a compra COM o payment_id armazenado
     const purchase = await queryOne(
-      `SELECT * FROM "rafflePurchase" WHERE id = $1`,
+      `SELECT * FROM livros WHERE id = $1`,
       [purchaseId]
     )
 

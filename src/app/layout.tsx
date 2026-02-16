@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Tronco da Sorte",
-  description: "Plataforma de campanhas online com sorteios premiados",
+  description: "Plataforma de lotes online com sorteios premiados",
 };
 
 export default function RootLayout({

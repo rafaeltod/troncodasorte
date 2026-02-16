@@ -29,7 +29,7 @@ export default function PrivacidadePage() {
               <p>Podemos coletar as seguintes categorias de informações:</p>
               <ul className="list-disc pl-6 mt-3 space-y-2">
                 <li><strong>Informações de Identificação Pessoal:</strong> nome, CPF, email, telefone, data de nascimento</li>
-                <li><strong>Informações de Transação:</strong> histórico de compras, quantidade de quotas, valores</li>
+                <li><strong>Informações de Transação:</strong> histórico de compras, quantidade de livros, valores</li>
                 <li><strong>Dados de Acesso:</strong> endereço IP, tipo de navegador, páginas visitadas</li>
                 <li><strong>Informações de Localização:</strong> dados gerais de localização (país, cidade)</li>
               </ul>

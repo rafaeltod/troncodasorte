@@ -15,7 +15,7 @@ export function RaffleRegulation() {
         <AccordionItem title="📋 Termos e Condições">
           <div className="text-gray-700 leading-relaxed space-y-3">
             <p>
-              Esta campanha é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
+              Esta lote é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
               Todos os participantes devem aceitar os Termos e Condições da plataforma Tronco da Sorte.
             </p>
           </div>
@@ -23,7 +23,7 @@ export function RaffleRegulation() {
 
         <AccordionItem title="⚖️ Responsabilidade Legal">
           <div className="text-gray-700 leading-relaxed space-y-3">
-            <p className="font-semibold">O organizador desta campanha é responsável por:</p>
+            <p className="font-semibold">O organizador desta lote é responsável por:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
               <li>Manter registros completos de todas as transações</li>
               <li>Realizar o sorteio de forma justa e transparente</li>
@@ -48,7 +48,7 @@ export function RaffleRegulation() {
 
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
           <p className="text-sm text-blue-900 font-semibold">
-            <strong>⚠️ Aviso Legal:</strong> A participação nesta campanha constitui aceitação automática de todos os termos, 
+            <strong>⚠️ Aviso Legal:</strong> A participação nesta lote constitui aceitação automática de todos os termos, 
             condições e regulamentos estabelecidos. Para mais informações, consulte a{' '}
             <a href="/termos" className="text-emerald-600 hover:text-emerald-700 font-bold">
               Política de Termos

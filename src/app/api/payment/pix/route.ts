@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
     // IMPORTANTE: Buscar os dados reais da compra do banco
     // NÃO confiar no amount enviado pelo cliente
     const purchase = await queryOne(
-      'SELECT "quotas", "amount", "userId", "raffleId", "status" FROM "rafflePurchase" WHERE id = $1',
+      'SELECT "livros", "amount", "userId", "raffleId", "status" FROM livros WHERE id = $1',
       [purchaseId]
     )
 
@@ -36,11 +36,11 @@ export async function POST(req: NextRequest) {
 
     // Usar o valor validado do banco (NÃO o enviado pelo cliente)
     const validatedAmount = Number(purchase.amount)
-    const quotaCount = purchase.quotas
+    const livroCount = purchase.livros
 
     console.log('[Payment] Recuperei a compra do banco:', {
       purchaseId,
-      quotas: purchase.quotas,
+      livros: purchase.livros,
       amount: purchase.amount,
       validatedAmount,
       type: typeof purchase.amount,
@@ -57,14 +57,14 @@ export async function POST(req: NextRequest) {
 
         const requestPayload = {
           transaction_amount: validatedAmount,
-          description: `Compra de ${quotaCount} ebook (s) - Mudando sua vida - ${raffleId}`,
+          description: `Compra de ${livroCount} ebook (s) - Mudando sua vida - ${raffleId}`,
           payment_method_id: 'pix',
           payer: {
             email: payerEmail,
           },
           metadata: {
-            purchaseId,
-            raffleId,
+            purchase_id: purchaseId,  // snake_case para consistência com MP
+            raffle_id: raffleId,      // snake_case para consistência com MP
           },
         }
 
@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
           // Salvar payment_id na compra para referência futura
           if (data.id) {
             await queryOne(
-              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              'UPDATE livros SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
               [String(data.id), purchaseId]
             )
             console.log('[Payment] payment_id salvo:', data.id)
@@ -130,7 +130,7 @@ export async function POST(req: NextRequest) {
           // Salvar payment_id na compra para referência futura
           if (data.id) {
             await queryOne(
-              'UPDATE "rafflePurchase" SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
+              'UPDATE livros SET payment_id = $1, "updatedAt" = NOW() WHERE id = $2',
               [String(data.id), purchaseId]
             )
             console.log('[Payment] 💾 payment_id salvo:', data.id)
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
       content: pixKey,
       amount: validatedAmount.toFixed(2),
       transactionId: purchaseId,
-      quotas: quotaCount,
+      livros: livroCount,
       status: 'pending',
       source: 'fallback_pix_mock',
       message: 'PIX em modo fallback. Configure MERCADO_PAGO_ACCESS_TOKEN para integração completa.',

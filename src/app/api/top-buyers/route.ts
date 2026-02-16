@@ -10,7 +10,7 @@ export async function GET() {
         u.name,
         u.email,
         tb."totalSpent",
-        tb."totalQuotas",
+        tb."totalLivros",
         tb."raffleBought"
        FROM "topBuyer" tb
        JOIN "user" u ON tb."userId" = u.id
@@ -22,7 +22,7 @@ export async function GET() {
     const formatted = topBuyers.map(buyer => ({
       ...buyer,
       totalSpent: Number(buyer.totalSpent) || 0,
-      totalQuotas: Number(buyer.totalQuotas) || 0,
+      totalLivros: Number(buyer.totalLivros) || 0,
       raffleBought: Number(buyer.raffleBought) || 0,
     }))
 

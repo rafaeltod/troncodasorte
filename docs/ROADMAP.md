@@ -153,7 +153,7 @@ TWILIO_PHONE_NUMBER="+55..."
 
 **Páginas:**
 - `/admin/dashboard`
-- `/admin/campanhas`
+- `/admin/lotes`
 - `/admin/usuarios`
 - `/admin/relatorios`
 
