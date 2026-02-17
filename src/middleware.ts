@@ -13,10 +13,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
 
-  // Se tem token e está na home, vai direto para rifas
-  if (token && pathname === '/') {
-    return NextResponse.redirect(new URL('/lotes', request.url))
-  }
+  // Usuário logado na home: deixar acessar normalmente (a home já lista os lotes)
 
   const response = NextResponse.next()
 

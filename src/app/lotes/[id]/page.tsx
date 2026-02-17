@@ -99,15 +99,17 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
 
             <div className="space-y-4 mb-8">
-              <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
-                <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold mb-2">
-                  <Gift className="w-4 h-4" />
-                  Prêmio
+              {Number(raffle.prizeAmount) > 0 && (
+                <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
+                  <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold mb-2">
+                    <Gift className="w-4 h-4" />
+                    Prêmio em Dinheiro
+                  </div>
+                  <div className="text-4xl font-black text-emerald-700">
+                    R$ {formatDecimal(Number(raffle.prizeAmount))}
+                  </div>
                 </div>
-                <div className="text-4xl font-black text-emerald-700">
-                  R$ {formatDecimal(Number(raffle.prizeAmount))}
-                </div>
-              </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">

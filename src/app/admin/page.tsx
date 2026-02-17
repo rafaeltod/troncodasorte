@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { AdminRoute } from '@/components/admin-route'
+import { useAuth } from '@/context/auth-context'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/formatters'
 import { Plus, Edit, Trash2, Eye, Users, TrendingUp, DollarSign, Award } from 'lucide-react'
@@ -21,13 +22,16 @@ interface Lote {
 }
 
 export default function AdminDashboardPage() {
+  const { user, loading: authLoading } = useAuth()
   const [lotes, setLotes] = useState<Lote[]>([])
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<'all' | 'open' | 'closed' | 'finished'>('all')
 
   useEffect(() => {
-    fetchLotes()
-  }, [])
+    if (!authLoading && user?.isAdmin) {
+      fetchLotes()
+    }
+  }, [authLoading, user])
 
   const fetchLotes = async () => {
     try {
@@ -229,7 +233,7 @@ export default function AdminDashboardPage() {
                         <td className="px-6 py-4">{getStatusBadge(lote.status)}</td>
                         <td className="px-6 py-4">
                           <span className="font-bold text-emerald-600">
-                            {formatCurrency(lote.prizeAmount)}
+                            {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : '—'}
                           </span>
                         </td>
                         <td className="px-6 py-4">

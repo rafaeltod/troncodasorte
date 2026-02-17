@@ -82,12 +82,14 @@ export function RaffleCard({
           </div>
 
           {/* Prize Info */}
-          <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
-            <div className="text-sm text-gray-600">Prêmio Principal</div>
-            <div className="text-2xl font-bold text-emerald-600">
-              R$ {formatDecimal(Number(prizeAmount))}
+          {Number(prizeAmount) > 0 && (
+            <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
+              <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
+              <div className="text-2xl font-bold text-emerald-600">
+                R$ {formatDecimal(Number(prizeAmount))}
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Button */}
           {status === 'closed' ? (
