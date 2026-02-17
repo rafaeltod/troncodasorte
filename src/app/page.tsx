@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
-import { RaffleCard } from '@/components/raffle-card'
+import { RaffleCard } from '@/components/lote-card'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search, TrendingUp, Zap } from 'lucide-react'

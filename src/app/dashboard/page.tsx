@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
-import { RaffleCard } from '@/components/raffle-card'
+import { RaffleCard } from '@/components/lote-card'
 import Link from 'next/link'
 import { Plus, History, Trophy, Users } from 'lucide-react'
 
