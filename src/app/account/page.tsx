@@ -141,7 +141,7 @@ export default function AccountPage() {
         {/* Header */}
         <div className="max-w-6xl mx-auto mb-10">
           <div className="flex items-center gap-4 mb-6">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-600 to-teal-600 overflow-hidden">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 overflow-hidden">
               <Image 
                 src="/troncodasorte.png"
                 alt="Tronco da Sorte"
@@ -255,7 +255,7 @@ export default function AccountPage() {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-extrabold hover:from-emerald-700 hover:to-teal-700 transition flex items-center justify-center gap-2"
+                  className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-extrabold hover:from-emerald-700 hover:to-teal-700 transition flex items-center justify-center gap-2"
                 >
                   <Save className="w-5 h-5" />
                   Salvar Alterações
@@ -322,7 +322,7 @@ export default function AccountPage() {
 
           {/* Estatísticas */}
           <div className="space-y-4">
-            <div className="bg-gradient-to-br from-emerald-600 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
+            <div className="bg-linear-to-br from-emerald-600 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
                 <p className="text-emerald-100 font-semibold text-sm">Livros Adquiridas</p>
@@ -330,7 +330,7 @@ export default function AccountPage() {
               <p className="text-4xl font-black">{totalLivros}</p>
             </div>
 
-            <div className="bg-gradient-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
+            <div className="bg-linear-to-br from-teal-500 to-teal-600 rounded-2xl shadow-lg p-6 text-white">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
                 <p className="text-teal-100 font-semibold text-sm">Rifas Participadas</p>
@@ -351,7 +351,7 @@ export default function AccountPage() {
             <div className="space-y-3">
               {purchases.map((purchase) => (
                 <Link key={purchase.id} href={`/compra/${purchase.id}`}>
-                  <div className="bg-gradient-to-r from-gray-50 to-emerald-50 hover:from-emerald-50 hover:to-teal-50 p-6 rounded-lg border border-gray-200 cursor-pointer transition transform hover:scale-102 hover:border-emerald-300">
+                  <div className="bg-linear-to-r from-gray-50 to-emerald-50 hover:from-emerald-50 hover:to-teal-50 p-6 rounded-lg border border-gray-200 cursor-pointer transition transform hover:scale-102 hover:border-emerald-300">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <p className="font-black text-gray-900 text-lg mb-2">
@@ -385,7 +385,7 @@ export default function AccountPage() {
               <p className="text-gray-600 text-lg mb-6">Você ainda não participou de nenhuma lote</p>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105"
+                className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105"
               >
                 <Ticket className="w-5 h-5" />
                 Explorar Lotes

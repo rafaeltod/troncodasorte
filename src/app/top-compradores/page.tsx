@@ -58,7 +58,7 @@ export default function TopBuyersPage() {
                 className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 transition flex items-center justify-between"
               >
                 <div className="flex items-center gap-4">
-                  <div className="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-emerald-500 to-teal-600 text-white rounded-full font-black text-2xl">
+                  <div className="flex items-center justify-center w-14 h-14 bg-linear-to-br from-emerald-500 to-teal-600 text-white rounded-full font-black text-2xl">
                     {index === 0 && '🥇'}
                     {index === 1 && '🥈'}
                     {index === 2 && '🥉'}
