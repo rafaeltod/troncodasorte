@@ -152,6 +152,7 @@ export default function Home() {
                 key={raffle.id}
                 id={raffle.id}
                 title={raffle.title}
+                description={raffle.description}
                 image={raffle.image}
                 prizeAmount={raffle.prizeAmount}
                 totalLivros={raffle.totalLivros}

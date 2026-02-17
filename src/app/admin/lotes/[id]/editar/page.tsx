@@ -57,7 +57,7 @@ export default function EditLotePage() {
         setFormData({
           title: data.title,
           description: data.description,
-          prizeAmount: data.prizeAmount.toString(),
+          prizeAmount: data.prizeAmount ? data.prizeAmount.toString() : '',
           totalLivros: data.totalLivros.toString(),
           livroPrice: data.livroPrice.toString(),
           status: data.status,
@@ -105,7 +105,7 @@ export default function EditLotePage() {
         body: JSON.stringify({
           title: formData.title,
           description: formData.description,
-          prizeAmount: parseFloat(formData.prizeAmount),
+          prizeAmount: parseFloat(formData.prizeAmount) || 0,
           totalLivros: parseInt(formData.totalLivros, 10),
           livroPrice: parseFloat(formData.livroPrice),
           status: formData.status,
@@ -254,7 +254,7 @@ export default function EditLotePage() {
             {/* Prize Amount */}
             <div className="mb-6">
               <label className="block text-gray-900 font-bold mb-2" htmlFor="prizeAmount">
-                Valor do Prêmio (R$)
+                Valor do Prêmio em Dinheiro (R$) <span className="text-sm font-normal text-gray-500">(opcional)</span>
               </label>
               <input
                 type="number"
@@ -265,8 +265,9 @@ export default function EditLotePage() {
                 step="0.01"
                 min="0"
                 className="w-full px-4 py-3 border-2 text-gray-400 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
-                required
+                placeholder="0.00 (deixe vazio se não for em dinheiro)"
               />
+              <p className="text-sm text-gray-500 mt-1">Se o prêmio não for em dinheiro, deixe em branco ou zero.</p>
             </div>
 
             {/* Total Livros */}

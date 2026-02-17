@@ -12,7 +12,7 @@ export default function HomePage() {
 
   useEffect(() => {
     if (user && !loading) {
-      router.push('/lotes')
+      router.push('/')
     }
   }, [user, loading, router])
 
@@ -195,7 +195,7 @@ export default function HomePage() {
             href="/auth/register"
             className="inline-block bg-white text-emerald-600 px-12 py-4 rounded-lg font-semibold text-lg hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg"
           >
-            Comece Agora Mesmo 🚀
+            Comece Agora Mesmo
           </Link>
         </div>
       </div>

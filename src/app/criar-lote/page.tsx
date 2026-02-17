@@ -73,7 +73,7 @@ export default function CreateRafflePageContent() {
         credentials: 'include',
         body: JSON.stringify({
           ...formData,
-          prizeAmount: parseFloat(formData.prizeAmount),
+          prizeAmount: formData.prizeAmount ? parseFloat(formData.prizeAmount) : 0,
           totalLivros: parseInt(formData.totalLivros),
           livroPrice: parseFloat(formData.livroPrice),
         }),
@@ -167,19 +167,20 @@ export default function CreateRafflePageContent() {
             <div>
               <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
                 <DollarSign className="w-5 h-5 text-emerald-600" />
-                Valor do Prêmio (R$)
+                Valor do Prêmio em Dinheiro (R$)
+                <span className="text-sm font-normal text-gray-500">(opcional)</span>
               </label>
               <input
                 type="number"
                 name="prizeAmount"
                 value={formData.prizeAmount}
                 onChange={handleInputChange}
-                required
                 step="0.01"
                 min="0"
                 className="w-full border-2 border-gray-200 rounded-xl px-5 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 transition"
-                placeholder="5000.00"
+                placeholder="0.00 (deixe vazio se o prêmio não for em dinheiro)"
               />
+              <p className="text-sm text-gray-500 mt-1">Se o prêmio não for em dinheiro, deixe em branco. Use o título e descrição para descrever o prêmio.</p>
             </div>
             <div>
               <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
