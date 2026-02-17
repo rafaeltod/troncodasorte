@@ -213,7 +213,7 @@ export default function TicketsResultPage() {
 
         {/* User Info */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-6 overflow-hidden">
-          <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
+          <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white p-6">
             <h1 className="text-3xl font-black mb-2">Meu Perfil</h1>
             <p className="text-emerald-100">Seus dados pessoais</p>
           </div>
@@ -247,7 +247,7 @@ export default function TicketsResultPage() {
         {/* Purchases */}
         <div className="space-y-4">
           <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-4">
-            <div className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white p-6">
+            <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white p-6">
               <h2 className="text-2xl font-black flex items-center gap-2">
                 <Ticket className="w-6 h-6" />
                 Minhas Compras por Lote

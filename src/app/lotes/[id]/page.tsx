@@ -2,13 +2,11 @@ import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
 import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
 import { formatDecimal } from '@/lib/formatters'
-import { RaffleRegulation } from '@/components/raffle-regulation'
-import { RaffleDetailClient } from '@/components/raffle-detail-client'
-import { RaffleImageGallery } from '@/components/raffle-image-gallery'
+import { RaffleRegulation } from '@/components/lote-regulamentação'
+import { RaffleDetailClient } from '@/components/lote-detalhe-cliente'
+import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
 import { AdminLoteActions } from '@/components/admin-lote-actions'
-import { RaffleTopBuyers } from '@/components/raffle-top-buyers'
-
-// ✅ Desabilitar cache e revalidação - sempre buscar dados frescos do BD
+import { RaffleTopBuyers } from '@/components/lote-top-compradores'
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
@@ -44,17 +42,17 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto px-4 py-8">
-        <div className="flex items-center justify-between mb-6">
+      <div className="max-w-6xl mx-auto py-8">
+        <div className="flex items-center justify-between mb-6 px-8">
           <a href="/" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 md:gap-8">
           {/* Images */}
-          <div className="space-y-6">
+          <div className="w-full">
             {mainImage && (
               <RaffleImageGallery
                 mainImage={mainImage}
@@ -64,7 +62,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             )}
             
             {/* Top Compradores do Lote - Mobile/Tablet Below, PC on side */}
-            <div className="lg:block">
+            <div className="md:block hidden">
               <RaffleTopBuyers raffleId={id} />
             </div>
           </div>
@@ -91,7 +89,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </span>
               )}
 
-              <h1 className="text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
             </div>
 
             {raffle.description && (
@@ -132,7 +130,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
                   <div
-                    className="bg-gradient-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
+                    className="bg-linear-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
                   >
                     {progress > 10 && <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>}
@@ -188,7 +186,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
         {/* Disclaimer */}
         <div className="mt-12 bg-linear-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
           <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
-            <p className="font-bold text-gray-900">⚠️ Informações Importantes</p>
+            <p className="font-bold text-gray-900 ">Informações Importantes</p>
             <p>
               Este bilhete de loteria está autorizado com base no termo de autorização descrito no regulamento da promoção. Antes de contratar, consulte o Regulamento do produto. É proibida a venda para menores de 18 anos.
             </p>

@@ -93,7 +93,7 @@ export default function HistoricoPage() {
           </p>
           <Link
             href="/lotes"
-            className="inline-block bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+            className="inline-block bg-linear-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
           >
             Explorar Lotes 🎯
           </Link>

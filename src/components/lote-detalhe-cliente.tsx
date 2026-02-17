@@ -42,7 +42,7 @@ export function RaffleDetailClient({
         </div>
 
         <button
-onClick={() => setIsDrawerOpen(true)} disabled={!isOpen} className="w-full bg-emerald-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-black text-lg py-4 rounded-lg transition shadow-lg" > 🛒 Comprar Agora </button> <p className="text-xs text-gray-600 text-center mt-4">
+onClick={() => setIsDrawerOpen(true)} disabled={!isOpen} className="w-full bg-emerald-600 hover:bg-green-700 disabled:bg-gray-400 text-white font-black text-lg py-4 rounded-lg transition shadow-lg" > Comprar Agora </button> <p className="text-xs text-gray-600 text-center mt-4">
           Clique e preencha o formulário ao lado
         </p>
       </div>

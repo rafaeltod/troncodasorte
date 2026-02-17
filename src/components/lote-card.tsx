@@ -8,6 +8,7 @@ import { formatDecimal } from '@/lib/formatters'
 interface RaffleCardProps {
   id: string
   title: string
+  description: string
   image?: string | null
   prizeAmount: number | string
   totalLivros: number | string
@@ -19,6 +20,7 @@ interface RaffleCardProps {
 export function RaffleCard({
   id,
   title,
+  description,
   image,
   prizeAmount,
   totalLivros,
@@ -66,8 +68,8 @@ export function RaffleCard({
         </div>
 
         {/* Content */}
-        <div className="p-5">
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
+        <div className="p-5" style={{ minHeight: '250px' }}>
+          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
             {title}
           </h3>
 
@@ -82,12 +84,16 @@ export function RaffleCard({
           </div>
 
           {/* Prize Info */}
-          {Number(prizeAmount) > 0 && (
+          {Number(prizeAmount) > 0 ? (
             <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
               <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
               <div className="text-2xl font-bold text-emerald-600">
                 R$ {formatDecimal(Number(prizeAmount))}
               </div>
+            </div>
+          ) : (
+            <div className="mb-4 p-3 h-[75.99px] line-clamp-2 py-3 px-4 rounded-lg">
+              <p className="text-gray-700 text-1x1 line-clamp-3">{description}</p>
             </div>
           )}
 

@@ -19,7 +19,7 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
     <div>
       {currentImage && (
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-4 border border-gray-200">
-          <div className="relative w-full h-[500px] bg-gray-100">
+          <div className="relative w-full h-55 md:h-100 lg:h-125 bg-gray-100">
             <Image
               src={currentImage}
               alt={`Imagem ${selectedIdx + 1}`}

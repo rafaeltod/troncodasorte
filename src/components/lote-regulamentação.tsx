@@ -6,13 +6,13 @@ import { FileText } from 'lucide-react'
 export function RaffleRegulation() {
   return (
     <div className="mt-16 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-      <h2 className="text-3xl font-black text-gray-900 mb-6 flex items-center gap-2">
+      <h2 className="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
         <FileText className="w-8 h-8 text-emerald-600" />
         Regulamento
       </h2>
 
       <div className="space-y-4">
-        <AccordionItem title="📋 Termos e Condições">
+        <AccordionItem title="Termos e Condições">
           <div className="text-gray-700 leading-relaxed space-y-3">
             <p>
               Esta lote é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
@@ -21,7 +21,7 @@ export function RaffleRegulation() {
           </div>
         </AccordionItem>
 
-        <AccordionItem title="⚖️ Responsabilidade Legal">
+        <AccordionItem title="Responsabilidade Legal">
           <div className="text-gray-700 leading-relaxed space-y-3">
             <p className="font-semibold">O organizador desta lote é responsável por:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">
