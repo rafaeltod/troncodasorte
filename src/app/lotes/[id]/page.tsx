@@ -142,9 +142,23 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 <div className="bg-emerald-50 p-4 rounded-lg border-2 border-emerald-300">
                   <div className="flex items-center gap-2 text-emerald-700 font-bold mb-2">
                     <Trophy className="w-5 h-5" />
-                    Vencedor
+                    Resultado do Sorteio
                   </div>
-                  <div className="text-lg font-black text-emerald-900">{raffle.winner}</div>
+                  {raffle.winnerNumber && (
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-500">Número vencedor</p>
+                      <p className="text-2xl font-mono font-black text-emerald-700">{raffle.winnerNumber}</p>
+                      {raffle.drawnNumber && raffle.drawnNumber !== raffle.winnerNumber && (
+                        <p className="text-xs text-gray-400 mt-1">Número sorteado: {raffle.drawnNumber}</p>
+                      )}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm text-gray-500">Ganhador</p>
+                    <p className="text-lg font-black text-emerald-900">
+                      {raffle.winnerUser?.name || 'Participante'}
+                    </p>
+                  </div>
                 </div>
               )}
             </div>
