@@ -22,7 +22,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
   if (!raffle) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center">
         <div className="text-center">
           <h1 className="text-2xl font-bold mb-4 text-gray-900">Lote não encontrada</h1>
           <a href="/" className="text-emerald-600 hover:text-emerald-700 font-semibold">
@@ -41,7 +41,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       <div className="max-w-6xl mx-auto py-8">
         <div className="flex items-center justify-between mb-6 px-8">
           <a href="/" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">

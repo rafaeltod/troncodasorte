@@ -1,22 +1,53 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import Image from 'next/image'
 import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
+import { FaAdjust } from "react-icons/fa";
+
 
 export function Navbar() {
   const router = useRouter()
   const { user, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [isDarkTheme, setIsDarkTheme] = useState(false)
+
+  const applyTheme = (theme: 'light' | 'dark') => {
+    const root = document.documentElement
+    root.classList.remove('light', 'dark')
+    root.classList.add(theme)
+    localStorage.setItem('theme', theme)
+  }
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme')
+
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      applyTheme(savedTheme)
+      setIsDarkTheme(savedTheme === 'dark')
+      return
+    }
+
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const initialTheme = prefersDark ? 'dark' : 'light'
+    applyTheme(initialTheme)
+    setIsDarkTheme(prefersDark)
+  }, [])
 
   const handleLogout = async () => {
     logout()
     setMobileMenuOpen(false)
     router.push('/')
+  }
+
+  const handleToggleTheme = () => {
+    const nextTheme = isDarkTheme ? 'light' : 'dark'
+    applyTheme(nextTheme)
+    setIsDarkTheme(nextTheme === 'dark')
   }
 
   return (
@@ -39,66 +70,75 @@ export function Navbar() {
             <span className="font-bold text-xl hidden sm:inline">Tronco da Sorte</span>
           </Link>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6">
-            <Link
-              href="/"
-              className="hover:text-emerald-100 transition-colors"
+          {/* Desktop Navigation + Theme Toggle + Mobile Menu Button */}
+          <div className="flex items-center gap-4 ml-auto">
+            <button
+              onClick={handleToggleTheme}
+              aria-label={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              title={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
             >
-              Lotes
-            </Link>
-            {user ? (
-              <>
+              <FaAdjust />
+            </button>
+            <nav className="hidden md:flex items-center gap-6">
+              <Link
+                href="/"
+                className="hover:text-emerald-100 transition-colors"
+              >
+                Lotes
+              </Link>
+              {user ? (
+                <>
+                  <Link
+                    href="/account"
+                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+                  >
+                    <User className="w-4 h-4" />
+                    {censorName(user.name)}
+                  </Link>
+                  {user.isAdmin && (
+                    <>
+                      <Link
+                        href="/admin"
+                        className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                      >
+                        <Shield className="w-4 h-4" />
+                        Painel Admin
+                      </Link>
+                      <Link
+                        href="/criar-lote"
+                        className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                      >
+                        + Criar Lote
+                      </Link>
+                    </>
+                  )}
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    Sair
+                  </button>
+                </>
+              ) : (
                 <Link
-                  href="/account"
+                  href="/meus-bilhetes"
                   className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
                 >
-                  <User className="w-4 h-4" />
-                  {censorName(user.name)}
+                  <Ticket className="w-4 h-4" />
+                  Meus Bilhetes
                 </Link>
-                {user.isAdmin && (
-                  <>
-                    <Link
-                      href="/admin"
-                      className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
-                    >
-                      <Shield className="w-4 h-4" />
-                      Painel Admin
-                    </Link>
-                    <Link
-                      href="/criar-lote"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
-                    >
-                      + Criar Lote
-                    </Link>
-                  </>
-                )}
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sair
-                </button>
-              </>
-            ) : (
-              <Link
-                href="/meus-bilhetes"
-                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
-              >
-                <Ticket className="w-4 h-4" />
-                Meus Bilhetes
-              </Link>
-            )}
-          </nav>
+              )}
+            </nav>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
-          >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+            <button
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Navigation */}
