@@ -85,9 +85,9 @@ export function RaffleCard({
 
           {/* Prize Info */}
           {Number(prizeAmount) > 0 ? (
-            <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
+            <div className="mb-4 p-3 bg-azul-claro  rounded-lg">
               <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
-              <div className="text-2xl font-bold text-emerald-600">
+              <div className="text-2xl font-bold text-azul-royal">
                 R$ {formatDecimal(Number(prizeAmount))}
               </div>
             </div>
@@ -101,14 +101,14 @@ export function RaffleCard({
           {status === 'closed' ? (
             <button
               disabled
-              className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold "
+              className="w-full bg-cinza text-white py-3 rounded-lg font-semibold "
             >
               Lote Fechado
             </button>
           ) : status === 'drawn' ? (
             <button
               disabled
-              className="w-full bg-emerald-400 text-white py-3 rounded-lg font-semibold "
+              className="w-full bg-azul-claro text-white py-3 rounded-lg font-semibold "
             >
               Lote Sorteado
             </button>
