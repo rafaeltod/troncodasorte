@@ -60,14 +60,14 @@ export function Navbar() {
                   <>
                     <Link
                       href="/admin"
-                      className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                      className="flex items-center gap-2 bg-gold hover:bg-amarelo-claro text-white px-4 py-2 rounded-full font-semibold transition-colors"
                     >
                       <Shield className="w-4 h-4" />
                       Painel Admin
                     </Link>
                     <Link
                       href="/criar-lote"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-full font-semibold transition-colors"
                     >
                       + Criar Lote
                     </Link>
@@ -75,7 +75,7 @@ export function Navbar() {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-full transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   Sair
@@ -84,7 +84,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/meus-bilhetes"
-                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-colors"
               >
                 <Ticket className="w-4 h-4" />
                 Meus Bilhetes

@@ -225,47 +225,44 @@ export function PixPaymentModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
-      <div className="bg-white rounded-2xl w-full max-w-2xl max-h-screen shadow-2xl flex flex-col overflow-hidden">
+    <div className="fixed inset-0 bg-preto/50 z-50 flex items-center justify-center">
+      <div className="bg-branco rounded-2xl w-full max-w-2xl max-h-screen shadow-2xl flex flex-col overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b shrink-0">
           <div>
-            <h2 className="text-2xl font-black text-gray-900">Pagamento PIX</h2>
-            <p className="text-sm text-gray-600 mt-1">Mercado Pago</p>
+            <h2 className="text-2xl font-preto text-cinza-escuro">Pagamento PIX</h2>
+            <p className="text-sm text-cinza mt-1">Mercado Pago</p>
           </div>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-cinza-claro cursor-pointer rounded-lg transition"
           >
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-cinza " />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-4 overflow-y-auto flex-1">
           {!pixData ? (
-            <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl">
-              <p className="text-sm text-gray-700 mb-3">
-                💰 <span className="font-bold">Valor a pagar:</span> R${" "}
+            <div className="bg-verde-pastel p-4 rounded-xl">
+              <p className="text-sm text-cinza-escuro mb-3">
+                <span className="font-bold">Valor a pagar:</span> R${" "}
                 {formatDecimal(backendAmount || amount)}
               </p>
-              <p className="text-xs text-gray-600">
+              <p className="text-xs text-cinza">
                 Gerando QR Code PIX para você...
               </p>
-              <div className="mt-4 flex justify-center">
-                <div className="animate-spin">⏳</div>
-              </div>
             </div>
           ) : (
             <>
               {/* Timer and Status */}
-              <div className=" bg-yellow-50 h-20 w-full rounded-xl  border-2 flex flex-col justify-center items-center mb-4 border-yellow-200">
+              <div className=" bg-amarelo-pastel h-20 w-full rounded-xl  border-2 flex flex-col justify-center items-center mb-4 border-yellow-200">
                 <div className="flex items-center justify-center gap-3">
                   <div className="text-center">
                     <p className="text-sm font-bold text-yellow-900">
                       Aguardando pagamento
                     </p>
-                    <p className="text-3xl font-black text-yellow-700">
+                    <p className="text-3xl font-preto text-yellow-700">
                       {String(Math.floor(timeRemaining / 60)).padStart(2, "0")}:
                       {String(timeRemaining % 60).padStart(2, "0")}
                     </p>
@@ -275,7 +272,7 @@ export function PixPaymentModal({
 
               {/* QR Code Section */}
               <div className="flex flex-col items-center gap-4">
-                <div className="bg-white p-4 rounded-xl border-2 border-gray-200 flex items-center justify-center w-full">
+                <div className="bg-branco p-4 rounded-xl border-2 border-cinza-claro flex items-center justify-center w-full">
                   {pixData.qrCode ? (
                     <img
                       src={pixData.qrCode}
@@ -283,11 +280,11 @@ export function PixPaymentModal({
                       className="w-48 h-48"
                       onError={(e) => {
                         e.currentTarget.src =
-                          "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22white%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22 fill=%22black%22%3EPIX QR Code%3C/text%3E%3C/svg%3E";
+                          "data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22200%22 height=%22200%22%3E%3Crect fill=%22branco%22 width=%22200%22 height=%22200%22/%3E%3Ctext x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 font-size=%2216%22 fill=%22black%22%3EPIX QR Code%3C/text%3E%3C/svg%3E";
                       }}
                     />
                   ) : (
-                    <div className="w-full p-6 text-center text-sm text-gray-600">
+                    <div className="w-full p-6 text-center text-sm text-cinza">
                       <p className="font-semibold">QR indisponível</p>
                       <p className="mt-2">
                         Use a chave abaixo para pagar via PIX
@@ -298,7 +295,7 @@ export function PixPaymentModal({
 
                 {/* Copiar chave - sempre mostrar abaixo do QR */}
                 <div className="w-full">
-                  <p className="text-xs font-bold text-gray-700 mb-2">
+                  <p className="text-xs font-bold text-cinza-escuro mb-2">
                     OU COPIE A CHAVE:
                   </p>
                   <div className="flex gap-2">
@@ -306,46 +303,45 @@ export function PixPaymentModal({
                       type="text"
                       value={pixData.content || pixData.pixKey || ""}
                       readOnly
-                      className="flex-1 px-3 py-2 text-sm text-gray-900 bg-white border border-gray-400 rounded-lg font-mono font-bold"
+                      className="flex-1 px-3 py-2 text-sm text-cinza-escuro bg-branco border border-cinza rounded-lg font-mono font-bold"
                     />
                     <button
                       onClick={copyPixKey}
-                      className="px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                      className="px-3 py-2 bg-cinza-claro hover:bg-azul-pastel rounded-lg transition"
                     >
                       {copied ? (
-                        <CheckCircle2 className="w-5 h-5 text-emerald-600" />
+                        <CheckCircle2 className="w-5 h-5 text-azul-royal" />
                       ) : (
-                        <Copy className="w-5 h-5 text-gray-600" />
+                        <Copy className="w-5 h-5 text-cinza" />
                       )}
                     </button>
                   </div>
                 </div>
 
-                <div className="w-full bg-blue-50 border border-blue-200 rounded-lg p-3">
-                  <p className="text-xs text-blue-700 font-bold">
+                <div className="w-full bg-azul-pastel rounded-lg p-3">
+                  <p className="text-xs text-azul-royal font-bold">
                     Transação ID:{" "}
                     <span className="font-mono text-xs">
                       {pixData.transactionId}
                     </span>
                   </p>
-                  <p className="text-xs text-blue-600 mt-1">
+                  <p className="text-xs text-azul-royal mt-1">
                     Sua compra será confirmada em até alguns minutos após o
                     pagamento.
                   </p>
                   {retryCount > 0 && (
-                    <p className="text-xs text-blue-500 mt-2">
-                      🔄 Verificando... ({retryCount})
+                    <p className="text-xs text-azul-royal mt-2">
+                      Verificando... ({retryCount})
                     </p>
                   )}
                 </div>
               </div>
 
               <button
-                onClick={onClose}
                 disabled={timeRemaining === 0}
-                className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-gray-300 text-white py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
+                className="w-full bg-verde-menta disabled:bg-gray-300 text-branco py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
               >
-                {timeRemaining === 0 ? "⏱️ Tempo expirado" : "✅ Entendi"}
+                {timeRemaining === 0 ? "Tempo expirado" : "Aguardando"}
               </button>
             </>
           )}

@@ -49,7 +49,7 @@ export default function HomePage() {
                 href="/auth/register"
                 className="bg-white text-emerald-600 hover:bg-emerald-50 px-8 py-4 rounded-xl font-semibold transition transform hover:scale-105 shadow-lg"
               >
-                🚀 Começar Agora
+                Começar Agora
               </Link>
               <Link
                 href="/auth/login"

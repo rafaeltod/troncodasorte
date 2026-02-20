@@ -198,7 +198,7 @@ export default function AccountPage() {
             {editing ? (
               <form onSubmit={handleUpdateProfile} className="space-y-6">
                 <div>
-                  <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                  <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                     <User className="w-4 h-4 text-emerald-600" />
                     Nome
                   </label>
@@ -212,7 +212,7 @@ export default function AccountPage() {
                 </div>
 
                 <div>
-                  <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                  <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                     <Phone className="w-4 h-4 text-emerald-600" />
                     Telefone
                   </label>
@@ -227,7 +227,7 @@ export default function AccountPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                    <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                       <Mail className="w-4 h-4 text-emerald-600" />
                       Email
                     </label>
@@ -240,7 +240,7 @@ export default function AccountPage() {
                   </div>
 
                   <div>
-                    <label className="block text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
+                    <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
                       <FileText className="w-4 h-4 text-emerald-600" />
                       CPF
                     </label>

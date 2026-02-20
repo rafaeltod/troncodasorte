@@ -96,14 +96,14 @@ export default function AdminDashboardPage() {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      open: 'bg-green-100 text-green-800',
-      closed: 'bg-yellow-100 text-yellow-800',
-      finished: 'bg-gray-100 text-gray-800',
+      open: 'bg-green-100 text-verde-agua',
+      closed: 'bg-yellow-100 text-vermelho-claro',
+      finished: 'bg-gray-100 text-cinza-escuro',
     }
     const labels = {
-      open: '🟢 Aberta',
-      closed: '🟡 Fechada',
-      finished: '⚫ Finalizada',
+      open: 'Aberta',
+      closed: 'Fechada',
+      finished: 'Finalizada',
     }
     return (
       <span className={`px-3 py-1 rounded-full text-sm font-bold ${badges[status as keyof typeof badges] || 'bg-gray-100 text-gray-800'}`}>
@@ -118,8 +118,8 @@ export default function AdminDashboardPage() {
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-5xl font-black text-gray-900 mb-3">
-              Painel do Vendedor
+            <h1 className="text-5xl font-black text-cinza-escuro mb-3">
+              Painel do Admin
             </h1>
             <p className="text-lg text-gray-600 mb-6">
               Gerencie todas as suas lotes em um só lugar
@@ -127,7 +127,7 @@ export default function AdminDashboardPage() {
 
             <Link
               href="/criar-lote"
-              className="inline-flex items-center gap-2 bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center gap-2 bg-azul-royal text-white px-6 py-3 rounded-full font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg"
             >
               <Plus size={20} /> Criar Nova Lote
             </Link>
@@ -138,7 +138,7 @@ export default function AdminDashboardPage() {
             <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-gray-600 font-bold">Total de Lotes</h3>
-                <Award className="text-emerald-600" size={24} />
+                <Award className="text-azul-royal" size={24} />
               </div>
               <p className="text-3xl font-black text-gray-900">{stats.total}</p>
             </div>
@@ -146,25 +146,25 @@ export default function AdminDashboardPage() {
             <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-gray-600 font-bold">Lotes Abertas</h3>
-                <TrendingUp className="text-green-600" size={24} />
+                <TrendingUp className="text-verde-agua" size={24} />
               </div>
-              <p className="text-3xl font-black text-green-600">{stats.open}</p>
+              <p className="text-3xl font-black text-verde-agua">{stats.open}</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-gray-600 font-bold">Livros Vendidos</h3>
-                <Users className="text-blue-600" size={24} />
+                <Users className="text-azul-claro" size={24} />
               </div>
-              <p className="text-3xl font-black text-blue-600">{stats.totalSold}</p>
+              <p className="text-3xl font-black text-azul-claro">{stats.totalSold}</p>
             </div>
 
             <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-gray-600 font-bold">Receita Total</h3>
-                <DollarSign className="text-emerald-600" size={24} />
+                <DollarSign className="text-amarelo-gold" size={24} />
               </div>
-              <p className="text-3xl font-black text-emerald-600">{formatCurrency(stats.totalRevenue)}</p>
+              <p className="text-3xl font-black text-amarelo-gold">{formatCurrency(stats.totalRevenue)}</p>
             </div>
           </div>
 
@@ -179,10 +179,10 @@ export default function AdminDashboardPage() {
               <button
                 key={f.id}
                 onClick={() => setFilter(f.id as any)}
-                className={`px-4 py-2 rounded-lg font-bold transition ${
+                className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${
                   filter === f.id
-                    ? 'bg-emerald-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 border-2 border-gray-200 hover:border-emerald-600'
+                    ? 'bg-azul-claro text-white'
+                    : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'
                 }`}
               >
                 {f.label}
@@ -193,7 +193,7 @@ export default function AdminDashboardPage() {
           {/* Lotes List */}
           {loading ? (
             <div className="text-center py-16">
-              <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
+              <div className="text-xl font-bold text-gray-600">Carregando...</div>
             </div>
           ) : filteredLotes.length > 0 ? (
             <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100">
@@ -201,13 +201,13 @@ export default function AdminDashboardPage() {
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b-2 border-gray-200">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Lote</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Status</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Prêmio</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Livros</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Participantes</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-gray-900">Receita</th>
-                      <th className="px-6 py-4 text-right text-sm font-black text-gray-900">Ações</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Lote</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Status</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Prêmio</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Livros</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Participantes</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Receita</th>
+                      <th className="px-6 py-4 text-right text-sm font-black text-cinza-escuro">Ações</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
@@ -243,7 +243,7 @@ export default function AdminDashboardPage() {
                             </p>
                             <div className="w-20 h-2 bg-gray-200 rounded-full mt-1">
                               <div
-                                className="h-full bg-emerald-600 rounded-full"
+                                className="h-full bg-amarelo-gold rounded-full"
                                 style={{
                                   width: `${(lote.soldLivros / lote.totalLivros) * 100}%`,
                                 }}
@@ -252,7 +252,7 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-blue-600">{lote.participants}</span>
+                          <span className="font-bold text-azul-claro">{lote.participants}</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-bold text-gray-900">
@@ -263,21 +263,21 @@ export default function AdminDashboardPage() {
                           <div className="flex items-center justify-end gap-2">
                             <Link
                               href={`/lotes/${lote.id}`}
-                              className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                              className="p-2 text-azul-claro hover:bg-azul-pastel rounded-lg transition"
                               title="Ver lote"
                             >
                               <Eye size={18} />
                             </Link>
                             <Link
                               href={`/admin/lotes/${lote.id}/editar`}
-                              className="p-2 text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
+                              className="p-2 text-verde-agua hover:bg-verde-pastel rounded-lg transition"
                               title="Editar lote"
                             >
                               <Edit size={18} />
                             </Link>
                             <button
                               onClick={() => handleDelete(lote.id)}
-                              className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition"
+                              className="p-2 text-vermelho-claro hover:bg-vermelho-pastel rounded-lg transition"
                               title="Deletar lote"
                             >
                               <Trash2 size={18} />

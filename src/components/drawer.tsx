@@ -60,7 +60,7 @@ export function Drawer({ isOpen, onClose, children, title }: DrawerProps) {
           {!title && <div className="flex-1" />}
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-gray-100 cursor-pointer rounded-lg transition"
             aria-label="Fechar"
           >
             <X className="w-6 h-6 text-gray-600" />

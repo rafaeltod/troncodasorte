@@ -76,22 +76,21 @@ export function FinalizarLoteButton({
       {!showConfirm ? (
         <button
           onClick={() => setShowConfirm(true)}
-          className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-xl transition flex items-center justify-center gap-2"
+          className="w-full bg-vermelho-claro hover:bg-vermelho-vivo rounded-full cursor-pointer text-branco font-bold py-3 px-6 transition flex items-center justify-center gap-2"
         >
-          <XCircle className="w-5 h-5" />
           Finalizar Lote
         </button>
       ) : (
-        <div className="bg-red-50 border-2 border-red-200 rounded-xl p-6">
-          <p className="text-red-700 font-semibold mb-4">
-            ⚠️ Tem certeza que deseja finalizar esta campanha?
+        <div className="bg-amarelo-pastel rounded-xl p-6">
+          <p className="text-vermelho-vivo font-semibold mb-4">
+            Tem certeza que deseja finalizar esta campanha?
           </p>
-          <p className="text-red-600 text-sm mb-4">
+          <p className="text-vermelho-vivo text-sm mb-4">
             Após finalizada, não será mais possível comprar livros nesta lote.
           </p>
           
           {error && (
-            <p className="text-red-700 bg-red-100 px-4 py-2 rounded mb-4 text-sm">
+            <p className="text-vermelho-vivo bg-red-100 px-4 py-2 rounded mb-4 text-sm">
               {error}
             </p>
           )}
@@ -100,11 +99,11 @@ export function FinalizarLoteButton({
             <button
               onClick={handleFinalizar}
               disabled={loading}
-              className="flex-1 bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white font-bold py-3 px-4 rounded-lg transition flex items-center justify-center gap-2"
+              className="flex-1 bg-vermelho-claro rounded-full cursor-pointer hover:bg-vermelho-vivo disabled:bg-vermelho-claro text-branco font-bold py-3 px-4 transition flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4  animate-spin" />
                   Finalizando...
                 </>
               ) : (
@@ -117,7 +116,7 @@ export function FinalizarLoteButton({
                 setError(null)
               }}
               disabled={loading}
-              className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-4 rounded-lg transition"
+              className="flex-1 bg-cinza-claro hover:bg-cinza-escuro hover:text-branco cursor-pointer text-gray-700 font-bold py-3 px-4 rounded-full transition"
             >
               Cancelar
             </button>

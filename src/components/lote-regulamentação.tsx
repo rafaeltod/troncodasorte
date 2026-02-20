@@ -7,7 +7,6 @@ export function RaffleRegulation() {
   return (
     <div className="mt-16 bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
       <h2 className="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
-        <FileText className="w-8 h-8 text-emerald-600" />
         Regulamento
       </h2>
 
@@ -34,7 +33,7 @@ export function RaffleRegulation() {
           </div>
         </AccordionItem>
 
-        <AccordionItem title="🔒 Transparência e Sorteio">
+        <AccordionItem title="Transparência e Sorteio">
           <div className="text-gray-700 leading-relaxed space-y-3">
             <p className="font-semibold">O sorteio será realizado de forma pública e auditável. Todos os participantes serão notificados sobre:</p>
             <ul className="list-disc list-inside space-y-2 ml-2">

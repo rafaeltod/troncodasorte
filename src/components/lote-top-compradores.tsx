@@ -89,10 +89,10 @@ export function RaffleTopBuyers({ raffleId }: RaffleTopBuyersProps) {
         {buyers.map((buyer, index) => (
           <div
             key={buyer.id}
-            className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-100 hover:border-emerald-300 transition"
+            className="flex items-center justify-between p-4 bg-cinza-claro rounded-lg border border-gray-100 hover:border-emerald-300 transition"
           >
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black text-lg">
+              <div className="flex items-center justify-center w-10 h-10 rounded-full bg-azul-royal text-white font-black text-lg">
                 {index === 0 && '🥇'}
                 {index === 1 && '🥈'}
                 {index === 2 && '🥉'}

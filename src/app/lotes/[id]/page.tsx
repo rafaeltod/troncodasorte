@@ -43,14 +43,14 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-6xl mx-auto py-8">
-        <div className="flex items-center justify-between mb-6 px-8">
-          <a href="/" className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold inline-flex transition">
+        <div className="flex items-center justify-between mb-6 px-8 md:px-0">
+          <a href="/" className=" items-center gap-2 text-azul-royal font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 px-8 md:p-0 md:gap-8">
           {/* Images */}
           <div className="w-full">
             {mainImage && (
@@ -68,42 +68,42 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
           </div>
 
           {/* Info */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-gray-200">
             <div className="mb-6">
               {raffle.status === 'drawn' && (
-                <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                <span className="inline-flex items-center gap-2 bg-amarelo-pastel text-amarelo-gold px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <Trophy className="w-4 h-4" />
                   SORTEADO
                 </span>
               )}
               {raffle.status === 'closed' && (
-                <span className="inline-flex items-center gap-2 bg-red-100 text-red-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                <span className="inline-flex items-center gap-2 bg-vermelho-pastel text-vermelho-vivo px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <span>🔒</span>
                   FECHADO
                 </span>
               )}
               {isOpen && (
-                <span className="inline-flex items-center gap-2 bg-emerald-100 text-emerald-700 px-4 py-2 rounded-full text-sm font-bold mb-4">
+                <span className="inline-flex items-center gap-2 bg-verde-pastel text-verde-agua px-4 py-2 rounded-full text-sm font-bold mb-4">
                   <Ticket className="w-4 h-4" />
                   ABERTO
                 </span>
               )}
 
-              <h1 className="text-3xl md:text-4xl font-black text-gray-900 mt-4">{raffle.title}</h1>
+              <h1 className="text-3xl md:text-4xl font-black text-cinza-escuro mt-4">{raffle.title}</h1>
             </div>
 
             {raffle.description && (
-              <p className="text-gray-700 mb-6 text-lg leading-relaxed">{raffle.description}</p>
+              <p className="text-cinza-escuro mb-6 text-lg leading-relaxed">{raffle.description}</p>
             )}
 
             <div className="space-y-4 mb-8">
               {Number(raffle.prizeAmount) > 0 && (
-                <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-6 rounded-xl border-2 border-emerald-200">
+                <div className="bg-azul-pastel p-6 rounded-xl">
                   <div className="flex items-center gap-2 text-sm text-gray-600 font-semibold mb-2">
                     <Gift className="w-4 h-4" />
                     Prêmio em Dinheiro
                   </div>
-                  <div className="text-4xl font-black text-emerald-700">
+                  <div className="text-4xl font-black text-azul-royal">
                     R$ {formatDecimal(Number(raffle.prizeAmount))}
                   </div>
                 </div>
@@ -115,7 +115,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     <Ticket className="w-4 h-4" />
                     Livro
                   </div>
-                  <div className="text-2xl font-black text-emerald-700">
+                  <div className="text-2xl font-black text-azul-royal">
                     R$ {formatDecimal(Number(raffle.livroPrice))}
                   </div>
                 </div>
@@ -124,23 +124,23 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
               <div>
                 <div className="flex justify-between mb-2">
                   <span className="text-sm font-bold text-gray-900">Progresso de Vendas</span>
-                  <span className="text-sm font-bold text-emerald-700">
+                  <span className="text-sm font-bold text-azul-royal">
                     {Math.round(progress)}%
                   </span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-5 border border-gray-300 overflow-hidden">
                   <div
-                    className="bg-linear-to-r from-emerald-600 to-teal-600 h-5 rounded-full transition-all flex items-center justify-center"
+                    className="bg-azul-royal h-5 rounded-full transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
                   >
-                    {progress > 10 && <span className="text-white text-xs font-bold">{Math.round(progress)}%</span>}
+                    {progress > 10 && <span className="text-branco text-xs font-bold">{Math.round(progress)}%</span>}
                   </div>
                 </div>
               </div>
 
               {raffle.status === 'drawn' && raffle.winner && (
                 <div className="bg-emerald-50 p-4 rounded-lg border-2 border-emerald-300">
-                  <div className="flex items-center gap-2 text-emerald-700 font-bold mb-2">
+                  <div className="flex items-center gap-2 text-azul-royal font-bold mb-2">
                     <Trophy className="w-5 h-5" />
                     Vencedor
                   </div>
@@ -152,10 +152,11 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
             {isOpen && progress < 100 && (
               <>
                 <div className="w-full mb-6">
-                  <a href="/meus-bilhetes" className="block w-full bg-teal-50 hover:bg-teal-100 border-2 border-teal-300 text-teal-700 py-3 rounded-lg font-bold text-center transition">
-                    📋 Meus Bilhetes
+                  <a href="/meus-bilhetes" className="block w-full bg-azul-royal hover:bg-azul-claro py-3 rounded-full font-bold text-center transition">
+                    Meus Bilhetes
                   </a>
                 </div>
+                
                 <RaffleDetailClient
                   raffleId={id}
                   livroPrice={Number(raffle.livroPrice)}
@@ -167,7 +168,6 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
             {progress >= 100 && isOpen && (
               <div className="w-full bg-emerald-100 text-emerald-900 py-4 rounded-lg font-black text-center flex items-center justify-center gap-2">
-                <span>✅</span>
                 Todas as Livros Vendidas
               </div>
             )}

@@ -155,7 +155,7 @@ export default function TicketsResultPage() {
         <div className="max-w-2xl mx-auto px-4 py-8">
           <Link
             href="/meus-bilhetes"
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
+            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 transition"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
@@ -183,7 +183,7 @@ export default function TicketsResultPage() {
         <div className="max-w-2xl mx-auto px-4 py-8">
           <Link
             href="/meus-bilhetes"
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
+            className="items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
           >
             <ArrowLeft className="w-4 h-4" />
             Voltar
@@ -205,7 +205,7 @@ export default function TicketsResultPage() {
         <Link
           href="/meus-bilhetes"
           onClick={() => localStorage.removeItem('ticketQuery')}
-          className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
+          className=" items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar
@@ -268,7 +268,7 @@ export default function TicketsResultPage() {
                   className="w-full p-4 hover:bg-gray-50 transition-colors flex items-center gap-4 cursor-pointer"
                 >
                   {/* Mini Image */}
-                  <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-200 relative">
+                  <div className="shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-200 relative">
                     {raffleGroup.raffleImage ? (
                       <Image
                         src={raffleGroup.raffleImage}
@@ -294,7 +294,7 @@ export default function TicketsResultPage() {
                   </div>
 
                   {/* Status Badge */}
-                  <div className="flex-shrink-0 flex items-center gap-3">
+                  <div className="shrink-0 flex items-center gap-3">
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ${
                         raffleGroup.raffleStatus === 'drawn'

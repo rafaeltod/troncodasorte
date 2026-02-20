@@ -17,7 +17,7 @@ export function LivroSelector({ onSelect, selectedQuantity, availableLivros }: L
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+    <div className="bg-branco rounded-2xl">
       <h3 className="text-1xl md:text-2xl font-black text-gray-900 mb-6">Selecione a quantidade</h3>
 
       <div className="grid grid-cols-2 gap-3 mb-8">
@@ -29,10 +29,10 @@ export function LivroSelector({ onSelect, selectedQuantity, availableLivros }: L
               key={quantity}
               onClick={() => !isDisabled && handleAddQuantity(quantity)}
               disabled={isDisabled}
-              className={`py-2 px-1 rounded-xl font-bold text-lg transition transform ${
+              className={`py-2 px-1 rounded-xl font-bold cursor-pointer text-lg transition transform ${
                 isDisabled
                   ? 'bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed'
-                  : 'bg-emerald-50 text-emerald-700 border-2 border-emerald-300 hover:bg-emerald-100 hover:scale-105'
+                  : 'bg-azul-pastel text-azul-royal hover:bg-azul-claro hover:scale-105'
               }`}
             >
               +{quantity}

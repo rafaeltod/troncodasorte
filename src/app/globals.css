@@ -12,20 +12,28 @@
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
   
   /* Cores personalizadas */
-  --color-gold: rgb(255 164 28);
+  --color-amarelo-gold: rgb(255 164 28);
   --color-amarelo-claro: rgb(255 244 106);
   --color-amarelo-pastel: rgb(250 249 207);
+
   --color-azul-royal: rgb(0 0 128);
   --color-azul-claro: rgb(91 122 198);
   --color-azul-pastel: rgb(207 213 250);
+
   --color-verde-menta: rgb(0 138 100);
   --color-verde-agua: rgb(68 185 133);
-  --color-verde-pastel: rgb(207 250 231)
+  --color-verde-pastel: rgb(207 250 231);
+
   --color-vermelho-vivo: rgb(196 14 14);
   --color-vermelho-claro: rgb(215 83 83);
   --color-vermelho-pastel: rgb(250 207 207);
+
   --color-cinza-escuro: rgb(19 25 33);
   --color-cinza: rgb(35 47 62);
+  --color-cinza-claro: rgb(202 212 233);
+
+  --color-branco: rgb(255 255 255);
+  --color-preto: rgb(0 0 0);
 }
 
 @media (prefers-color-scheme: dark) {
