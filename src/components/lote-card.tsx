@@ -113,7 +113,7 @@ export function RaffleCard({
               Lote Sorteado
             </button>
           ) : (
-            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
+            <button className="w-full bg-azul-royal hover:bg-azul-claro hover:cursor-pointer text-white py-3 rounded-lg font-semibold transition-colors">
               Comprar Livros
             </button>
           )}
