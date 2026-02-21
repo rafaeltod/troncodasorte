@@ -62,14 +62,14 @@ function FinalizarLoteButton({
       setSuccess(true)
       setShowConfirm(false)
       
-      // Recarregar a página após 1.5 segundos
+      // Recarregar a página após 1 segundo
       setTimeout(() => {
         if (onFinalized) {
           onFinalized()
         } else {
           window.location.reload()
         }
-      }, 1500)
+      }, 1000)
     } catch (err: any) {
       setError(err.message)
     } finally {
