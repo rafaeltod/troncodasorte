@@ -1,26 +1,169 @@
-import Image from 'next/image'
-import { getRaffleById } from '@/lib/queries'
-import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
+'use client'
+
+import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
+import { ArrowLeft, Gift, Ticket, Trophy } from 'lucide-react'
 import { formatDecimal } from '@/lib/formatters'
 import { RaffleRegulation } from '@/components/lote-regulamentação'
-import { RaffleDetailClient } from '@/components/lote-detalhe-cliente'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
 import { AdminLoteActions } from '@/components/admin-lote-actions'
 import { RaffleTopBuyers } from '@/components/lote-top-compradores'
-export const dynamic = 'force-dynamic'
-export const revalidate = 0
+import { CheckoutFlow } from '@/components/checkout-flow'
+import { Drawer } from '@/components/drawer'
 
-interface DetailProps {
-  params: Promise<{
-    id: string
-  }>
+interface RaffleDetail {
+  id: string
+  title: string
+  description?: string | null
+  prizeAmount?: number | string | null
+  totalLivros: number
+  soldLivros: number
+  livroPrice: number | string
+  status: string
+  winner?: string | null
+  image?: string | null
+  images?: string[] | null
 }
 
-export default async function RaffleDetailPage({ params }: DetailProps) {
-  const { id } = await params
-  const raffle = await getRaffleById(id)
+interface LivroSelectorProps {
+  onSelect: (quantity: number) => void
+  selectedQuantity: number
+  availableLivros: number
+}
 
-  if (!raffle) {
+function LivroSelector({ onSelect, selectedQuantity, availableLivros }: LivroSelectorProps) {
+  const presetOptions = [1, 50, 100, 200, 300, 500]
+
+  const handleAddQuantity = (quantity: number) => {
+    const newTotal = selectedQuantity + quantity
+    if (newTotal <= availableLivros) {
+      onSelect(newTotal)
+    }
+  }
+
+  return (
+    <div className="bg-branco rounded-2xl">
+      <h3 className="text-1xl md:text-2xl font-black text-gray-900 mb-6">Selecione a quantidade</h3>
+
+      <div className="grid grid-cols-2 gap-3 mb-8">
+        {presetOptions.map((quantity) => {
+          const newTotal = selectedQuantity + quantity
+          const isDisabled = newTotal > availableLivros
+          return (
+            <button
+              key={quantity}
+              onClick={() => !isDisabled && handleAddQuantity(quantity)}
+              disabled={isDisabled}
+              className={`py-2 px-1 rounded-xl font-bold cursor-pointer text-lg transition transform ${
+                isDisabled
+                  ? 'bg-gray-100 text-gray-400 border-2 border-gray-200 cursor-not-allowed'
+                  : 'bg-azul-pastel text-azul-royal hover:bg-azul-claro hover:scale-105'
+              }`}
+            >
+              +{quantity}
+            </button>
+          )
+        })}
+      </div>
+
+      <div className="space-y-3">
+        <p className="text-1xl md:text-2xl font-bold text-gray-900">Ou digite abaixo:</p>
+        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-4 border-2 border-gray-300">
+          <input
+            type="number"
+            min="1"
+            max={availableLivros}
+            value={selectedQuantity}
+            onChange={(e) => onSelect(Number(e.target.value) || 1)}
+            className="flex-1 text-center text-2xl font-black text-gray-900 bg-transparent border-0 focus:outline-none"
+          />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+export default function RaffleDetailPage() {
+  const params = useParams()
+  const id = typeof params?.id === 'string' ? params.id : Array.isArray(params?.id) ? params.id[0] : ''
+  const [raffle, setRaffle] = useState<RaffleDetail | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [notFound, setNotFound] = useState(false)
+  const [selectedQuantity, setSelectedQuantity] = useState(1)
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+
+  useEffect(() => {
+    let isMounted = true
+
+    const fetchRaffle = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        setNotFound(false)
+
+        const response = await fetch(`/api/lotes/${id}`, {
+          credentials: 'include',
+        })
+
+        if (response.status === 404) {
+          if (!isMounted) return
+          setRaffle(null)
+          setNotFound(true)
+          return
+        }
+
+        if (!response.ok) {
+          throw new Error('Erro ao buscar lote')
+        }
+
+        const data = (await response.json()) as RaffleDetail
+        if (!isMounted) return
+        setRaffle(data)
+        setSelectedQuantity(1)
+      } catch (err) {
+        if (!isMounted) return
+        console.error('Erro ao buscar lote:', err)
+        setError('Erro ao carregar lote')
+      } finally {
+        if (isMounted) {
+          setLoading(false)
+        }
+      }
+    }
+
+    if (id) {
+      fetchRaffle()
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [id])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+        <div className="text-center text-gray-700 font-semibold">Carregando...</div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4 text-gray-900">Falha ao carregar o lote</h1>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <a href="/" className="text-emerald-600 hover:text-emerald-700 font-semibold">
+            ← Voltar para lotes
+          </a>
+        </div>
+      </div>
+    )
+  }
+
+  if (!raffle || notFound) {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
         <div className="text-center">
@@ -35,22 +178,21 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
   const progress = (raffle.soldLivros / raffle.totalLivros) * 100
   const isOpen = raffle.status === 'open'
-  
-  // Garantir que images é sempre um array
+  const availableLivros = raffle.totalLivros - raffle.soldLivros
+  const totalPrice = selectedQuantity * Number(raffle.livroPrice)
   const images = Array.isArray(raffle.images) ? raffle.images : []
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto py-8">
-        <div className="flex items-center justify-between mb-6 px-8 md:px-0">
+    <main className="min-h-screen w-full max-w-7xl mx-auto box-border bg-gray-50 py-8 px-2 md:px-5 lg:px-15">
+        <div className="flex items-center justify-between mb-5">
           <a href="/" className=" items-center gap-2 text-azul-royal font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 px-8 md:p-0 md:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 md:gap-8">
           {/* Images */}
           <div className="w-full">
             {mainImage && (
@@ -61,8 +203,8 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
               />
             )}
             
-            {/* Top Compradores do Lote - Mobile/Tablet Below, PC on side */}
-            <div className="md:block hidden">
+            {/* Top Compradores - desktop */}
+            <div className="lg:block hidden mt-4">
               <RaffleTopBuyers raffleId={id} />
             </div>
           </div>
@@ -109,17 +251,15 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                  <div className="text-sm text-gray-600 font-semibold mb-2 flex items-center gap-2">
+              <div className="bg-cinza-claro p-4 rounded-lg max-w-40">
+                  <div className="text-sm text-cinza font-semibold mb-2 flex items-center gap-2">
                     <Ticket className="w-4 h-4" />
                     Livro
                   </div>
-                  <div className="text-2xl font-black text-azul-royal">
+                  <div className="text-2xl font-black text-cinza">
                     R$ {formatDecimal(Number(raffle.livroPrice))}
                   </div>
                 </div>
-              </div>
 
               <div>
                 <div className="flex justify-between mb-2">
@@ -156,13 +296,48 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     Meus Bilhetes
                   </a>
                 </div>
-                
-                <RaffleDetailClient
-                  raffleId={id}
-                  livroPrice={Number(raffle.livroPrice)}
-                  availableLivros={raffle.totalLivros - raffle.soldLivros}
-                  isOpen={true}
+
+                <LivroSelector
+                  selectedQuantity={selectedQuantity}
+                  onSelect={setSelectedQuantity}
+                  availableLivros={availableLivros}
                 />
+
+                <div className="mt-8 bg-verde-pastel to-green-50 p-6 rounded-xl">
+                  <div className="flex justify-between items-center mb-6">
+                    <div>
+                      <p className="text-sm text-gray-600 font-semibold mb-1">Total a Pagar</p>
+                      <p className="text-3xl font-black text-verde-menta">
+                        R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setIsDrawerOpen(true)}
+                    disabled={!isOpen}
+                    className="w-full bg-verde-menta hover:bg-verde-claro cursor-pointer disabled:bg-cinza-claro text-branco font-black text-lg py-4 rounded-full transition shadow-lg"
+                  >
+                    Comprar Agora
+                  </button>
+                  <p className="text-xs text-gray-600 text-center mt-4">
+                    Clique e preencha o formulário ao lado
+                  </p>
+                </div>
+
+                <Drawer
+                  isOpen={isDrawerOpen}
+                  onClose={() => setIsDrawerOpen(false)}
+                  title="Finalizar Compra"
+                >
+                  <CheckoutFlow
+                    raffleId={id}
+                    livroPrice={Number(raffle.livroPrice)}
+                    availableLivros={availableLivros}
+                    isOpen={isOpen}
+                    selectedQuantity={selectedQuantity}
+                  />
+                </Drawer>
               </>
             )}
 
@@ -183,6 +358,11 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
           </div>
         </div>
 
+        {/* Top Compradores - mobile*/}
+          <div className="lg:hidden block mt-8">
+            <RaffleTopBuyers raffleId={id} />
+          </div>
+
         {/* Disclaimer */}
         <div className="mt-12 bg-linear-to-br from-gray-50 to-gray-100 rounded-2xl shadow-lg p-8 border border-gray-300">
           <div className="space-y-4 text-sm text-gray-700 leading-relaxed">
@@ -201,7 +381,6 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
 
         {/* Regulamento */}
         <RaffleRegulation />
-      </div>
-    </div>
+    </main>
   )
 }

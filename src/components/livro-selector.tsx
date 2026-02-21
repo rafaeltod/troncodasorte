@@ -1,10 +1,6 @@
 'use client'
 
-interface LivroSelectorProps {
-  onSelect: (quantity: number) => void
-  selectedQuantity: number
-  availableLivros: number
-}
+
 
 export function LivroSelector({ onSelect, selectedQuantity, availableLivros }: LivroSelectorProps) {
   const presetOptions = [1, 50, 100, 200, 300, 500]
