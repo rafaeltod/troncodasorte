@@ -38,13 +38,6 @@
   --color-fundo-cinza: rgb(249 250 251);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-  }
-}
-
 * {
   @apply antialiased;
 }

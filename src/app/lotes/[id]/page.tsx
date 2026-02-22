@@ -180,7 +180,7 @@ function RaffleTopBuyers({ raffleId }: RaffleTopBuyersProps) {
         {buyers.map((buyer, index) => (
           <div
             key={buyer.id}
-            className="flex items-center justify-between p-4 bg-cinza-claro rounded-lg border border-gray-100 hover:border-emerald-300 transition"
+            className="flex items-center justify-between p-4 bg-cinza-claro  rounded-lg border border-gray-100 hover:border-emerald-300 transition"
           >
             <div className="flex items-center gap-3">
               <div className="flex items-center justify-center w-10 h-10 rounded-full bg-branco font-black text-lg">
@@ -422,7 +422,7 @@ export default function RaffleDetailPage() {
             {isOpen && progress < 100 && (
               <>
                 <div className="w-full mb-6">
-                  <a href="/meus-bilhetes" className="block w-full bg-azul-royal hover:bg-branco hover:text-azul-royal border hover:border-azul-royal py-3 rounded-full font-bold text-center transition">
+                  <a href="/meus-bilhetes" className="block w-full bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border hover:border-azul-royal py-3 rounded-full font-bold text-center transition">
                     Meus Bilhetes
                   </a>
                 </div>
