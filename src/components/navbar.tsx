@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
+import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
 import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
 
@@ -20,9 +21,8 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className={`${mainConfig} bg-azul-royal! text-branco top-0 left-0 right-0 z-50 border-b-20`}>
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link 
             href="/"
@@ -95,7 +95,7 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="md:hidden hover:bg-white/10 rounded-lg transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -162,7 +162,7 @@ export function Navbar() {
             </div>
           </nav>
         )}
-      </div>
+      
     </header>
   )
 }

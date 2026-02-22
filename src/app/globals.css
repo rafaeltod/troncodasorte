@@ -17,8 +17,8 @@
   --color-amarelo-pastel: rgb(250 249 207);
 
   --color-azul-royal: rgb(0 0 128);
-  --color-azul-claro: rgb(91 122 198);
-  --color-azul-pastel: rgb(207 213 250);
+  --color-azul-claro: rgb(50 180 255);
+  --color-azul-pastel: rgb(224 228 255);
 
   --color-verde-menta: rgb(0 138 100);
   --color-verde-agua: rgb(68 185 133);
@@ -34,6 +34,8 @@
 
   --color-branco: rgb(255 255 255);
   --color-preto: rgb(0 0 0);
+
+  --color-fundo-cinza: rgb(249 250 251);
 }
 
 @media (prefers-color-scheme: dark) {

@@ -7,6 +7,7 @@ import { RaffleCard } from '@/components/lote-card'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Search, TrendingUp, Zap } from 'lucide-react'
+import { mainConfig } from '../lib/layout-config'
 
 interface Raffle {
   id: string
@@ -103,11 +104,11 @@ export default function Home() {
           <div className="text-xl font-bold text-gray-600">Carregando lotes...</div>
         </div>
       ) : filteredRaffles.length === 0 ? (
-        <div className="container mx-auto px-4 py-20 text-center">
+        <div className={mainConfig}>
           <p className="text-xl text-gray-600">Nenhuma lote encontrada</p>
         </div>
       ) : (
-        <div className="container mx-auto px-4 py-12">
+        <div className={mainConfig}>
 
       {/* Search Bar */}
       <div className="relative max-w-2xl">
