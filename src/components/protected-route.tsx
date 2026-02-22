@@ -22,8 +22,8 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   // Não renderiza nada até montar no cliente
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-slate-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-cinza-claro items-center justify-center">
+        <div className="text-xl font-bold text-slate-600">Carregando...</div>
       </div>
     )
   }

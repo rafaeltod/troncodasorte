@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
+import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
 import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
 
@@ -20,9 +21,8 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className={`${mainConfig} bg-azul-royal! text-branco top-0 left-0 right-0 z-50 border-b-20`}>
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link 
             href="/"
@@ -60,14 +60,14 @@ export function Navbar() {
                   <>
                     <Link
                       href="/admin"
-                      className="flex items-center gap-2 bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                      className="flex items-center gap-2 bg-gold hover:bg-amarelo-claro text-white px-4 py-2 rounded-full font-semibold transition-colors"
                     >
                       <Shield className="w-4 h-4" />
                       Painel Admin
                     </Link>
                     <Link
                       href="/criar-lote"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-full font-semibold transition-colors"
                     >
                       + Criar Lote
                     </Link>
@@ -75,7 +75,7 @@ export function Navbar() {
                 )}
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-lg transition-colors"
+                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-full transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   Sair
@@ -84,7 +84,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/meus-bilhetes"
-                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
+                className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-full transition-colors"
               >
                 <Ticket className="w-4 h-4" />
                 Meus Bilhetes
@@ -95,7 +95,7 @@ export function Navbar() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 hover:bg-white/10 rounded-lg transition-colors"
+            className="md:hidden hover:bg-white/10 rounded-lg transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -162,7 +162,7 @@ export function Navbar() {
             </div>
           </nav>
         )}
-      </div>
+      
     </header>
   )
 }

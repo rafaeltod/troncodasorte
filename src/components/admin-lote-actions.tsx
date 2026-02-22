@@ -18,8 +18,8 @@ export function AdminLoteActions({ raffleId, raffleStatus }: AdminLoteActionsPro
   }
 
   return (
-    <div className="bg-amber-50 border-2 border-amber-200 rounded-xl p-6 mt-6">
-      <div className="flex items-center gap-2 text-amber-700 font-bold mb-4">
+    <div className=" rounded-xl mt-6">
+      <div className="flex items-center gap-2 text-vermelho-claro font-bold mb-4">
         <Settings className="w-5 h-5" />
         Ações de Administrador
       </div>
@@ -27,9 +27,8 @@ export function AdminLoteActions({ raffleId, raffleStatus }: AdminLoteActionsPro
       <div className="flex flex-wrap gap-3">
         <a
           href={`/admin/lotes/${raffleId}/editar`}
-          className="flex-1 min-w-[140px] bg-amber-100 hover:bg-amber-200 text-amber-800 font-semibold py-2 px-4 rounded-lg transition text-center"
-        >
-          ✏️ Editar
+          className="flex-1 min-w-35 bg-branco border border-vermelho-claro hover:bg-vermelho-claro hover:text-branco text-vermelho-claro font-semibold py-2 px-4 rounded-full transition text-center"
+        >Editar
         </a>
       </div>
       

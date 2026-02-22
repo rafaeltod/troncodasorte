@@ -141,9 +141,9 @@ export default function TicketsResultPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-cinza-claro flex items-center justify-center">
         <div className="text-center">
-          <p className="text-gray-600 font-semibold">Carregando seus bilhetes...</p>
+          <p className="text-cinza font-semibold">Carregando seus bilhetes...</p>
         </div>
       </div>
     )
@@ -151,22 +151,21 @@ export default function TicketsResultPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-cinza-claro">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link
-            href="/meus-bilhetes"
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
-          >
-            <ArrowLeft className="w-4 h-4" />
+          <div className="flex items-center justify-between mb-5">
+          <a href="/" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+            <ArrowLeft className="w-5 h-5" />
             Voltar
-          </Link>
+          </a>
+        </div>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-red-200">
+          <div className="bg-branco rounded-2xl shadow-lg p-8">
             <div className="text-center">
-              <p className="text-lg font-bold text-red-700 mb-4">{error}</p>
+              <p className="text-lg font-bold text-vermelho-vivo mb-4">{error}</p>
               <Link
                 href="/meus-bilhetes"
-                className="inline-block bg-emerald-600 text-white px-6 py-2 rounded-lg font-bold hover:bg-emerald-700 transition"
+                className="inline-block bg-azul-royal text-branco px-6 py-2 rounded-lg font-bold hover:bg-branco hover:text-azul-royal transition"
               >
                 Tentar Novamente
               </Link>
@@ -179,17 +178,14 @@ export default function TicketsResultPage() {
 
   if (!ticketData) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-cinza-claro">
         <div className="max-w-2xl mx-auto px-4 py-8">
-          <Link
-            href="/meus-bilhetes"
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
-          >
-            <ArrowLeft className="w-4 h-4" />
+          <a href="/meus-bilhetes" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+            <ArrowLeft className="w-5 h-5" />
             Voltar
-          </Link>
+          </a>
 
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza">
             <div className="text-center">
               <p className="text-gray-600 font-semibold">Nenhuma compra encontrada.</p>
             </div>
@@ -200,45 +196,45 @@ export default function TicketsResultPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cinza-claro">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <Link
           href="/meus-bilhetes"
           onClick={() => localStorage.removeItem('ticketQuery')}
-          className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
+          className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition mb-5"
         >
           <ArrowLeft className="w-4 h-4" />
           Voltar
         </Link>
 
         {/* User Info */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-6 overflow-hidden">
-          <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white p-6">
+        <div className="bg-branco rounded-2xl shadow-lg border border-cinza mb-6 overflow-hidden">
+          <div className="bg-azul-royal text-branco p-6">
             <h1 className="text-3xl font-black mb-2">Meu Perfil</h1>
             <p className="text-emerald-100">Seus dados pessoais</p>
           </div>
 
           <div className="p-6 space-y-4">
             <div>
-              <p className="text-xs font-bold text-gray-600 mb-1">Nome Completo</p>
-              <p className="text-lg font-bold text-gray-900">{censorName(ticketData.user.name)}</p>
+              <p className="text-xs font-bold text-cinza mb-1">Nome Completo</p>
+              <p className="text-lg font-bold text-cinza-escuro">{censorName(ticketData.user.name)}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-600 mb-1">Email</p>
-              <p className="text-lg font-bold text-gray-900">{censorEmail(ticketData.user.email)}</p>
+              <p className="text-xs font-bold text-cinza mb-1">Email</p>
+              <p className="text-lg font-bold text-cinza-escuro">{censorEmail(ticketData.user.email)}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-600 mb-1">Telefone</p>
-              <p className="text-lg font-bold text-gray-900">{censorPhoneShort(ticketData.user.phone)}</p>
+              <p className="text-xs font-bold text-cinza mb-1">Telefone</p>
+              <p className="text-lg font-bold text-cinza-escuro">{censorPhoneShort(ticketData.user.phone)}</p>
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-600 mb-1">CPF</p>
-              <p className="text-lg font-bold text-gray-900">{censorCPF(ticketData.user.cpf)}</p>
+              <p className="text-xs font-bold text-cinza mb-1">CPF</p>
+              <p className="text-lg font-bold text-cinza-escuro">{censorCPF(ticketData.user.cpf)}</p>
             </div>
 
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-4">
-              <p className="text-xs text-blue-700">
-                ℹ️ Os dados acima aparecem parcialmente censurados por questões de segurança.
+            <div className="bg-azul-pastel border rounded-lg p-4 mt-4">
+              <p className="text-xs text-azul-royal">
+              Os dados acima aparecem parcialmente censurados por questões de segurança.
               </p>
             </div>
           </div>
@@ -246,8 +242,8 @@ export default function TicketsResultPage() {
 
         {/* Purchases */}
         <div className="space-y-4">
-          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden mb-4">
-            <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white p-6">
+          <div className="bg-branco rounded-2xl shadow-lg border border-cinza overflow-hidden mb-4">
+            <div className="bg-azul-royal text-branco p-6">
               <h2 className="text-2xl font-black flex items-center gap-2">
                 <Ticket className="w-6 h-6" />
                 Minhas Compras por Lote
@@ -256,19 +252,19 @@ export default function TicketsResultPage() {
           </div>
 
           {ticketData.purchases.length === 0 ? (
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 text-center">
+            <div className="bg-branco rounded-2xl shadow-lg border border-cinza p-6 text-center">
               <p className="text-gray-600 font-semibold">Você ainda não fez nenhuma compra.</p>
             </div>
           ) : (
             groupPurchasesByRaffle(ticketData.purchases).map((raffleGroup) => (
-              <div key={raffleGroup.raffleId} className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+              <div key={raffleGroup.raffleId} className="bg-branco rounded-2xl shadow-lg border border-cinza overflow-hidden">
                 {/* Raffle Header */}
                 <button
                   onClick={() => toggleRaffleExpanded(raffleGroup.raffleId)}
-                  className="w-full p-4 hover:bg-gray-50 transition-colors flex items-center gap-4 cursor-pointer"
+                  className="w-full p-4 hover:bg-cinza-claro transition-colors flex items-center gap-4 cursor-pointer"
                 >
                   {/* Mini Image */}
-                  <div className="flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-gray-200 relative">
+                  <div className="shrink-0 w-20 h-20 rounded-lg overflow-hidden bg-cinza relative">
                     {raffleGroup.raffleImage ? (
                       <Image
                         src={raffleGroup.raffleImage}
@@ -278,7 +274,7 @@ export default function TicketsResultPage() {
                       />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center bg-gray-300">
-                        <Ticket className="w-8 h-8 text-gray-500" />
+                        <Ticket className="w-8 h-8 text-cinza" />
                       </div>
                     )}
                   </div>
@@ -294,21 +290,21 @@ export default function TicketsResultPage() {
                   </div>
 
                   {/* Status Badge */}
-                  <div className="flex-shrink-0 flex items-center gap-3">
+                  <div className="shrink-0 flex items-center gap-3">
                     <span
-                      className={`text-xs font-bold px-3 py-1 rounded-full whitespace-nowrap ${
+                      className={`text-xs font-bold px-3 py-1 rounded-full brancospace-nowrap ${
                         raffleGroup.raffleStatus === 'drawn'
-                          ? 'bg-emerald-100 text-emerald-800'
+                          ? 'bg-amarelo-pastel text-amarelo-gold'
                           : raffleGroup.raffleStatus === 'open'
-                          ? 'bg-cyan-100 text-cyan-800'
+                          ? 'bg-verde-pastel text-verde-menta'
                           : 'bg-gray-100 text-gray-800'
                       }`}
                     >
                       {raffleGroup.raffleStatus === 'drawn'
-                        ? '✅ Sorteada'
+                        ? 'Sorteada'
                         : raffleGroup.raffleStatus === 'open'
-                        ? '🔄 Aberta'
-                        : '⏸️ Fechada'}
+                        ? 'Aberta'
+                        : 'Fechada'}
                     </span>
                     <ChevronDown
                       className={`w-5 h-5 text-gray-400 transition-transform ${
@@ -320,25 +316,25 @@ export default function TicketsResultPage() {
 
                 {/* Purchases List */}
                 {expandedRaffles.has(raffleGroup.raffleId) && (
-                  <div className="border-t border-gray-200 p-4">
+                  <div className="border-t border-cinza p-4">
                     {/* Summary */}
-                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                    <div className="mb-4">
                       <div className="grid grid-cols-3 gap-4 text-center mb-4">
                         <div>
-                          <p className="text-xs text-gray-600 font-semibold">TOTAL GASTO</p>
-                          <p className="text-xl font-black text-emerald-600">
+                          <p className="text-xs text-cinza font-semibold">TOTAL GASTO</p>
+                          <p className="text-xl font-black text-cinza">
                             R$ {formatDecimal(raffleGroup.totalSpent)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600 font-semibold">LIVROS</p>
-                          <p className="text-xl font-black text-teal-600">
+                          <p className="text-xs text-cinza font-semibold">LIVROS</p>
+                          <p className="text-xl font-black text-cinza">
                             {raffleGroup.totalLivros}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-600 font-semibold">NÚMEROS</p>
-                          <p className="text-xl font-black text-cyan-600">
+                          <p className="text-xs text-cinza font-semibold">NÚMEROS</p>
+                          <p className="text-xl font-black text-cinza">
                             {raffleGroup.allNumbers.length}
                           </p>
                         </div>
@@ -354,9 +350,13 @@ export default function TicketsResultPage() {
                                 : raffleGroup.raffleId
                             )
                           }
-                          className="flex-1 bg-cyan-100 hover:bg-cyan-200 text-cyan-800 px-3 py-2 rounded font-bold text-sm transition"
+                          className={`flex-1 px-3 py-2 font-bold rounded-full text-sm transition cursor-pointer border-2 ${
+                            selectedRaffleNumbers === raffleGroup.raffleId
+                              ? 'bg-azul-royal text-branco border-azul-royal'
+                              : 'bg-branco text-azul-royal border-azul-royal hover:bg-azul-royal/50'
+                          }`}
                         >
-                          👁️ Ver Números
+                          Ver Números
                         </button>
                         <button
                           onClick={() =>
@@ -366,21 +366,25 @@ export default function TicketsResultPage() {
                                 : raffleGroup.raffleId
                             )
                           }
-                          className="flex-1 bg-blue-100 hover:bg-blue-200 text-blue-800 px-3 py-2 rounded font-bold text-sm transition"
+                          className={`flex-1 px-3 py-2 font-bold rounded-full text-sm transition cursor-pointer border-2 ${
+                            selectedRaffleProofs === raffleGroup.raffleId
+                              ? 'bg-azul-royal text-branco border-azul-royal'
+                              : 'bg-branco text-azul-royal border-azul-royal hover:bg-azul-royal/50'
+                          }`}
                         >
-                          📋 Ver Comprovantes
+                          Ver Comprovantes
                         </button>
                       </div>
                     </div>
 
                     {/* Numbers Modal */}
                     {selectedRaffleNumbers === raffleGroup.raffleId && (
-                      <div className="bg-cyan-50 border-l-4 border-cyan-600 rounded-lg p-4 mb-4">
+                      <div className="bg-fundo-cinza border-l-4 border-azul-royal rounded-lg p-4 mb-4">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-bold text-cyan-900">Seus Números</h4>
+                          <h4 className="font-bold text-cinza-escuro">Seus Números</h4>
                           <button
                             onClick={() => setSelectedRaffleNumbers(null)}
-                            className="text-cyan-600 hover:text-cyan-900"
+                            className="text-cinza  hover:text-cinza-escuro  cursor-pointer"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -389,7 +393,7 @@ export default function TicketsResultPage() {
                           {raffleGroup.allNumbers.map((num, idx) => (
                             <span
                               key={idx}
-                              className="bg-cyan-200 text-cyan-900 px-3 py-1 rounded-full text-sm font-bold"
+                              className="bg-azul-royal text-branco px-3 py-1 rounded-full text-sm font-bold"
                             >
                               {num}
                             </span>
@@ -400,12 +404,12 @@ export default function TicketsResultPage() {
 
                     {/* Proofs Modal */}
                     {selectedRaffleProofs === raffleGroup.raffleId && (
-                      <div className="bg-blue-50 border-l-4 border-blue-600 rounded-lg p-4">
+                      <div className="bg-fundo-cinza border-l-4 border-azul-royal rounded-lg p-4">
                         <div className="flex items-center justify-between mb-3">
-                          <h4 className="font-bold text-blue-900">Comprovantes ({raffleGroup.purchases.length})</h4>
+                          <h4 className="font-bold text-cinza-escuro">Comprovantes ({raffleGroup.purchases.length})</h4>
                           <button
                             onClick={() => setSelectedRaffleProofs(null)}
-                            className="text-blue-600 hover:text-blue-900"
+                            className="text-cinza  hover:text-cinza-escuro  cursor-pointer"
                           >
                             <X className="w-4 h-4" />
                           </button>
@@ -414,22 +418,22 @@ export default function TicketsResultPage() {
                           {raffleGroup.purchases.map((purchase) => (
                             <div
                               key={purchase.id}
-                              className="bg-white rounded p-3 border border-blue-200 text-sm"
+                              className="bg-branco rounded p-3 border border-cinza-claro text-sm"
                             >
                               <div className="flex justify-between items-start">
                                 <div>
-                                  <p className="font-bold text-gray-900">
+                                  <p className="font-bold text-cinza-escuro">
                                     {purchase.livros} livro{purchase.livros !== 1 ? 's' : ''}
                                   </p>
-                                  <p className="text-xs text-gray-600">
+                                  <p className="text-xs text-cinza">
                                     {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                                   </p>
                                 </div>
-                                <p className="font-black text-emerald-600">
+                                <p className="font-black text-cinza">
                                   R$ {formatDecimal(Number(purchase.amount))}
                                 </p>
                               </div>
-                              <p className="text-xs text-gray-600 mt-1 font-mono">ID: {purchase.id}</p>
+                              <p className="text-xs text-cinza mt-1 font-mono">ID: {purchase.id}</p>
                             </div>
                           ))}
                         </div>
@@ -447,7 +451,7 @@ export default function TicketsResultPage() {
           <Link
             href="/lotes"
             onClick={() => localStorage.removeItem('ticketQuery')}
-            className="block w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-bold transition text-center"
+            className="block w-full bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal  border-2 border-azul-royal py-3 rounded-full font-bold transition text-center"
           >
             Voltar para Lotes
           </Link>
