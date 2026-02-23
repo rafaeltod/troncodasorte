@@ -6,6 +6,7 @@ import { useAuth } from '@/context/auth-context'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/formatters'
 import { Plus, Edit, Trash2, Eye, Users, TrendingUp, DollarSign, Award } from 'lucide-react'
+import { mainConfig } from '../../lib/layout-config'
 
 interface Lote {
   id: string
@@ -96,8 +97,8 @@ export default function AdminDashboardPage() {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      open: 'bg-green-100 text-verde-agua',
-      closed: 'bg-yellow-100 text-vermelho-claro',
+      open: 'bg-verde-pastel text-verde-agua',
+      closed: 'bg-vermelho-pastel text-vermelho-claro',
       finished: 'bg-gray-100 text-cinza-escuro',
     }
     const labels = {
@@ -115,13 +116,13 @@ export default function AdminDashboardPage() {
   return (
     <AdminRoute>
       <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-7xl mx-auto px-4">
+        <div className={mainConfig}>
           {/* Header */}
           <div className="mb-8">
             <h1 className="text-5xl font-black text-cinza-escuro mb-3">
               Painel do Admin
             </h1>
-            <p className="text-lg text-gray-600 mb-6">
+            <p className="text-lg text-cinza mb-6">
               Gerencie todas as suas lotes em um só lugar
             </p>
 

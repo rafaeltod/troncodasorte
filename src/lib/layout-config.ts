@@ -1,1 +1,1 @@
-export const mainConfig = "w-full max-w-7xl bg-fundo-cinza min-w-screen box-border px-2 md:px-5 lg:px-15 shadow-lg"
+export const mainConfig = "w-full max-w-screen bg-fundo-cinza box-border px-2 md:px-4 lg:px-6 shadow-lg"

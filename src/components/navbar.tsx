@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -42,40 +42,36 @@ export function Navbar() {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
-              href="/"
-              className="hover:text-emerald-100 transition-colors"
-            >
+              href="/" className=" gap-2 flex items-center hover:text-branco/50 transition-colors"> 
+              <Home className="w-4 h-4" />
               Lotes
             </Link>
             {user ? (
               <>
-                <Link
-                  href="/account"
-                  className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
-                >
-                  <User className="w-4 h-4" />
-                  {censorName(user.name)}
-                </Link>
+                
                 {user.isAdmin && (
                   <>
                     <Link
                       href="/admin"
-                      className="flex items-center gap-2 bg-gold hover:bg-amarelo-claro text-white px-4 py-2 rounded-full font-semibold transition-colors"
+                      className="flex items-center gap-2 hover:text-branco/50 transition-colors"
                     >
                       <Shield className="w-4 h-4" />
                       Painel Admin
                     </Link>
-                    <Link
-                      href="/criar-lote"
-                      className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-full font-semibold transition-colors"
-                    >
-                      + Criar Lote
-                    </Link>
                   </>
                 )}
+
+                <Link
+                  href="/account"
+                  className="flex items-center gap-2 hover:text-branco/50 transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                  {censorName(user.name)}
+                </Link>
+
                 <button
                   onClick={handleLogout}
-                  className="flex items-center gap-2 border border-white/50 hover:bg-white/10 px-4 py-2 rounded-full transition-colors"
+                  className="flex items-center gap-2 border cursor-pointer bg-branco text-azul-royal hover:bg-branco/50 px-4 py-2 rounded-full transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   Sair
@@ -107,26 +103,26 @@ export function Navbar() {
             <div className="flex flex-col gap-3">
               <Link
                 href="/"
-                className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <Home className="w-4 h-4" />
                 Lotes
               </Link>
               {user ? (
                 <>
                   <Link
                     href="/account"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                    className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}>
                     <User className="w-4 h-4" />
-                    Minha Conta
+                    Perfil
                   </Link>
                   {user.isAdmin && (
                     <>
                       <Link
                         href="/admin"
-                        className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Shield className="w-4 h-4" />
@@ -134,7 +130,7 @@ export function Navbar() {
                       </Link>
                       <Link
                         href="/criar-lote"
-                        className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        className=" text-branco hover:text-branco/90 px-4 py-2 rounded-full font-semibold transition-colors text-left m-2"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         + Criar Lote
@@ -143,7 +139,7 @@ export function Navbar() {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors text-left w-full"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-branco/90 rounded-full transition-colors text-left w-full"
                   >
                     <LogOut className="w-4 h-4" />
                     Sair

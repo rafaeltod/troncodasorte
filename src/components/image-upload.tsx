@@ -75,8 +75,8 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-slate-900 font-bold text-lg mb-3">
-          📸 Fotos da Rifa ({images.length}/{maxImages})
+        <label className="block text-cinza-escuro font-bold text-lg mb-3">
+          Imagens ({images.length}/{maxImages})
         </label>
         <div className="relative">
           <input
@@ -102,7 +102,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
 
       {images.length > 0 && (
         <div>
-          <p className="text-slate-900 font-semibold mb-3">✅ {images.length} imagem(ns) adicionada(s)</p>
+          <p className="text-cinza-escuro font-semibold mb-3">{images.length} imagem(ns) adicionada(s)</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {images.map((image, index) => (
               <div key={index} className="relative group">
@@ -118,9 +118,9 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 bg-red-600 hover:bg-red-700 text-white rounded-full w-8 h-8 flex items-center justify-center font-bold transition transform hover:scale-110 shadow-lg"
+                  className="absolute top-1 right-1 bg-vermelho-claro hover:bg-vermelho-vivo text-branco rounded-full w-8 h-8 flex items-center justify-center font-bold transition transform hover:scale-110 shadow-lg"
                 >
-                  ×
+                  x
                 </button>
               </div>
             ))}
