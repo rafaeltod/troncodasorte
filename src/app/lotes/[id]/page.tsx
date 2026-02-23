@@ -3,7 +3,7 @@ import { getRaffleById } from '@/lib/queries'
 import { ArrowLeft, Gift, Ticket, Users, Trophy, DollarSign, Package } from 'lucide-react'
 import { formatDecimal } from '@/lib/formatters'
 import { RaffleRegulation } from '@/components/lote-regulamentação'
-import { RaffleDetailClient } from '@/components/lote-detalhe-cliente'
+import { CupomWrapper } from '@/components/cupom-wrapper'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
 import { AdminLoteActions } from '@/components/admin-lote-actions'
 import { RaffleTopBuyers } from '@/components/lote-top-compradores'
@@ -260,7 +260,7 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     📋 Meus Bilhetes
                   </a>
                 </div>
-                <RaffleDetailClient
+                <CupomWrapper
                   raffleId={id}
                   livroPrice={Number(raffle.livroPrice)}
                   availableLivros={raffle.totalLivros - raffle.soldLivros}

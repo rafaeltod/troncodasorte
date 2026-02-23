@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield, TrendingUp } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -72,6 +72,15 @@ export function Navbar() {
                       + Criar Lote
                     </Link>
                   </>
+                )}
+                {user.isVendedor && !user.isAdmin && (
+                  <Link
+                    href="/vendedor"
+                    className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    Painel Vendedor
+                  </Link>
                 )}
                 <button
                   onClick={handleLogout}
@@ -140,6 +149,16 @@ export function Navbar() {
                         + Criar Lote
                       </Link>
                     </>
+                  )}
+                  {user.isVendedor && !user.isAdmin && (
+                    <Link
+                      href="/vendedor"
+                      className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      Painel Vendedor
+                    </Link>
                   )}
                   <button
                     onClick={handleLogout}

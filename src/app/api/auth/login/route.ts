@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
 
     // Buscar usuário por CPF primeiro (obrigatório)
     let user = await queryOne(
-      'SELECT id, name, email, cpf, phone, "birthDate", "createdAt", "isAdmin" FROM "user" WHERE cpf = $1',
+      'SELECT id, name, email, cpf, phone, "birthDate", "createdAt", "isAdmin", "isVendedor" FROM "user" WHERE cpf = $1',
       [cpf]
     )
 

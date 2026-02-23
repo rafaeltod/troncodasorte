@@ -6,7 +6,17 @@ import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
 import { formatCPF, formatPhone, censorName, censorPhone, formatDecimal } from '@/lib/formatters'
 import { PixPaymentModal } from './pix-payment-modal'
-import { Ticket, Phone, User, Mail, Calendar, Check } from 'lucide-react'
+import { Ticket, Phone, User, Mail, Calendar, Check, Tag } from 'lucide-react'
+
+interface CupomData {
+  id: string
+  code: string
+  discount: number
+  tipoDesconto: string
+  description: string | null
+  loteId: string | null
+  vendedor: { name: string }
+}
 
 interface CheckoutFlowProps {
   raffleId: string
@@ -14,6 +24,7 @@ interface CheckoutFlowProps {
   availableLivros: number
   isOpen: boolean
   selectedQuantity: number
+  cupom?: CupomData
 }
 
 type CheckoutStep = 'phone' | 'register' | 'confirm' | 'payment'
@@ -30,6 +41,7 @@ export function CheckoutFlow({
   availableLivros,
   isOpen,
   selectedQuantity,
+  cupom,
 }: CheckoutFlowProps) {
   const router = useRouter()
   const { user, refetch } = useAuth()
@@ -56,7 +68,18 @@ export function CheckoutFlow({
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
 
   const numericLivroPrice = Number(livroPrice)
-  const totalPrice = selectedQuantity * numericLivroPrice
+  const originalTotal = selectedQuantity * numericLivroPrice
+
+  // Calcular desconto do cupom
+  let descontoTotal = 0
+  if (cupom) {
+    if (cupom.tipoDesconto === 'percentual') {
+      descontoTotal = originalTotal * (cupom.discount / 100)
+    } else {
+      descontoTotal = Math.min(cupom.discount, originalTotal)
+    }
+  }
+  const totalPrice = originalTotal - descontoTotal
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -204,7 +227,9 @@ export function CheckoutFlow({
         body: JSON.stringify({
           livros: selectedQuantity,
           amount: totalPrice,
-          phone: formData.phone.replace(/\D/g, ''), // Enviar telefone sem formatação
+          phone: formData.phone.replace(/\D/g, ''),
+          cupomId: cupom?.id || null,
+          descontoAplicado: descontoTotal,
         }),
       })
 
@@ -250,6 +275,21 @@ export function CheckoutFlow({
           <p className="text-sm text-gray-700">Quantidade:</p>
           <p className="font-bold text-gray-900">{selectedQuantity}x</p>
         </div>
+        {cupom && descontoTotal > 0 && (
+          <>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm text-gray-700">Subtotal:</p>
+              <p className="font-bold text-gray-400 line-through">R$ {formatDecimal(originalTotal)}</p>
+            </div>
+            <div className="flex justify-between items-center mb-2">
+              <p className="text-sm text-blue-700 flex items-center gap-1">
+                <Tag className="w-3 h-3" />
+                Cupom {cupom.code}:
+              </p>
+              <p className="font-bold text-blue-600">- R$ {formatDecimal(descontoTotal)}</p>
+            </div>
+          </>
+        )}
         <div className="border-t border-emerald-200 pt-2 flex justify-between items-center">
           <p className="font-black text-gray-900">Total:</p>
           <p className="text-2xl font-black text-emerald-600">R$ {formatDecimal(totalPrice)}</p>
@@ -426,6 +466,11 @@ export function CheckoutFlow({
               <p>
                 <strong>Livros:</strong> {selectedQuantity}x
               </p>
+              {cupom && descontoTotal > 0 && (
+                <p className="text-blue-700">
+                  <strong>Cupom:</strong> {cupom.code} (-R$ {formatDecimal(descontoTotal)})
+                </p>
+              )}
               <p className="border-t border-emerald-200 pt-2">
                 <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {formatDecimal(totalPrice)}</span>
               </p>

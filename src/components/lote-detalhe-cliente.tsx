@@ -5,11 +5,22 @@ import { LivroSelector } from './livro-selector'
 import { CheckoutFlow } from './checkout-flow'
 import { Drawer } from './drawer'
 
+interface CupomData {
+  id: string
+  code: string
+  discount: number
+  tipoDesconto: string
+  description: string | null
+  loteId: string | null
+  vendedor: { name: string }
+}
+
 interface RaffleDetailClientProps {
   raffleId: string
   livroPrice: number
   availableLivros: number
   isOpen: boolean
+  cupom?: CupomData | null
 }
 
 export function RaffleDetailClient({
@@ -17,11 +28,24 @@ export function RaffleDetailClient({
   livroPrice,
   availableLivros,
   isOpen,
+  cupom,
 }: RaffleDetailClientProps) {
   const [selectedQuantity, setSelectedQuantity] = useState(1)
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-  const totalPrice = selectedQuantity * Number(livroPrice)
+  const numericPrice = Number(livroPrice)
+  const originalTotal = selectedQuantity * numericPrice
+
+  // Calcular desconto
+  let descontoTotal = 0
+  if (cupom) {
+    if (cupom.tipoDesconto === 'percentual') {
+      descontoTotal = originalTotal * (cupom.discount / 100)
+    } else {
+      descontoTotal = Math.min(cupom.discount, originalTotal)
+    }
+  }
+  const totalPrice = originalTotal - descontoTotal
 
   return (
     <>
@@ -35,9 +59,23 @@ export function RaffleDetailClient({
         <div className="flex justify-between items-center mb-6">
           <div>
             <p className="text-sm text-gray-600 font-semibold mb-1">Total a Pagar</p>
-            <p className="text-3xl font-black text-emerald-700">
-              R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-            </p>
+            {descontoTotal > 0 ? (
+              <>
+                <p className="text-lg text-gray-400 line-through">
+                  R$ {originalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-3xl font-black text-emerald-700">
+                  R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                </p>
+                <p className="text-xs text-blue-600 font-bold mt-1">
+                  Desconto de R$ {descontoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} com cupom {cupom?.code}
+                </p>
+              </>
+            ) : (
+              <p className="text-3xl font-black text-emerald-700">
+                R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+              </p>
+            )}
           </div>
         </div>
 
@@ -59,6 +97,7 @@ onClick={() => setIsDrawerOpen(true)} disabled={!isOpen} className="w-full bg-em
           availableLivros={availableLivros}
           isOpen={isOpen}
           selectedQuantity={selectedQuantity}
+          cupom={cupom || undefined}
         />
       </Drawer>
     </>

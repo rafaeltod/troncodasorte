@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
   try {
     const { id } = await params;
     const body = await req.json();
-    const { livros, amount, phone } = body;
+    const { livros, amount, phone, cupomId, descontoAplicado } = body;
 
     // Token é opcional (permite compras anônimas)
     const token = req.cookies.get("token")?.value || null;
@@ -123,15 +123,36 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       );
     }
 
+    // Validar cupom se informado
+    if (cupomId) {
+      const cupomValid = await queryOne(
+        `SELECT id, ativo, "loteId" FROM cupom WHERE id = $1 AND ativo = TRUE`,
+        [cupomId],
+      );
+      if (!cupomValid) {
+        return NextResponse.json(
+          { error: "Cupom inválido ou inativo" },
+          { status: 400 },
+        );
+      }
+      // Verificar se cupom é específico para este lote
+      if (cupomValid.loteId && cupomValid.loteId !== id) {
+        return NextResponse.json(
+          { error: "Este cupom não é válido para este lote" },
+          { status: 400 },
+        );
+      }
+    }
+
     // NÃO gerar números aqui - os números só são gerados após confirmação do pagamento
     // Criar registro de compra com numbers vazio (userId pode ser NULL para compras anônimas)
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, status, "createdAt", "updatedAt")
-       VALUES (gen_random_uuid(), $1, $2, $3, $4, '', $5, 'pending', NOW(), NOW())
+      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, "cupomId", "descontoAplicado", status, "createdAt", "updatedAt")
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, '', $5, $6, $7, 'pending', NOW(), NOW())
        RETURNING id, "raffleId", "userId", livros, amount, status`,
-      [userId, id, livros, amount, phone],
+      [userId, id, livros, amount, phone, cupomId || null, descontoAplicado || 0],
     );
 
     if (!purchase) {
