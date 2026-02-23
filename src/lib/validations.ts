@@ -14,6 +14,12 @@ export const createRaffleSchema = z.object({
   totalLivros: z.number().int().positive('Número de livros deve ser positivo'),
   livroPrice: z.number().positive('Preço do livro deve ser positivo').default(0.50),
   images: z.array(z.string()).max(20, 'Máximo 20 imagens').optional(),
+  qtdPremiosAleatorios: z.number().int().min(0, 'Quantidade não pode ser negativa').optional().default(0),
+  premiosConfig: z.array(z.object({
+    tipo: z.enum(['dinheiro', 'item']),
+    descricao: z.string().optional().default(''),
+    valor: z.string().optional().default(''),
+  })).optional(),
 })
 
 export const purchaseRaffleSchema = z.object({

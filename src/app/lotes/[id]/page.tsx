@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { getRaffleById } from '@/lib/queries'
-import { ArrowLeft, Gift, Ticket, Users, Trophy } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Users, Trophy, DollarSign, Package } from 'lucide-react'
 import { formatDecimal } from '@/lib/formatters'
 import { RaffleRegulation } from '@/components/lote-regulamentação'
 import { RaffleDetailClient } from '@/components/lote-detalhe-cliente'
@@ -154,13 +154,103 @@ export default async function RaffleDetailPage({ params }: DetailProps) {
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500">Ganhador</p>
+                    <p className="text-sm text-gray-500">Ganhador Principal</p>
                     <p className="text-lg font-black text-emerald-900">
                       {raffle.winnerUser?.name || 'Participante'}
                     </p>
                   </div>
                 </div>
               )}
+
+              {/* Prêmios Aleatórios — mostra com número sorteado (gerado na criação) */}
+              {/* Depois do sorteio: mostra número, prêmio e ganhador */}
+              {raffle.status === 'drawn' && raffle.premiosAleatorios && (() => {
+                const premios = typeof raffle.premiosAleatorios === 'string' 
+                  ? JSON.parse(raffle.premiosAleatorios) 
+                  : raffle.premiosAleatorios
+                if (!Array.isArray(premios) || premios.length === 0) return null
+                return (
+                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
+                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-3">
+                      <Gift className="w-5 h-5" />
+                      Prêmios Aleatórios ({premios.length})
+                    </div>
+                    <div className="space-y-2">
+                      {premios.map((premio: any) => (
+                        <div key={premio.posicao} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
+                            {premio.posicao}º
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                              <p className="font-mono font-bold text-gray-800">{premio.number}</p>
+                              {premio.tipo === 'dinheiro' && premio.valor && (
+                                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <DollarSign className="w-3 h-3" />
+                                  R$ {premio.valor}
+                                </span>
+                              )}
+                              {premio.tipo === 'item' && premio.descricao && (
+                                <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <Package className="w-3 h-3" />
+                                  {premio.descricao}
+                                </span>
+                              )}
+                            </div>
+                            {premio.drawnNumber && premio.drawnNumber !== premio.number && (
+                              <p className="text-xs text-gray-400">Número sorteado: {premio.drawnNumber}</p>
+                            )}
+                            <p className="text-sm text-gray-600 truncate">{premio.winner?.name || 'Participante'}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* Antes do sorteio: mostra os prêmios configurados com o número já sorteado */}
+              {raffle.status !== 'drawn' && raffle.premiosConfig && (() => {
+                const config = typeof raffle.premiosConfig === 'string'
+                  ? JSON.parse(raffle.premiosConfig)
+                  : raffle.premiosConfig
+                if (!Array.isArray(config) || config.length === 0) return null
+                return (
+                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
+                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-1">
+                      <Gift className="w-5 h-5" />
+                      Prêmios Aleatórios ({config.length})
+                    </div>
+                    <p className="text-xs text-purple-500 mb-3">Números já sorteados — ganhadores definidos ao cadastrar resultado</p>
+                    <div className="space-y-2">
+                      {config.map((premio: any, index: number) => (
+                        <div key={index} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
+                            {index + 1}º
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                              <p className="font-mono font-bold text-2xl text-purple-700">{premio.number}</p>
+                              {premio.tipo === 'dinheiro' && premio.valor && (
+                                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <DollarSign className="w-3 h-3" />
+                                  R$ {premio.valor}
+                                </span>
+                              )}
+                              {premio.tipo === 'item' && premio.descricao && (
+                                <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <Package className="w-3 h-3" />
+                                  {premio.descricao}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
 
             {isOpen && progress < 100 && (

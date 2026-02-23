@@ -51,7 +51,7 @@ export async function POST(
 
     // Verificar se o lote existe
     const lote = await queryOne(
-      `SELECT id, status, winner FROM lotes WHERE id = $1`,
+      `SELECT id, status, winner, "qtdPremiosAleatorios", "premiosConfig" FROM lotes WHERE id = $1`,
       [id]
     )
 
@@ -74,6 +74,28 @@ export async function POST(
         { error: 'O lote precisa estar finalizado (fechado) antes de cadastrar o resultado' },
         { status: 400 }
       )
+    }
+
+    // Verificar se o número informado conflita com algum prêmio aleatório pré-sorteado
+    let premiosConfigParsed: { tipo: string; descricao: string; valor: string; number: string }[] = []
+    if (lote.premiosConfig) {
+      try {
+        premiosConfigParsed = typeof lote.premiosConfig === 'string'
+          ? JSON.parse(lote.premiosConfig)
+          : lote.premiosConfig
+      } catch {
+        premiosConfigParsed = []
+      }
+    }
+
+    if (premiosConfigParsed.length > 0) {
+      const premioNumbers = premiosConfigParsed.map((p) => p.number)
+      if (premioNumbers.includes(cleanNumber)) {
+        return NextResponse.json(
+          { error: `O número ${cleanNumber} já foi sorteado para um prêmio aleatório. Escolha outro número.` },
+          { status: 400 }
+        )
+      }
     }
 
     // Buscar todas as compras confirmadas desse lote com números
@@ -151,6 +173,74 @@ export async function POST(
       )
     }
 
+    // Resolver prêmios aleatórios usando números pré-sorteados na criação
+    let premiosAleatorios: { posicao: number; number: string; drawnNumber: string; tipo?: string; descricao?: string; valor?: string; winner: { userId: string; name: string; email: string; purchaseId: string } }[] = []
+
+    // Parse premiosConfig (prize config with pre-drawn numbers from creation)
+    let premiosConfig: { tipo: string; descricao: string; valor: string; number: string }[] = []
+    if (lote.premiosConfig) {
+      try {
+        premiosConfig = typeof lote.premiosConfig === 'string'
+          ? JSON.parse(lote.premiosConfig)
+          : lote.premiosConfig
+      } catch {
+        premiosConfig = []
+      }
+    }
+
+    if (premiosConfig.length > 0) {
+      // Para cada prêmio, buscar o bilhete correspondente ao número pré-sorteado
+      // Usa a mesma lógica de incremento do prêmio principal
+      const usedWinnerNumbers = new Set<string>()
+      usedWinnerNumbers.add(winnerNumber!) // excluir o vencedor principal
+
+      for (let i = 0; i < premiosConfig.length; i++) {
+        const config = premiosConfig[i]
+        const premioDrawnNumber = config.number
+
+        if (!premioDrawnNumber) continue
+
+        let currentNum = parseInt(premioDrawnNumber, 10)
+        let premioWinnerNumber: string | null = null
+        let premioWinnerData: { purchaseId: string; userId: string; userName: string; userEmail: string } | null = null
+        let premioAttempts = 0
+
+        while (premioAttempts < 1000000) {
+          const formatted = String(currentNum).padStart(6, '0')
+
+          if (numberToPurchase.has(formatted) && !usedWinnerNumbers.has(formatted)) {
+            premioWinnerNumber = formatted
+            premioWinnerData = numberToPurchase.get(formatted)!
+            break
+          }
+
+          currentNum++
+          if (currentNum > 999999) {
+            currentNum = 1
+          }
+          premioAttempts++
+        }
+
+        if (premioWinnerNumber && premioWinnerData) {
+          usedWinnerNumbers.add(premioWinnerNumber)
+          premiosAleatorios.push({
+            posicao: i + 1,
+            drawnNumber: premioDrawnNumber,
+            number: premioWinnerNumber,
+            tipo: config.tipo || undefined,
+            descricao: config.descricao || undefined,
+            valor: config.valor || undefined,
+            winner: {
+              userId: premioWinnerData.userId,
+              name: premioWinnerData.userName,
+              email: premioWinnerData.userEmail,
+              purchaseId: premioWinnerData.purchaseId,
+            },
+          })
+        }
+      }
+    }
+
     // Atualizar o lote com o resultado
     const updated = await queryOne(
       `UPDATE lotes 
@@ -158,10 +248,11 @@ export async function POST(
            winner = $2, 
            "drawnNumber" = $3, 
            "winnerNumber" = $4,
+           "premiosAleatorios" = $5,
            "updatedAt" = NOW()
        WHERE id = $1
-       RETURNING id, title, status, winner, "drawnNumber", "winnerNumber"`,
-      [id, winnerData.userId, cleanNumber, winnerNumber]
+       RETURNING id, title, status, winner, "drawnNumber", "winnerNumber", "premiosAleatorios"`,
+      [id, winnerData.userId, cleanNumber, winnerNumber, premiosAleatorios.length > 0 ? JSON.stringify(premiosAleatorios) : null]
     )
 
     return NextResponse.json({
@@ -177,6 +268,7 @@ export async function POST(
           email: winnerData.userEmail,
           purchaseId: winnerData.purchaseId,
         },
+        premiosAleatorios,
       },
     })
   } catch (error) {

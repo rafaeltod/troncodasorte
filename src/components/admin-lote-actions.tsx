@@ -2,11 +2,26 @@
 
 import { useState } from 'react'
 import { useAuth } from '@/context/auth-context'
-import { Settings, XCircle, Loader2, CheckCircle2, Trophy, Hash } from 'lucide-react'
+import { Settings, XCircle, Loader2, CheckCircle2, Trophy, Hash, Gift, DollarSign, Package } from 'lucide-react'
 
 interface AdminLoteActionsProps {
   raffleId: string
   raffleStatus: string
+}
+
+interface PremioAleatorio {
+  posicao: number
+  number: string
+  drawnNumber?: string
+  tipo?: string
+  descricao?: string
+  valor?: string
+  winner: {
+    userId: string
+    name: string
+    email: string
+    purchaseId: string
+  }
 }
 
 interface ResultadoData {
@@ -19,6 +34,7 @@ interface ResultadoData {
     email: string
     purchaseId: string
   }
+  premiosAleatorios: PremioAleatorio[]
 }
 
 function FinalizarLoteButton({ 
@@ -265,10 +281,49 @@ function CadastrarResultadoButton({
           </div>
 
           <div className="bg-white rounded-lg p-4 border border-emerald-200">
-            <p className="text-sm text-gray-500 mb-1">Ganhador</p>
+            <p className="text-sm text-gray-500 mb-1">Ganhador Principal</p>
             <p className="text-lg font-bold text-gray-800">{resultado.winner.name}</p>
             <p className="text-sm text-gray-500">{resultado.winner.email}</p>
           </div>
+
+          {resultado.premiosAleatorios && resultado.premiosAleatorios.length > 0 && (
+            <div className="bg-purple-50 rounded-lg p-4 border border-purple-200">
+              <div className="flex items-center gap-2 text-purple-700 font-bold mb-3">
+                <Gift className="w-4 h-4" />
+                Prêmios Aleatórios ({resultado.premiosAleatorios.length})
+              </div>
+              <div className="space-y-2 max-h-60 overflow-y-auto">
+                {resultado.premiosAleatorios.map((premio) => (
+                  <div key={premio.posicao} className="bg-white rounded-lg p-3 border border-purple-100 flex items-center gap-3">
+                    <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
+                      {premio.posicao}º
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                        <p className="font-mono font-bold text-sm text-gray-800">{premio.number}</p>
+                        {premio.tipo === 'dinheiro' && premio.valor && (
+                          <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                            <DollarSign className="w-3 h-3" />
+                            R$ {premio.valor}
+                          </span>
+                        )}
+                        {premio.tipo === 'item' && premio.descricao && (
+                          <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                            <Package className="w-3 h-3" />
+                            {premio.descricao}
+                          </span>
+                        )}
+                      </div>
+                      {premio.drawnNumber && premio.drawnNumber !== premio.number && (
+                        <p className="text-xs text-gray-400">Número sorteado: {premio.drawnNumber}</p>
+                      )}
+                      <p className="text-xs text-gray-600 truncate">{premio.winner.name}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <button

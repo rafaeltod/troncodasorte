@@ -36,6 +36,9 @@ export async function getRaffleById(id: string) {
       r.winner,
       r."drawnNumber",
       r."winnerNumber",
+      r."qtdPremiosAleatorios",
+      r."premiosAleatorios",
+      r."premiosConfig",
       r."creatorId",
       r."createdAt",
       r."updatedAt",
@@ -62,7 +65,7 @@ export async function getRaffleById(id: string) {
     LEFT JOIN livros rp ON r.id = rp."raffleId"
     LEFT JOIN "user" u2 ON rp."userId" = u2.id
     WHERE r.id = $1
-    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."drawnNumber", r."winnerNumber", r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
+    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."drawnNumber", r."winnerNumber", r."qtdPremiosAleatorios", r."premiosAleatorios", r."premiosConfig", r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
   `
 
   return queryOne(query, [id])
