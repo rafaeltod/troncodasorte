@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2 } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText } from 'lucide-react'
 import { censorName, formatDecimal } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
-import { RaffleRegulation } from '@/components/lote-regulamentação'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
 import { CheckoutFlow } from '@/components/checkout-flow'
 import { Drawer } from '@/components/drawer'
 import { useAuth } from '@/context/auth-context'
+import { AccordionItem } from '@/components/accordion'
 
 interface RaffleDetail {
   id: string
@@ -542,7 +542,7 @@ export default function RaffleDetailPage() {
                                   setAdminError(null)
                                 }}
                                 disabled={adminLoading}
-                                className="flex-1 bg-cinza-claro hover:bg-cinza-escuro hover:text-branco cursor-pointer text-gray-700 font-bold py-3 px-4 rounded-full transition"
+                                className="flex-1 bg-cinza-claro hover:bg-cinza-escuro hover:text-branco cursor-pointer text-cinza font-bold py-3 px-4 rounded-full transition"
                               >
                                 Cancelar
                               </button>
@@ -640,7 +640,62 @@ export default function RaffleDetailPage() {
         </div>
 
         {/* Regulamento */}
-        <RaffleRegulation />
+        <div className="mt-16 bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+      <h2 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
+        Regulamento
+      </h2>
+
+      <div className="space-y-4">
+        <AccordionItem title="Termos e Condições">
+          <div className="text-cinza leading-relaxed space-y-3">
+            <p>
+              Esta lote é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
+              Todos os participantes devem aceitar os Termos e Condições da plataforma Tronco da Sorte.
+            </p>
+          </div>
+        </AccordionItem>
+
+        <AccordionItem title="Responsabilidade Legal">
+          <div className="text-cinza leading-relaxed space-y-3">
+            <p className="font-semibold">O organizador desta lote é responsável por:</p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li>Manter registros completos de todas as transações</li>
+              <li>Realizar o sorteio de forma justa e transparente</li>
+              <li>Cumprir todas as obrigações legais e fiscais</li>
+              <li>Proteger os dados pessoais dos participantes</li>
+              <li>Entregar o prêmio ao vencedor conforme regulamentado</li>
+            </ul>
+          </div>
+        </AccordionItem>
+
+        <AccordionItem title="Transparência e Sorteio">
+          <div className="text-cinza leading-relaxed space-y-3">
+            <p className="font-semibold">O sorteio será realizado de forma pública e auditável. Todos os participantes serão notificados sobre:</p>
+            <ul className="list-disc list-inside space-y-2 ml-2">
+              <li>Data e horário exato do sorteio</li>
+              <li>Método de seleção do vencedor</li>
+              <li>Resultado do sorteio em tempo real</li>
+              <li>Dados do vencedor (apenas primeira letra do nome)</li>
+            </ul>
+          </div>
+        </AccordionItem>
+
+        <div className="bg-azul-pastel rounded-lg p-4 mt-4">
+          <p className="text-sm text-azul-royal font-semibold">
+            <strong>Aviso Legal:</strong> A participação nesta lote constitui aceitação automática de todos os termos, 
+            condições e regulamentos estabelecidos. Para mais informações, consulte a{' '}
+            <a href="/termos" className="text-azul-claro hover:text-azul-royal font-bold">
+              Política de Termos
+            </a>{' '}
+            e{' '}
+            <a href="/privacidade" className="text-azul-claro hover:text-azul-royal font-bold">
+              Privacidade
+            </a>
+            .
+          </p>
+        </div>
+      </div>
+    </div>
     </main>
   )
 }
