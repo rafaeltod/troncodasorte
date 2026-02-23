@@ -97,9 +97,9 @@ export default function AdminDashboardPage() {
 
   const getStatusBadge = (status: string) => {
     const badges = {
-      open: 'bg-verde-pastel text-verde-agua',
-      closed: 'bg-vermelho-pastel text-vermelho-claro',
-      finished: 'bg-gray-100 text-cinza-escuro',
+      open: 'bg-verde-pastel text-verde-menta',
+      closed: 'bg-vermelho-pastel text-vermelho-vivo',
+      finished: 'bg-cinza-claro text-cinza-escuro',
     }
     const labels = {
       open: 'Aberta',
@@ -107,7 +107,7 @@ export default function AdminDashboardPage() {
       finished: 'Finalizada',
     }
     return (
-      <span className={`px-3 py-1 rounded-full text-sm font-bold ${badges[status as keyof typeof badges] || 'bg-gray-100 text-gray-800'}`}>
+      <span className={`px-3 py-1 rounded-full text-sm font-bold ${badges[status as keyof typeof badges] || 'bg-cinza-claro text-cinza-escuro'}`}>
         {labels[status as keyof typeof labels] || status}
       </span>
     )
@@ -115,7 +115,7 @@ export default function AdminDashboardPage() {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-fundo-cinza py-12">
         <div className={mainConfig}>
           {/* Header */}
           <div className="mb-8">
@@ -123,49 +123,49 @@ export default function AdminDashboardPage() {
               Painel do Admin
             </h1>
             <p className="text-lg text-cinza mb-6">
-              Gerencie todas as suas lotes em um só lugar
+              Gerencie todas os seus lotes em um só lugar
             </p>
 
             <Link
               href="/criar-lote"
-              className="inline-flex items-center gap-2 bg-azul-royal text-white px-6 py-3 rounded-full font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg"
+              className="inline-flex items-center gap-2 bg-azul-royal text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco hover:text-azul-royal border shadow-lg"
             >
-              <Plus size={20} /> Criar Nova Lote
+              <Plus size={20} /> Criar Novo Lote
             </Link>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
+            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-gray-600 font-bold">Total de Lotes</h3>
+                <h3 className="text-cinza font-bold">Total de Lotes</h3>
                 <Award className="text-azul-royal" size={24} />
               </div>
-              <p className="text-3xl font-black text-gray-900">{stats.total}</p>
+              <p className="text-3xl font-black text-cinza-escuro">{stats.total}</p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
+            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-gray-600 font-bold">Lotes Abertas</h3>
-                <TrendingUp className="text-verde-agua" size={24} />
+                <h3 className="text-cinza font-bold">Lotes Abertos</h3>
+                <TrendingUp className="text-cinza" size={24} />
               </div>
-              <p className="text-3xl font-black text-verde-agua">{stats.open}</p>
+              <p className="text-3xl font-black text-cinza">{stats.open}</p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
+            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-gray-600 font-bold">Livros Vendidos</h3>
-                <Users className="text-azul-claro" size={24} />
+                <h3 className="text-cinza font-bold">Livros Vendidos</h3>
+                <Users className="text-cinza" size={24} />
               </div>
-              <p className="text-3xl font-black text-azul-claro">{stats.totalSold}</p>
+              <p className="text-3xl font-black text-cinza">{stats.totalSold}</p>
             </div>
 
-            <div className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-100">
+            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-gray-600 font-bold">Receita Total</h3>
-                <DollarSign className="text-amarelo-gold" size={24} />
+                <h3 className="text-cinza font-bold">Receita Total</h3>
+                <DollarSign className="text-cinza" size={24} />
               </div>
-              <p className="text-3xl font-black text-amarelo-gold">{formatCurrency(stats.totalRevenue)}</p>
+              <p className="text-3xl font-black text-cinza">{formatCurrency(stats.totalRevenue)}</p>
             </div>
           </div>
 
@@ -182,8 +182,8 @@ export default function AdminDashboardPage() {
                 onClick={() => setFilter(f.id as any)}
                 className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${
                   filter === f.id
-                    ? 'bg-azul-claro text-white'
-                    : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'
+                    ? 'bg-azul-claro text-branco'
+                    : 'bg-branco text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'
                 }`}
               >
                 {f.label}
@@ -194,13 +194,13 @@ export default function AdminDashboardPage() {
           {/* Lotes List */}
           {loading ? (
             <div className="text-center py-16">
-              <div className="text-xl font-bold text-gray-600">Carregando...</div>
+              <div className="text-xl font-bold text-cinza">Carregando...</div>
             </div>
           ) : filteredLotes.length > 0 ? (
-            <div className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-100">
+            <div className="bg-branco rounded-xl shadow-lg overflow-hidden border-2 border-cinza-claro">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50 border-b-2 border-gray-200">
+                  <thead className="bg-fundo-cinza border-b-2 border-cinza-claro">
                     <tr>
                       <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Lote</th>
                       <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Status</th>
@@ -211,9 +211,9 @@ export default function AdminDashboardPage() {
                       <th className="px-6 py-4 text-right text-sm font-black text-cinza-escuro">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-200">
+                  <tbody className="divide-y divide-cinza-claro">
                     {filteredLotes.map((lote) => (
-                      <tr key={lote.id} className="hover:bg-gray-50 transition">
+                      <tr key={lote.id} className="hover:bg-fundo-cinza transition">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             {lote.image && (
@@ -224,8 +224,8 @@ export default function AdminDashboardPage() {
                               />
                             )}
                             <div>
-                              <p className="font-bold text-gray-900">{lote.title}</p>
-                              <p className="text-sm text-gray-500">
+                              <p className="font-bold text-cinza">{lote.title}</p>
+                              <p className="text-sm text-fundo-cinza0">
                                 {new Date(lote.createdAt).toLocaleDateString('pt-BR')}
                               </p>
                             </div>
@@ -233,16 +233,16 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-6 py-4">{getStatusBadge(lote.status)}</td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-emerald-600">
+                          <span className="font-bold text-azul-royal">
                             {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : '—'}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm">
-                            <p className="font-bold text-gray-900">
+                            <p className="font-bold text-cinza">
                               {lote.soldLivros}/{lote.totalLivros}
                             </p>
-                            <div className="w-20 h-2 bg-gray-200 rounded-full mt-1">
+                            <div className="w-20 h-2 bg-cinza-claro rounded-full mt-1">
                               <div
                                 className="h-full bg-amarelo-gold rounded-full"
                                 style={{
@@ -256,7 +256,7 @@ export default function AdminDashboardPage() {
                           <span className="font-bold text-azul-claro">{lote.participants}</span>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-gray-900">
+                          <span className="font-bold text-cinza">
                             {formatCurrency(lote.soldLivros * lote.livroPrice)}
                           </span>
                         </td>
@@ -278,7 +278,7 @@ export default function AdminDashboardPage() {
                             </Link>
                             <button
                               onClick={() => handleDelete(lote.id)}
-                              className="p-2 text-vermelho-claro hover:bg-vermelho-pastel rounded-lg transition"
+                              className="p-2 text-vermelho-vivo hover:bg-vermelho-pastel rounded-lg transition"
                               title="Deletar lote"
                             >
                               <Trash2 size={18} />
@@ -292,17 +292,16 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-300 shadow-lg">
-              <div className="text-5xl mb-4">🎯</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="text-center py-16 bg-branco rounded-2xl border-2 border-dashed border-cinza-claro shadow-lg">
+              <h3 className="text-2xl font-bold text-cinza mb-2">
                 Nenhuma lote encontrada
               </h3>
-              <p className="text-gray-600 mb-6">
+              <p className="text-cinza mb-6">
                 Comece criando sua primeira lote!
               </p>
               <Link
                 href="/criar-lote"
-                className="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-emerald-700 transition"
+                className="inline-flex items-center gap-2 bg-azul-royal text-branco px-6 py-3 rounded-xl font-bold hover:bg-azul-claro transition"
               >
                 <Plus size={20} /> Criar Lote
               </Link>

@@ -97,7 +97,7 @@ export default function Home() {
   const drawnCount = raffles.filter(r => r.status === 'drawn').length
 
   return (
-    <div className="min-h-screen bg-gray-50 max-w-screen">
+    <div className="min-h-screen bg-fundo-cinza max-w-screen">
       {/* Rafles Grid */}
       {loading ? (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">

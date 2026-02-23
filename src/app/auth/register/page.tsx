@@ -111,7 +111,7 @@ export default function RegisterPage() {
       // Atualizar context imediatamente
       await refetch()
 
-      setSuccess('✅ Conta criada com sucesso!')
+      setSuccess('Conta criada com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
       router.push('/')
     } catch (err) {
@@ -123,11 +123,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-fundo-cinza flex flex-col items-center justify-center py-12 px-4">
         <div className="max-w-md w-full">
           {/* Logo Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 mb-4 overflow-hidden">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full  mb-4 overflow-hidden">
               <Image 
                 src="/troncodasorte.png"
                 alt="Tronco da Sorte"
@@ -136,22 +136,22 @@ export default function RegisterPage() {
                 priority
               />
             </div>
-            <h1 className="text-3xl font-black text-gray-900 mb-2">Criar Conta</h1>
-            <p className="text-gray-600">Junte-se ao Tronco da Sorte</p>
+            <h1 className="text-3xl font-black text-cinza mb-2">Criar Conta</h1>
+            <p className="text-cinza">Junte-se ao Tronco da Sorte</p>
           </div>
 
           {/* Form Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg mb-4 flex items-start gap-3">
+                <div className="bg-vermelho-pastel border-l-4 border-vermelho-vivo text-vermelho-vivo p-4 rounded-lg mb-4 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{error}</p>
                 </div>
               )}
 
               {success && (
-                <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg mb-4 flex items-start gap-3">
+                <div className="bg-verde-pastel border-l-4 border-verde-agua text-verde-agua p-4 rounded-lg mb-4 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{success}</p>
                 </div>
@@ -159,8 +159,8 @@ export default function RegisterPage() {
 
               {/* Nome Completo */}
               <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <User className="w-4 h-4 text-emerald-600" />
+                <label className="text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <User className="w-4 h-4 text-azul-royal" />
                   Nome Completo
                 </label>
                 <input
@@ -169,14 +169,14 @@ export default function RegisterPage() {
                   value={formData.name}
                   onChange={handleInputChange}
                   placeholder="João da Silva"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
               {/* CPF */}
               <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-emerald-600" />
+                <label className="text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-azul-royal" />
                   CPF
                 </label>
                 <input
@@ -185,14 +185,14 @@ export default function RegisterPage() {
                   value={formatCPF(formData.cpf)}
                   onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value }))}
                   placeholder="000.000.000-00"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
               {/* Email */}
               <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-emerald-600" />
+                <label className="text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <Mail className="w-4 h-4 text-azul-royal" />
                   Email
                 </label>
                 <input
@@ -201,14 +201,14 @@ export default function RegisterPage() {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="seu@email.com"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
               {/* Telefone */}
               <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-emerald-600" />
+                <label className="text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-azul-royal" />
                   Telefone
                 </label>
                 <input
@@ -217,14 +217,14 @@ export default function RegisterPage() {
                   value={formatPhone(formData.phone)}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                   placeholder="(00) 00000-0000"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
               {/* Data de Nascimento */}
               <div>
-                <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Calendar className="w-4 h-4 text-emerald-600" />
+                <label className=" text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-azul-royal" />
                   Data de Nascimento
                 </label>
                 <input
@@ -232,27 +232,27 @@ export default function RegisterPage() {
                   name="birthDate"
                   value={formData.birthDate}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
               {/* Termos e Condições */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+              <div className="bg-azul-pastel  rounded-lg p-4 mt-6">
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     name="acceptedTerms"
                     checked={formData.acceptedTerms}
                     onChange={handleInputChange}
-                    className="w-5 h-5 mt-1 text-emerald-600 rounded focus:ring-emerald-600 cursor-pointer"
+                    className="w-5 h-5 mt-1 accent-azul-royal rounded focus:ring-2 focus:ring-azul-royal cursor-pointer"
                   />
-                  <div className="text-sm text-gray-700">
+                  <div className="text-sm text-cinza">
                     <span className="font-semibold">Li e aceito o </span>
-                    <Link href="/termos" className="text-emerald-600 hover:text-emerald-700 font-bold">
+                    <Link href="/termos" className="text-azul-royal hover:text-azul-royal font-bold">
                       Termos e Condições
                     </Link>
                     {' '}e a{' '}
-                    <Link href="/privacidade" className="text-emerald-600 hover:text-emerald-700 font-bold">
+                    <Link href="/privacidade" className="text-azul-royal hover:text-azul-royal font-bold">
                       Política de Privacidade
                     </Link>
                   </div>
@@ -263,20 +263,20 @@ export default function RegisterPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+                className="w-full bg-azul-royal text-white py-3 cursor-pointer rounded-full font-bold text-lg hover:bg-branco hover:text-azul-royal border transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
               >
-                {loading ? '⏳ Criando conta...' : '✨ Criar Conta'}
+                {loading ? 'Criando conta...' : 'Criar Conta'}
               </button>
 
-              <p className="text-center text-gray-600 mt-4">
+              <p className="text-center text-cinza mt-4">
                 Já tem conta?{' '}
-                <Link href="/auth/login" className="text-emerald-600 hover:text-emerald-700 font-bold">
+                <Link href="/auth/login" className="text-azul-royal hover:text-azul-royal font-bold">
                   Faça login
                 </Link>
               </p>
 
               <div className="text-center mt-6">
-                <Link href="/" className="text-gray-600 hover:text-emerald-600 font-semibold text-sm">
+                <Link href="/" className="text-cinza hover:text-azul-royal font-semibold text-sm">
                   ← Voltar para Início
                 </Link>
               </div>

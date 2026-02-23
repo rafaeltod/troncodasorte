@@ -155,8 +155,8 @@ export default function EditLotePage() {
   if (loading) {
     return (
       <AdminRoute>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-xl font-bold text-gray-600">Carregando...</div>
+        <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
+          <div className="text-xl font-bold text-cinza">Carregando...</div>
         </div>
       </AdminRoute>
     )
@@ -165,15 +165,15 @@ export default function EditLotePage() {
   if (!lote) {
     return (
       <AdminRoute>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
           <div className="text-center">
             <div className="text-5xl mb-4">❌</div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+            <h2 className="text-2xl font-bold text-cinza mb-3">
               Lote não encontrada
             </h2>
             <Link
               href="/admin"
-              className="text-emerald-600 hover:underline font-bold"
+              className="text-azul-royal hover:underline font-bold"
             >
               Voltar ao painel
             </Link>
@@ -185,43 +185,43 @@ export default function EditLotePage() {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-fundo-cinza py-12">
         <div className="max-w-4xl mx-auto px-4">
           {/* Header */}
           <div className="mb-8">
             <Link
               href="/admin"
-              className="inline-flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-bold mb-4"
+              className="inline-flex items-center gap-2 text-azul-royal hover:text-azul-royal font-bold mb-4"
             >
               <ArrowLeft size={20} /> Voltar ao painel
             </Link>
-            <h1 className="text-5xl font-black text-gray-900 mb-3">
+            <h1 className="text-5xl font-black text-cinza mb-3">
               Editar Lote
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-lg text-cinza">
               Atualize as informações da sua lote
             </p>
           </div>
 
           {/* Success Message */}
           {success && (
-            <div className="mb-6 bg-green-100 border-2 border-green-600 text-green-800 px-6 py-4 rounded-xl font-bold">
+            <div className="mb-6 bg-verde-pastel text-verde-menta px-6 py-4 rounded-xl font-bold">
               Lote atualizada com sucesso! Redirecionando...
             </div>
           )}
 
           {/* Error Message */}
           {error && (
-            <div className="mb-6 bg-red-100 border-2 border-red-600 text-red-800 px-6 py-4 rounded-xl font-bold">
+            <div className="mb-6 bg-vermelho-pastel text-vermelho-vivo px-6 py-4 rounded-xl font-bold">
               ❌ {error}
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-8 border-2 border-gray-100">
+          <form onSubmit={handleSubmit} className="bg-branco rounded-2xl shadow-lg p-8 border-2 border-cinza-claro">
             {/* Title */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="title">
+              <label className="block text-cinza font-bold mb-2" htmlFor="title">
                 Título da Lote
               </label>
               <input
@@ -230,14 +230,14 @@ export default function EditLotePage() {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-gray-400 border-2 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
+                className="w-full px-4 py-3 text-cinza-claro border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
               />
             </div>
 
             {/* Description */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="description">
+              <label className="block text-cinza font-bold mb-2" htmlFor="description">
                 Descrição
               </label>
               <textarea
@@ -246,15 +246,15 @@ export default function EditLotePage() {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={5}
-                className="w-full px-4 py-3 border-2 text-gray-400 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium resize-none"
+                className="w-full px-4 py-3 border-2 text-cinza-claro border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium resize-none"
                 required
               />
             </div>
 
             {/* Prize Amount */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="prizeAmount">
-                Valor do Prêmio em Dinheiro (R$) <span className="text-sm font-normal text-gray-500">(opcional)</span>
+              <label className="block text-cinza font-bold mb-2" htmlFor="prizeAmount">
+                Valor do Prêmio em Dinheiro (R$) <span className="text-sm font-normal text-fundo-cinza0">(opcional)</span>
               </label>
               <input
                 type="number"
@@ -264,15 +264,15 @@ export default function EditLotePage() {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-3 border-2 text-gray-400 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
+                className="w-full px-4 py-3 border-2 text-cinza-claro border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 placeholder="0.00 (deixe vazio se não for em dinheiro)"
               />
-              <p className="text-sm text-gray-500 mt-1">Se o prêmio não for em dinheiro, deixe em branco ou zero.</p>
+              <p className="text-sm text-fundo-cinza0 mt-1">Se o prêmio não for em dinheiro, deixe em branco ou zero.</p>
             </div>
 
             {/* Total Livros */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="totalLivros">
+              <label className="block text-cinza font-bold mb-2" htmlFor="totalLivros">
                 Total de Livros
               </label>
               <input
@@ -282,12 +282,12 @@ export default function EditLotePage() {
                 value={formData.totalLivros}
                 onChange={handleInputChange}
                 min="1"
-                className="w-full px-4 py-3 text-gray-400 border-2 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
+                className="w-full px-4 py-3 text-cinza-claro border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
                 disabled={lote.soldLivros > 0}
               />
               {lote.soldLivros > 0 && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-cinza mt-2">
                   Não é possível alterar o total de livros após vendas realizadas ({lote.soldLivros} vendidos)
                 </p>
               )}
@@ -295,7 +295,7 @@ export default function EditLotePage() {
 
             {/* Livro Price */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="livroPrice">
+              <label className="block text-cinza font-bold mb-2" htmlFor="livroPrice">
                 Preço por Livro (R$)
               </label>
               <input
@@ -306,12 +306,12 @@ export default function EditLotePage() {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0.01"
-                className="w-full text-gray-400 px-4 py-3 border-2 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
+                className="w-full text-cinza-claro px-4 py-3 border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
                 disabled={lote.soldLivros > 0}
               />
               {lote.soldLivros > 0 && (
-                <p className="text-sm text-gray-600 mt-2">
+                <p className="text-sm text-cinza mt-2">
                   Não é possível alterar o preço após vendas realizadas
                 </p>
               )}
@@ -319,7 +319,7 @@ export default function EditLotePage() {
 
             {/* Status */}
             <div className="mb-6">
-              <label className="block text-gray-900 font-bold mb-2" htmlFor="status">
+              <label className="block text-cinza font-bold mb-2" htmlFor="status">
                 Status da Lote
               </label>
               <select
@@ -327,18 +327,18 @@ export default function EditLotePage() {
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full px-4 text-gray-400 hover:cursor-pointer py-3 border-2 border-gray-500 rounded-xl focus:border-emerald-600 focus:outline-none font-medium"
+                className="w-full px-4 text-cinza-claro hover:cursor-pointer py-3 border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
               >
-                <option className='text-gray-400 hover:cursor-pointer' value="open">Aberta</option>
-                <option className='text-gray-400 hover:cursor-pointer' value="closed">Fechada</option>
-                <option className='text-gray-400 hover:cursor-pointer' value="finished">Finalizada</option>
+                <option className='text-cinza-claro hover:cursor-pointer' value="open">Aberta</option>
+                <option className='text-cinza-claro hover:cursor-pointer' value="closed">Fechada</option>
+                <option className='text-cinza-claro hover:cursor-pointer' value="finished">Finalizada</option>
               </select>
             </div>
 
             {/* Images */}
             <div className="mb-8">
-              <label className="block text-gray-900 font-bold mb-2">
+              <label className="block text-cinza font-bold mb-2">
                 Imagens da Lote
               </label>
               <ImageUpload
@@ -353,17 +353,15 @@ export default function EditLotePage() {
               <button
                 type="submit"
                 disabled={saving}
-                className="flex-1 bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                className="flex-1 bg-azul-royal text-branco px-6 py-4 rounded-full font-bold hover:bg-branco border hover:text-azul-royal transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
               >
-                {saving ? ' Salvando...' : <><Save className="inline mr-2" size={20} /> Salvar Alterações</>}
+                {saving ? ' Salvando...' : 'Salvar Alterações'}
               </button>
 
               <button
                 type="button"
-                onClick={handleDelete}
-                className="px-6 py-4 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition shadow-lg"
-              >
-                <Trash2 className="inline mr-2" size={20} /> Deletar Lote
+                className="px-6 py-4 bg-vermelho-vivo text-branco rounded-full font-bold hover:bg-vermelho-claro transition shadow-lg"
+              > Deletar Lote
               </button>
             </div>
           </form>
