@@ -351,7 +351,7 @@ export default function RaffleDetailPage() {
                     {availableLivros <= selectedQuantity && (
                       <p className="text-vermelho-vivo text-sm">Limite atingido</p>
                     )}
-                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 border-gray-300">
+                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 border-cinza-claro">
                       <button
                         onClick={() => {
                           const newValue = Math.max(1, selectedQuantity - 1)
