@@ -117,7 +117,7 @@ export default function Home() {
           placeholder="Pesquisar lotes por título ou descrição..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-gray-800 placeholder-gray-400 border-2 border-azul-pastel focus:outline-none focus:ring-1 focus:ring-azul-claro"
+          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-cinza placeholder-cinza border-2 border-azul-claro focus:outline-none focus:ring-1 focus:ring-azul-royal"
         />
         <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
       </div>
