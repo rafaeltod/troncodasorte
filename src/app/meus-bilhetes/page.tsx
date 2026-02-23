@@ -77,32 +77,30 @@ export default function MyTicketsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-md mx-auto px-4 py-8">
-        <Link
-          href="/"
-          className="items-center gap-2 text-emerald-600 hover:text-emerald-700 font-semibold mb-6 inline-flex transition"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Voltar
-        </Link>
+        <div className="flex items-center justify-between mb-5">
+          <a href="/" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+            <ArrowLeft className="w-5 h-5" />
+            Voltar
+          </a>
+        </div>
 
         <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-          <h1 className="text-3xl font-black text-gray-900 mb-2 flex items-center gap-2">
-            <Phone className="w-8 h-8 text-emerald-600" />
+          <h1 className="text-3xl font-black text-cinza-escuro mb-2 flex items-center gap-2">
             Meus Bilhetes
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-cinza mb-6">
             Consulte suas compras usando telefone e CPF
           </p>
 
           {error && (
-            <div className="mb-6 bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg">
+            <div className="mb-6 bg-fundo-cinza border-l-4 border-vermelho-vivo text-vermelho-vivo p-4 rounded-lg">
               <p className="font-bold">{error}</p>
             </div>
           )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
+              <label className="block text-sm font-bold text-cinza-escuro mb-2">
                 <Phone className="w-4 h-4 inline mr-2" />
                 Telefone
               </label>
@@ -113,13 +111,13 @@ export default function MyTicketsPage() {
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900 font-semibold"
+                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-white text-cinza-escuro font-semibold"
                 required
               />
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-gray-900 mb-2">
+              <label className="block text-sm font-bold text-cinza-escuro mb-2">
                 <FileText className="w-4 h-4 inline mr-2" />
                 CPF
               </label>
@@ -130,7 +128,7 @@ export default function MyTicketsPage() {
                 onChange={handleInputChange}
                 placeholder="000.000.000-00"
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900 font-semibold"
+                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-white text-cinza-escuro font-semibold"
                 required
               />
             </div>
@@ -138,15 +136,15 @@ export default function MyTicketsPage() {
             <button
               type="submit"
               disabled={loading || !formData.phone || !formData.cpf}
-              className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+              className="w-full bg-azul-royal text-branco py-4 cursor-pointer rounded-full font-black text-lg hover:bg-branco hover:text-azul-royal transition disabled:hover:bg-azul-royal disabled:hover:text-branco disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
             >
-              {loading ? "⏳ Consultando..." : "Consultar Bilhetes"}
+              {loading ? "Consultando..." : "Consultar Bilhetes"}
             </button>
           </form>
 
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
-            <p className="text-sm text-blue-900 font-semibold">
-              ℹ️ Seus dados são protegidos e usados apenas para localizar suas
+          <div className="bg-azul-pastel  rounded-lg p-4 mt-6">
+            <p className="text-sm text-azul-royal font-semibold">
+              Seus dados são protegidos e usados apenas para localizar suas
               compras.
             </p>
           </div>

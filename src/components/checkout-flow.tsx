@@ -228,31 +228,31 @@ export function CheckoutFlow({
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-      <h3 className="text-2xl font-black text-gray-900 mb-6 flex items-center gap-2">
-        <Ticket className="w-6 h-6 text-emerald-600" />
+    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+      <h3 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
+        <Ticket className="w-6 h-6 text-cinza" />
         Compre Agora
       </h3>
 
       {error && (
-        <div className="mb-6 bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg">
+        <div className="mb-6 bg-red-50 text-vermelho-vivo p-4 rounded-lg">
           <p className="font-bold">{error}</p>
         </div>
       )}
 
       {/* Price summary */}
-      <div className="bg-linear-to-br from-emerald-50 to-teal-50 p-4 rounded-xl mb-6 border border-emerald-200">
+      <div className="bg-amarelo-pastel p-4 rounded-xl mb-6">
         <div className="flex justify-between items-center mb-2">
-          <p className="text-sm text-gray-700">Preço por cota:</p>
-          <p className="font-bold text-gray-900">R$ {formatDecimal(numericLivroPrice)}</p>
+          <p className="text-sm text-cinza">Preço por cota:</p>
+          <p className="font-bold text-cinza-escuro">R$ {formatDecimal(numericLivroPrice)}</p>
         </div>
         <div className="flex justify-between items-center mb-2">
-          <p className="text-sm text-gray-700">Quantidade:</p>
-          <p className="font-bold text-gray-900">{selectedQuantity}x</p>
+          <p className="text-sm text-cinza-escuro">Quantidade:</p>
+          <p className="font-bold text-cinza">{selectedQuantity}x</p>
         </div>
-        <div className="border-t border-emerald-200 pt-2 flex justify-between items-center">
-          <p className="font-black text-gray-900">Total:</p>
-          <p className="text-2xl font-black text-emerald-600">R$ {formatDecimal(totalPrice)}</p>
+        <div className=" pt-2 flex justify-between items-center">
+          <p className=" text-cinza-escuro">Total:</p>
+          <p className="text-2xl font-black text-amarelo-gold">R$ {formatDecimal(totalPrice)}</p>
         </div>
       </div>
 
@@ -260,7 +260,7 @@ export function CheckoutFlow({
       {currentStep === 'phone' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
+            <label className="block text-sm font-bold text-cinza-escuro mb-2">
               <Phone className="w-4 h-4 inline mr-2" />
               Informe seu Telefone
             </label>
@@ -270,9 +270,9 @@ export function CheckoutFlow({
               onChange={(e) => setPhoneInput(formatPhone(e.target.value))}
               placeholder="(00) 00000-0000"
               disabled={loading}
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900 font-semibold"
+              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-azul-royal focus:outline-none bg-branco text-cinza font-semibold"
             />
-            <p className="text-xs text-gray-600 mt-2">
+            <p className="text-xs text-cinza mt-2">
               Se você já comprou livros conosco, vamos reconhecê-lo automaticamente
             </p>
           </div>
@@ -280,9 +280,9 @@ export function CheckoutFlow({
           <button
             onClick={handlePhoneSubmit}
             disabled={loading || !phoneInput}
-            className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-4 rounded-lg font-black text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            className="w-full bg-azul-royal text-branco py-4 rounded-full font-black text-lg hover:bg-branco hover:text-azul-royal hover:border-2 hover:border-azul-royal cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
           >
-            {loading ? '⏳ Verificando...' : '➜ Continuar'}
+            {loading ? 'Verificando...' : 'Continuar'}
           </button>
         </div>
       )}
@@ -291,7 +291,7 @@ export function CheckoutFlow({
       {currentStep === 'register' && (
         <div className="space-y-4">
           <div>
-            <label className="block text-sm font-bold text-gray-900 mb-2">
+            <label className="block text-sm font-bold text-cinza-escuro mb-2">
               <User className="w-4 h-4 inline mr-2" />
               Nome Completo
             </label>
@@ -302,13 +302,13 @@ export function CheckoutFlow({
               onChange={handleInputChange}
               placeholder="João Silva"
               disabled={loading}
-              className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900"
+              className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-branco text-cinza-escuro"
             />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-bold text-gray-900 mb-2">CPF</label>
+              <label className="block text-xs font-bold text-cinza-escuro mb-2">CPF</label>
               <input
                 type="text"
                 name="cpf"
@@ -318,12 +318,12 @@ export function CheckoutFlow({
                 onPaste={handleNoCopyPaste}
                 placeholder="000.000.000-00"
                 disabled={loading}
-                className="w-full px-3 py-2 text-sm rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900"
+                className="w-full px-3 py-2 text-sm rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-branco text-cinza-escuro"
               />
-              <p className="text-xs text-gray-500 mt-1">Não pode ser copiado</p>
+              <p className="text-xs text-cinza mt-1">Não pode ser copiado</p>
             </div>
             <div>
-              <label className="block text-xs font-bold text-gray-900 mb-2">Telefone</label>
+              <label className="block text-xs font-bold text-cinza-escuro mb-2">Telefone</label>
               <input
                 type="tel"
                 name="phone"
@@ -331,13 +331,13 @@ export function CheckoutFlow({
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
                 disabled={true}
-                className="w-full px-3 py-2 text-sm rounded-lg border-2 border-gray-300 bg-gray-100 text-gray-600 cursor-not-allowed"
+                className="w-full px-3 py-2 text-sm rounded-lg border-2 border-cinza-claro bg-cinza-claro text-cinza-escuro cursor-not-allowed"
               />
             </div>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-900 mb-2">
+            <label className="block text-xs font-bold text-cinza-escuro mb-2">
               <Phone className="w-4 h-4 inline mr-2" />
               Confirme o Telefone
             </label>
@@ -350,13 +350,13 @@ export function CheckoutFlow({
               onPaste={handleNoCopyPaste}
               placeholder="(00) 00000-0000"
               disabled={loading}
-              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900"
+              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-branco text-cinza-escuro"
             />
-            <p className="text-xs text-gray-500 mt-1">Não pode ser copiado</p>
+            <p className="text-xs text-cinza mt-1">Não pode ser copiado</p>
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-900 mb-2">
+            <label className="block text-xs font-bold text-cinza-escuro mb-2">
               <Mail className="w-4 h-4 inline mr-2" />
               E-mail
             </label>
@@ -367,12 +367,12 @@ export function CheckoutFlow({
               onChange={handleInputChange}
               placeholder="seu@email.com"
               disabled={loading}
-              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900"
+              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-branco text-cinza-escuro"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-gray-900 mb-2">
+            <label className="block text-xs font-bold text-cinza-escuro mb-2">
               <Calendar className="w-4 h-4 inline mr-2" />
               Data de Nascimento
             </label>
@@ -382,7 +382,7 @@ export function CheckoutFlow({
               value={formData.birthDate}
               onChange={handleInputChange}
               disabled={loading}
-              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-white text-gray-900"
+              className="w-full px-3 py-2 text-sm rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-branco text-cinza-escuro"
             />
           </div>
 
@@ -393,16 +393,16 @@ export function CheckoutFlow({
                 setError('')
               }}
               disabled={loading}
-              className="flex-1 bg-gray-200 text-gray-900 py-3 rounded-lg font-bold hover:bg-gray-300 transition disabled:opacity-50"
+              className="flex-1 bg-cinza-claro text-cinza-escuro py-3 rounded-lg font-bold transition disabled:opacity-50"
             >
-              ← Voltar
+              Voltar
             </button>
             <button
               onClick={handleRegisterAndContinue}
               disabled={loading}
-              className="flex-1 bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="flex-1 bg-azul-royal text-branco py-3 rounded-lg font-black hover:bg-azul-royal/80 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
-              {loading ? '⏳ Registrando...' : 'Continuar ➜'}
+              {loading ? 'Registrando...' : 'Continuar'}
             </button>
           </div>
         </div>
@@ -411,9 +411,9 @@ export function CheckoutFlow({
       {/* Step 3: Confirmation (New or Existing Customer) */}
       {currentStep === 'confirm' && (
         <div className="space-y-4">
-          <div className="bg-emerald-50 border-2 border-emerald-200 rounded-lg p-4">
-            <p className="text-sm font-bold text-emerald-900 mb-3">✅ Informações da Compra</p>
-            <div className="space-y-2 text-sm text-gray-900">
+          <div className="bg-azul-pastel rounded-lg p-4">
+            <p className="text-sm font-bold text-cinza-escuro mb-3">Informações da Compra</p>
+            <div className="space-y-2 text-sm text-cinza-escuro">
               <p>
                 <strong>Nome:</strong>{' '}
                 {existingCustomer
@@ -426,13 +426,13 @@ export function CheckoutFlow({
               <p>
                 <strong>Livros:</strong> {selectedQuantity}x
               </p>
-              <p className="border-t border-emerald-200 pt-2">
-                <strong>Total:</strong> <span className="text-lg font-black text-emerald-700">R$ {formatDecimal(totalPrice)}</span>
+              <p className="border-t border-azul-pastel pt-2">
+                <strong>Total:</strong> <span className="text-lg font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</span>
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-cinza">
             Ao clicar em "Concluir Reserva", você será direcionado para o pagamento via PIX.
           </p>
 
@@ -443,16 +443,16 @@ export function CheckoutFlow({
                 setError('')
               }}
               disabled={loading}
-              className="flex-1 bg-gray-200 text-gray-900 py-3 rounded-lg font-bold hover:bg-gray-300 transition disabled:opacity-50"
+              className="flex-1 text-cinza bg-cinza-claro hover:bg-cinza hover:text-branco cursor-pointer py-3 rounded-full font-bold transition disabled:opacity-50"
             >
-              ← Voltar
+              Voltar
             </button>
             <button
               onClick={handleConfirmAndProceed}
               disabled={loading}
-              className="flex-1 bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-black hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              className="flex-1 bg-azul-royal hover:bg-branco hover:text-azul-royal hover:border-2 hover:border-azul-royal cursor-pointer text-branco py-3 rounded-full font-black transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
-              {loading ? '⏳ Processando...' : 'Concluir Reserva ➜'}
+              {loading ? 'Processando...' : 'Concluir Reserva'}
             </button>
           </div>
         </div>

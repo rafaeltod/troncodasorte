@@ -33,7 +33,7 @@ export function Drawer({ isOpen, onClose, children, title }: DrawerProps) {
       {/* Overlay - somente no desktop */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-40 hidden md:block transition-opacity duration-300"
+          className="fixed inset-0 bg-preto/30 z-40 hidden md:block transition-opacity duration-300"
           onClick={onClose}
         />
       )}
@@ -41,7 +41,7 @@ export function Drawer({ isOpen, onClose, children, title }: DrawerProps) {
       {/* Drawer */}
       <div
         className={`fixed inset-0 md:right-0 md:left-auto md:top-0 md:bottom-0 md:w-125 
-                     bg-white z-50 flex flex-col
+                     bg-branco z-50 flex flex-col
                      rounded-t-3xl md:rounded-none
                      transition-all duration-300 ease-out
                      ${
@@ -53,17 +53,17 @@ export function Drawer({ isOpen, onClose, children, title }: DrawerProps) {
                     `}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-4 md:p-6 border-b border-gray-200 sticky top-0 bg-white rounded-t-3xl md:rounded-none z-10">
+        <div className="flex items-center justify-between p-4 md:p-6 border-b border-cinza-claro sticky top-0 bg-branco rounded-t-3xl md:rounded-none z-10">
           {title && (
-            <h2 className="text-lg font-bold text-gray-900 flex-1">{title}</h2>
+            <h2 className="text-lg font-bold text-cinza-escuro flex-1">{title}</h2>
           )}
           {!title && <div className="flex-1" />}
           <button
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-cinza-claro cursor-pointer rounded-lg transition"
             aria-label="Fechar"
           >
-            <X className="w-6 h-6 text-gray-600" />
+            <X className="w-6 h-6 text-cinza-escuro" />
           </button>
         </div>
 

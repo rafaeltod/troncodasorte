@@ -5,8 +5,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
+import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut, Shield } from 'lucide-react'
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home } from 'lucide-react'
 import { FaAdjust } from "react-icons/fa";
 
 
@@ -51,9 +52,8 @@ export function Navbar() {
   }
 
   return (
-    <header className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-lg sticky top-0 z-50">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+    <header className={`${mainConfig} bg-azul-royal! text-branco top-0 left-0 right-0 z-50 border-b-20`}>
+        <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link 
             href="/"
@@ -147,26 +147,26 @@ export function Navbar() {
             <div className="flex flex-col gap-3">
               <Link
                 href="/"
-                className="text-left px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
+                className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <Home className="w-4 h-4" />
                 Lotes
               </Link>
               {user ? (
                 <>
                   <Link
                     href="/account"
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
+                    className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
+                    onClick={() => setMobileMenuOpen(false)}>
                     <User className="w-4 h-4" />
-                    Minha Conta
+                    Perfil
                   </Link>
                   {user.isAdmin && (
                     <>
                       <Link
                         href="/admin"
-                        className="flex items-center gap-2 bg-yellow-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Shield className="w-4 h-4" />
@@ -174,7 +174,7 @@ export function Navbar() {
                       </Link>
                       <Link
                         href="/criar-lote"
-                        className="bg-white text-emerald-600 px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                        className=" text-branco hover:text-branco/90 px-4 py-2 rounded-full font-semibold transition-colors text-left m-2"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         + Criar Lote
@@ -183,7 +183,7 @@ export function Navbar() {
                   )}
                   <button
                     onClick={handleLogout}
-                    className="flex items-center gap-2 px-4 py-2 hover:bg-white/10 rounded-lg transition-colors text-left w-full"
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-branco/90 rounded-full transition-colors text-left w-full"
                   >
                     <LogOut className="w-4 h-4" />
                     Sair
@@ -202,7 +202,7 @@ export function Navbar() {
             </div>
           </nav>
         )}
-      </div>
+      
     </header>
   )
 }
