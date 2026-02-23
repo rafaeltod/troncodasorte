@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus } from 'lucide-react'
 import { censorName, formatDecimal } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
@@ -324,7 +324,7 @@ export default function RaffleDetailPage() {
                   </div>
                 </div>
               </div>
-
+              {/* vencedor */}
               {raffle.status === 'drawn' && raffle.winner && (
                 <div className="bg-amarelo-pastel p-4 rounded-lg mt-4">
                   <div className="flex items-center gap-2 text-amarelo-gold font-bold mb-2">
@@ -351,7 +351,18 @@ export default function RaffleDetailPage() {
                     {availableLivros <= selectedQuantity && (
                       <p className="text-vermelho-vivo text-sm">Limite atingido</p>
                     )}
-                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 h-15 border-gray-300">
+                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 border-gray-300">
+                      <button
+                        onClick={() => {
+                          const newValue = Math.max(1, selectedQuantity - 1)
+                          setSelectedQuantity(newValue)
+                        }}
+                        className="flex items-center justify-center w-12 h-12 bg-cinza hover:bg-vermelho-vivo text-branco rounded-lg font-black text-xl transition cursor-pointer"
+                        title="Diminuir quantidade"
+                      >
+                        <Minus className="w-5 h-5" />
+                      </button>
+
                       <input
                         type="number"
                         min="1"
@@ -367,6 +378,18 @@ export default function RaffleDetailPage() {
                         }}
                         className="flex-1 text-center text-2xl font-black text-cinza-escuro bg-transparent border-0 focus:outline-none"
                       />
+
+                      <button
+                        onClick={() => {
+                          const newValue = Math.min(availableLivros, selectedQuantity + 1)
+                          setSelectedQuantity(newValue)
+                        }}
+                        disabled={selectedQuantity >= availableLivros}
+                        className="flex items-center justify-center w-12 h-12 bg-cinza hover:bg-azul-claro text-branco rounded-lg font-black text-xl transition cursor-pointer disabled:bg-cinza-claro disabled:cursor-not-allowed"
+                        title="Aumentar quantidade"
+                      >
+                        <Plus className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
 
