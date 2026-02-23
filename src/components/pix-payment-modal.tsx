@@ -70,12 +70,12 @@ export function PixPaymentModal({
     return () => clearInterval(interval);
   }, [pixData, timeRemaining]);
 
-  // ✅ Excluir compra quando expirar (4 minutos)
+  // Excluir compra quando expirar
   useEffect(() => {
     if (timeRemaining === 0 && !expired && purchaseId && raffleId) {
       setExpired(true);
       console.log(
-        "[PixPaymentModal] ⏰ Tempo expirado - excluindo compra:",
+        "[PixPaymentModal] Tempo expirado - excluindo compra:",
         purchaseId,
       );
 
@@ -159,10 +159,8 @@ export function PixPaymentModal({
           typeof data.qrCode === "string" &&
           data.qrCode.startsWith("data:")
         ) {
-          // Já é um data URL válido, usar direto
           console.log("[PixPaymentModal] QR Code já vem do backend");
         } else if (!data.qrCode && (data.content || data.pixKey)) {
-          // Se não tem qrCode mas tem content (BR Code), gerar localmente
           const payload = data.content || data.pixKey;
           const isEmail = /\S+@\S+\.\S+/.test(payload);
           const FORCE_QR = process.env.NEXT_PUBLIC_FORCE_QR === "true";
@@ -192,12 +190,11 @@ export function PixPaymentModal({
         }
 
         setPixData(data);
-        // ✅ Setar o amount validado do backend (tanto no POST quanto no GET)
         if (data.amount) {
           setBackendAmount(Number(data.amount));
         }
       }
-      // Reset timer quando QR code é gerado/recuperado
+      // Reset timer
       setTimeRemaining(5 * 60);
       console.log("[PixPaymentModal] ✅ QR code gerado com sucesso!");
     } catch (error) {
@@ -244,7 +241,7 @@ export function PixPaymentModal({
         {/* Content */}
         <div className="p-6 space-y-4 overflow-y-auto flex-1">
           {!pixData ? (
-            <div className="bg-verde-pastel p-4 rounded-xl">
+            <div className="bg-azul-pastel p-4 rounded-xl">
               <p className="text-sm text-cinza-escuro mb-3">
                 <span className="font-bold">Valor a pagar:</span> R${" "}
                 {formatDecimal(backendAmount || amount)}
@@ -339,7 +336,7 @@ export function PixPaymentModal({
 
               <button
                 disabled={timeRemaining === 0}
-                className="w-full bg-verde-menta disabled:bg-gray-300 text-branco py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
+                className="w-full bg-azul-royal disabled:bg-gray-300 text-branco py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
               >
                 {timeRemaining === 0 ? "Tempo expirado" : "Aguardando"}
               </button>

@@ -97,15 +97,15 @@ export default function Home() {
   const drawnCount = raffles.filter(r => r.status === 'drawn').length
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 max-w-screen">
       {/* Rafles Grid */}
       {loading ? (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-xl font-bold text-gray-600">Carregando lotes...</div>
+          <div className="text-xl font-bold text-cinza">Carregando lotes...</div>
         </div>
       ) : filteredRaffles.length === 0 ? (
         <div className={mainConfig}>
-          <p className="text-xl text-gray-600">Nenhuma lote encontrada</p>
+          <p className="text-xl text-cinza">Nenhuma lote encontrada</p>
         </div>
       ) : (
         <div className={mainConfig}>

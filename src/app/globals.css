@@ -12,12 +12,12 @@
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
   
   /* Cores personalizadas */
-  --color-amarelo-gold: rgb(255 164 28);
-  --color-amarelo-claro: rgb(255 244 106);
+  --color-amarelo-gold: rgb(204 150 61);
+  --color-amarelo-claro: rgb(255 204 104);
   --color-amarelo-pastel: rgb(250 249 207);
 
-  --color-azul-royal: rgb(0 0 128);
-  --color-azul-claro: rgb(50 180 255);
+  --color-azul-royal: rgb(15 46 92);
+  --color-azul-claro: rgb(20 80 255);
   --color-azul-pastel: rgb(224 228 255);
 
   --color-verde-menta: rgb(0 138 100);
@@ -29,20 +29,13 @@
   --color-vermelho-pastel: rgb(250 207 207);
 
   --color-cinza-escuro: rgb(19 25 33);
-  --color-cinza: rgb(35 47 62);
+  --color-cinza: rgb(50 70 70);
   --color-cinza-claro: rgb(230 230 230);
 
   --color-branco: rgb(255 255 255);
   --color-preto: rgb(0 0 0);
 
   --color-fundo-cinza: rgb(249 250 251);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-  }
 }
 
 * {

@@ -27,14 +27,6 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
               className="object-cover"
               priority
             />
-            {status === 'drawn' && (
-              <div className="absolute inset-0 bg-verde-menta bg-opacity-50 flex items-center justify-center">
-                <div className="text-center">
-                  <Trophy className="w-20 h-20 text-branco mx-auto mb-2" />
-                  <span className="text-branco font-bold text-3xl">SORTEADA</span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
