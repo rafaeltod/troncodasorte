@@ -5,6 +5,21 @@
   --foreground: #0f172a;
 }
 
+:root.light {
+  --background: #ffffff;
+  --foreground: #0f172a;
+}
+
+:root.dark {
+  --background: #0f172a;
+  --foreground: #f1f5f9;
+}
+
+:root.red{
+  --background: #991b1b;
+  --foreground: #d3d3d3;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -37,6 +52,7 @@
 
   --color-fundo-cinza: rgb(249 250 251);
 }
+
 
 * {
   @apply antialiased;

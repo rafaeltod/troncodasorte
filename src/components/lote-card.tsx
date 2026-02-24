@@ -33,7 +33,7 @@ export function RaffleCard({
 
   return (
     <Link href={`/lotes/${id}`} className="block">
-      <div className="bg-white rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
           {image ? (

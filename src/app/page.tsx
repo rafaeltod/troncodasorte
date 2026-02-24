@@ -97,17 +97,20 @@ export default function Home() {
   const drawnCount = raffles.filter(r => r.status === 'drawn').length
 
   return (
-    <div className="min-h-screen bg-fundo-cinza max-w-screen">
+    <div className="min-h-screen">
+      
+
+    <div className="min-h-screen max-w-screen bg-{background}">
       {/* Rafles Grid */}
       {loading ? (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-xl font-bold text-cinza">Carregando lotes...</div>
         </div>
       ) : (
         <div className={`${mainConfig} min-h-screen`}>
 
       {/* Search Bar */}
-      <div className="relative max-w-2xl">
+      <div className="relative max-w-2xl mt-5">
         <input
           type="text"
           placeholder="Pesquisar lotes por título ou descrição..."
@@ -170,5 +173,6 @@ export default function Home() {
         </div>
       )}
     </div>
+  </div>
   )
 }

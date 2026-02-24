@@ -251,10 +251,11 @@ export default function RaffleDetailPage() {
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
   return (
-    <main className={mainConfig}>
-        <div className="flex items-center justify-between mb-5">
-          <a href="/" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
-            <ArrowLeft className="w-5 h-5" />
+    <div className="min-h-screen bg-{background}">
+      <main className="max-w-6xl mx-auto py-8">
+        <div className="flex items-center justify-between mb-6 px-8">
+          <a href="/" className=" items-center gap-2 text-azul-royal font-semibold inline-flex transition">
+            <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
         </div>
@@ -1161,6 +1162,8 @@ export default function RaffleDetailPage() {
         </div>
       </div>
     </div>
-    </main>
+      </main>
+    </div>
   )
 }
+
