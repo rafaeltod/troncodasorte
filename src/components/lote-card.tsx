@@ -33,7 +33,7 @@ export function RaffleCard({
 
   return (
     <Link href={`/lotes/${id}`} className="block">
-      <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 bg-lote-card">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
           {image ? (
@@ -72,7 +72,7 @@ export function RaffleCard({
 
         {/* Content */}
         <div className="p-5" style={{ minHeight: '250px' }}>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
+          <h3 className="text-xl font-semibold text-foreground mb-2 line-clamp-1">
             {title}
           </h3>
 

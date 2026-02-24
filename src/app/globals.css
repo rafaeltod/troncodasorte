@@ -1,28 +1,25 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-}
+
 
 :root.light {
   --background: #ffffff;
   --foreground: #0f172a;
+  --lote-card: #ffffff;
+  --detalhes-pesquisa: var(--amarelo-gold);
 }
 
 :root.dark {
   --background: #0f172a;
   --foreground: #f1f5f9;
-}
-
-:root.red{
-  --background: #991b1b;
-  --foreground: #d3d3d3;
+  --lote-card: #374056;
+  --detalhes-pesquisa: var(--amarelo-gold);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-lote-card: var(--lote-card);
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
   
