@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus, DollarSign, Package } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus, DollarSign, Package, Tag, X } from 'lucide-react'
 import { censorName, formatDecimal } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
@@ -63,6 +63,21 @@ export default function RaffleDetailPage() {
   const [resultadoError, setResultadoError] = useState<string | null>(null)
   const [resultadoData, setResultadoData] = useState<any>(null)
 
+  // Cupom states
+  const [cupom, setCupom] = useState<{
+    id: string
+    code: string
+    discount: number
+    tipoDesconto: string
+    description: string | null
+    loteId: string | null
+    vendedor: { name: string }
+  } | null>(null)
+  const [cupomError, setCupomError] = useState('')
+  const [loadingCupom, setLoadingCupom] = useState(false)
+  const [cupomInputCode, setCupomInputCode] = useState('')
+  const [showCupomInput, setShowCupomInput] = useState(false)
+
   // Presets para seleção de quantidade
   const presetOptions = [1, 50, 100, 200, 300, 500]
 
@@ -111,6 +126,49 @@ export default function RaffleDetailPage() {
 
     return () => {
       isMounted = false
+    }
+  }, [id])
+
+  // Validar cupom
+  const validateCupom = async (code: string) => {
+    setLoadingCupom(true)
+    setCupomError('')
+    try {
+      const res = await fetch('/api/cupom/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, loteId: id }),
+      })
+      const data = await res.json()
+      if (res.ok && data.valid) {
+        setCupom(data.cupom)
+        setShowCupomInput(false)
+        setCupomInputCode('')
+      } else {
+        setCupomError(data.error || 'Cupom inválido')
+      }
+    } catch {
+      setCupomError('Erro ao validar cupom')
+    } finally {
+      setLoadingCupom(false)
+    }
+  }
+
+  const removeCupom = () => {
+    setCupom(null)
+    setCupomError('')
+    // Remover cupom da URL sem recarregar
+    const url = new URL(window.location.href)
+    url.searchParams.delete('cupom')
+    window.history.replaceState({}, '', url.toString())
+  }
+
+  // Detectar cupom na URL (?cupom=CODIGO)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const cupomCode = params.get('cupom')
+    if (cupomCode) {
+      validateCupom(cupomCode)
     }
   }, [id])
 
@@ -178,7 +236,17 @@ export default function RaffleDetailPage() {
   const progress = (raffle.soldLivros / raffle.totalLivros) * 100
   const isOpen = raffle.status === 'open'
   const availableLivros = raffle.totalLivros - raffle.soldLivros
-  const totalPrice = selectedQuantity * Number(raffle.livroPrice)
+  // Calcular preço com desconto do cupom
+  const originalTotal = selectedQuantity * Number(raffle.livroPrice)
+  let descontoTotal = 0
+  if (cupom) {
+    if (cupom.tipoDesconto === 'percentual') {
+      descontoTotal = originalTotal * (cupom.discount / 100)
+    } else {
+      descontoTotal = Math.min(cupom.discount, originalTotal)
+    }
+  }
+  const totalPrice = originalTotal - descontoTotal
   const images = Array.isArray(raffle.images) ? raffle.images : []
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
@@ -558,13 +626,104 @@ export default function RaffleDetailPage() {
                   </div>
                 </div>
 
+                {/* Cupom Banner */}
+                {loadingCupom && (
+                  <div className="mb-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-center">
+                    <p className="text-blue-700 font-bold">⏳ Validando cupom...</p>
+                  </div>
+                )}
+
+                {cupomError && (
+                  <div className="mb-4 bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-700 font-bold text-sm">{cupomError}</p>
+                  </div>
+                )}
+
+                {cupom && (
+                  <div className="mb-4 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Tag className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <p className="font-black text-blue-800 text-sm">
+                            Cupom aplicado: <span className="font-mono bg-blue-100 px-2 py-0.5 rounded">{cupom.code}</span>
+                          </p>
+                          <p className="text-xs text-blue-600 mt-0.5">
+                            {cupom.tipoDesconto === 'percentual'
+                              ? `${cupom.discount}% de desconto`
+                              : `R$ ${cupom.discount.toFixed(2)} de desconto`}
+                            {cupom.vendedor && ` — via ${cupom.vendedor.name}`}
+                          </p>
+                        </div>
+                      </div>
+                      <button onClick={removeCupom} className="text-gray-400 hover:text-gray-600 p-1">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Inserir cupom manualmente */}
+                {!cupom && (
+                  <div className="mb-4">
+                    {!showCupomInput ? (
+                      <button
+                        onClick={() => setShowCupomInput(true)}
+                        className="text-sm text-azul-royal font-semibold hover:underline flex items-center gap-1"
+                      >
+                        <Tag className="w-4 h-4" />
+                        Tem um cupom de desconto?
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={cupomInputCode}
+                          onChange={(e) => setCupomInputCode(e.target.value.toUpperCase())}
+                          placeholder="Digite o código"
+                          className="flex-1 border-2 border-azul-royal rounded-lg px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
+                        />
+                        <button
+                          onClick={() => {
+                            if (cupomInputCode.trim()) validateCupom(cupomInputCode.trim())
+                          }}
+                          disabled={loadingCupom || !cupomInputCode.trim()}
+                          className="bg-azul-royal text-branco px-4 py-2 rounded-lg text-sm font-bold hover:bg-azul-claro disabled:bg-cinza transition"
+                        >
+                          {loadingCupom ? 'Validando...' : 'Aplicar'}
+                        </button>
+                        <button
+                          onClick={() => { setShowCupomInput(false); setCupomInputCode(''); setCupomError('') }}
+                          className="text-cinza hover:text-cinza-escuro p-2"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="mt-8 bg-amarelo-pastel p-6 rounded-xl">
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <p className="text-sm text-cinza-escuro font-semibold mb-1">Total a Pagar</p>
-                      <p className="text-3xl font-black text-amarelo-gold">
-                        R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </p>
+                      {descontoTotal > 0 ? (
+                        <>
+                          <p className="text-lg text-gray-400 line-through">
+                            R$ {originalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </p>
+                          <p className="text-3xl font-black text-amarelo-gold">
+                            R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </p>
+                          <p className="text-xs text-blue-600 font-bold mt-1">
+                            Desconto de R$ {descontoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} com cupom {cupom?.code}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-3xl font-black text-amarelo-gold">
+                          R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -591,6 +750,7 @@ export default function RaffleDetailPage() {
                     availableLivros={availableLivros}
                     isOpen={isOpen}
                     selectedQuantity={selectedQuantity}
+                    cupom={cupom || undefined}
                   />
                 </Drawer>
               </>
