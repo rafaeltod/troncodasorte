@@ -57,6 +57,11 @@ export default function RaffleDetailPage() {
   const [adminShowConfirm, setAdminShowConfirm] = useState(false)
   const [adminError, setAdminError] = useState<string | null>(null)
   const [adminSuccess, setAdminSuccess] = useState(false)
+  const [resultadoShowForm, setResultadoShowForm] = useState(false)
+  const [resultadoDrawnNumber, setResultadoDrawnNumber] = useState('')
+  const [resultadoLoading, setResultadoLoading] = useState(false)
+  const [resultadoError, setResultadoError] = useState<string | null>(null)
+  const [resultadoData, setResultadoData] = useState<any>(null)
 
   // Presets para seleção de quantidade
   const presetOptions = [1, 50, 100, 200, 300, 500]
@@ -709,6 +714,151 @@ export default function RaffleDetailPage() {
                       <div className="bg-emerald-100 border-2 border-emerald-400 text-emerald-700 px-6 py-4 rounded-xl flex items-center gap-3 font-bold">
                         <CheckCircle2 className="w-5 h-5" />
                         Campanha finalizada com sucesso!
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Cadastrar Resultado Section */}
+                {raffle.status === 'closed' && (
+                  <div className="mt-6">
+                    {resultadoData ? (
+                      <div className="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-6">
+                        <div className="flex items-center gap-2 text-emerald-700 font-bold mb-4">
+                          <Trophy className="w-5 h-5" />
+                          Resultado Cadastrado!
+                        </div>
+                        <div className="space-y-3">
+                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                            <p className="text-sm text-gray-500 mb-1">Número sorteado (digitado)</p>
+                            <p className="text-2xl font-mono font-bold text-gray-800">{resultadoData.drawnNumber}</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                            <p className="text-sm text-gray-500 mb-1">Número vencedor (correspondente)</p>
+                            <p className="text-2xl font-mono font-bold text-emerald-600">{resultadoData.winnerNumber}</p>
+                            {resultadoData.incrementos > 0 && (
+                              <p className="text-xs text-gray-400 mt-1">
+                                +{resultadoData.incrementos} incremento{resultadoData.incrementos > 1 ? 's' : ''} a partir do número sorteado
+                              </p>
+                            )}
+                          </div>
+                          {resultadoData.winner && (
+                            <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                              <p className="text-sm text-gray-500 mb-1">Ganhador Principal</p>
+                              <p className="text-lg font-bold text-gray-800">{resultadoData.winner.name}</p>
+                              <p className="text-sm text-gray-500">{resultadoData.winner.email}</p>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition"
+                        >
+                          Recarregar Página
+                        </button>
+                      </div>
+                    ) : !resultadoShowForm ? (
+                      <button
+                        onClick={() => setResultadoShowForm(true)}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-full cursor-pointer text-white font-bold py-3 px-6 transition flex items-center justify-center gap-2"
+                      >
+                        <Trophy className="w-5 h-5" />
+                        Cadastrar Resultado
+                      </button>
+                    ) : (
+                      <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6">
+                        <p className="text-emerald-700 font-semibold mb-4 flex items-center gap-2">
+                          Informe o número
+                        </p>
+                        <p className="text-emerald-600 text-sm mb-4">
+                          Digite o número entre 000000 e 999999. O sistema irá verificar se existe um bilhete correspondente.
+                          Caso não exista, será feito o incremento automático até encontrar um bilhete válido.
+                        </p>
+
+                        <div className="mb-4">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={resultadoDrawnNumber}
+                            onChange={(e) => {
+                              const cleaned = e.target.value.replace(/\D/g, '').slice(0, 6)
+                              setResultadoDrawnNumber(cleaned)
+                            }}
+                            placeholder="000000"
+                            maxLength={6}
+                            className="w-full text-center text-3xl font-mono font-bold tracking-[0.3em] bg-white border-2 border-emerald-300 rounded-lg py-3 px-4 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 text-gray-800 placeholder-gray-300"
+                          />
+                          <p className="text-xs text-gray-400 mt-1 text-center">
+                            {resultadoDrawnNumber.length}/6 dígitos — será completado com zeros à esquerda
+                          </p>
+                        </div>
+
+                        {resultadoError && (
+                          <p className="text-vermelho-vivo bg-vermelho-pastel px-4 py-2 rounded mb-4 text-sm">
+                            {resultadoError}
+                          </p>
+                        )}
+
+                        <div className="flex gap-3">
+                          <button
+                            onClick={async () => {
+                              if (resultadoDrawnNumber.length === 0) {
+                                setResultadoError('Informe o número do sorteio')
+                                return
+                              }
+
+                              const numberPadded = resultadoDrawnNumber.padStart(6, '0')
+                              setResultadoLoading(true)
+                              setResultadoError(null)
+
+                              try {
+                                const response = await fetch(`/api/admin/lotes/${id}/resultado`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ drawnNumber: numberPadded }),
+                                })
+
+                                const data = await response.json()
+
+                                if (!response.ok) {
+                                  throw new Error(data.error || 'Erro ao cadastrar resultado')
+                                }
+
+                                setResultadoData(data.resultado)
+                                setResultadoShowForm(false)
+                              } catch (err: any) {
+                                setResultadoError(err.message)
+                              } finally {
+                                setResultadoLoading(false)
+                              }
+                            }}
+                            disabled={resultadoLoading}
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold py-3 px-4 rounded-full transition flex items-center justify-center gap-2"
+                          >
+                            {resultadoLoading ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Buscando bilhete...
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle2 className="w-4 h-4" />
+                                Cadastrar Resultado
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setResultadoShowForm(false)
+                              setResultadoError(null)
+                              setResultadoDrawnNumber('')
+                            }}
+                            disabled={resultadoLoading}
+                            className="flex-1 bg-cinza-claro hover:bg-cinza-escuro hover:text-branco cursor-pointer text-cinza font-bold py-3 px-4 rounded-full transition"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>
