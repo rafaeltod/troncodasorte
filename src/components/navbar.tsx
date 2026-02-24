@@ -52,7 +52,7 @@ export function Navbar() {
   }
 
   return (
-    <header className={`${mainConfig} bg-azul-royal! text-branco top-0 left-0 right-0 z-50 border-b-20`}>
+    <header className={`${mainConfig} bg-azul-royal! text-branco top-0 left-0 right-0 z-50`}>
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link 

@@ -145,10 +145,10 @@ export default function Home() {
         </div>
       </div>
 
-    <div className="min-h-screen bg-gray-50 max-w-screen">
+    <div className="min-h-screen max-w-screen bg-{background}">
       {/* Rafles Grid */}
       {loading ? (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-xl font-bold text-cinza">Carregando lotes...</div>
         </div>
       ) : filteredRaffles.length === 0 ? (
@@ -216,5 +216,6 @@ export default function Home() {
         </div>
       )}
     </div>
+  </div>
   )
 }
