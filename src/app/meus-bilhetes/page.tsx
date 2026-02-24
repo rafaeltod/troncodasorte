@@ -75,10 +75,10 @@ export default function MyTicketsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-{background}">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-5">
-          <a href="/" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+          <a href="/" className=" items-center gap-2 text-azul-royal dark:text-amarelo-claro text-1xl font-bold inline-flex transition">
             <ArrowLeft className="w-5 h-5" />
             Voltar
           </a>

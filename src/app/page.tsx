@@ -120,34 +120,34 @@ export default function Home() {
           placeholder="Pesquisar lotes por título ou descrição..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-cinza placeholder-cinza border-2 border-azul-claro focus:outline-none focus:ring-1 focus:ring-azul-royal dark:bg-cinza-escuro dark:text-branco dark:placeholder-cinza-claro dark:border-azul-royal"
+          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-cinza placeholder-cinza border-2 border-azul-claro focus:outline-none focus:ring-1 focus:ring-azul-royal dark:bg-amarelo-pastel dark:text-azul-royal dark:placeholder-azul-royal/50 dark:border-amarelo-claro"
         />
-        <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-cinza-claro w-5 h-5" />
+        <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-cinza-escuro w-5 h-5" />
       </div>
 
       {/* Filter Buttons */}
       <div className="flex gap-3 mt-4 flex-wrap mb-4">
         <button
           onClick={() => handleStatusFilter('all')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
         >
           Tudo ({totalCount})
         </button>
         <button
           onClick={() => handleStatusFilter('open')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
         >
           Abertas ({openCount})
         </button>
         <button
           onClick={() => handleStatusFilter('closed')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
         >
           Fechadas ({closedCount})
         </button>
         <button
           onClick={() => handleStatusFilter('drawn')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'drawn' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'drawn' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
         >
           Sorteadas ({drawnCount})
         </button>

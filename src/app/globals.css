@@ -2,8 +2,6 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-
-
 :root.light {
   --background: #ffffff;
   --foreground: #0f172a;
