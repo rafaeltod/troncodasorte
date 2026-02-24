@@ -184,28 +184,28 @@ export default function PurchaseDetailPage({
 
   if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
+        <div className="text-xl font-bold text-cinza">⏳ Carregando...</div>
       </div>
     );
   }
 
   if (error || !purchase || !user) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-fundo-cinza py-12">
         <div className="container mx-auto px-4">
           <div className="max-w-2xl mx-auto">
-            <Link
-              href="/account"
-              className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-bold mb-8"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              Voltar
-            </Link>
+            <div className="flex items-center justify-between mb-5">
+                <a href="/account" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+                    <ArrowLeft className="w-5 h-5" />
+                    Voltar
+                </a>
+            </div>
 
-            <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 text-center">
-              <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-              <p className="text-gray-900 font-bold text-lg">
+
+            <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro text-center">
+              <AlertCircle className="w-16 h-16 text-vermelho-vivo mx-auto mb-4" />
+              <p className="text-cinza-escuro font-bold text-lg">
                 {error || "Compra não encontrada"}
               </p>
             </div>
@@ -219,7 +219,7 @@ export default function PurchaseDetailPage({
   const isConfirmed = purchase.status === "confirmed";
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-fundo-cinza py-12">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
@@ -231,16 +231,16 @@ export default function PurchaseDetailPage({
                   ? "/meus-bilhetes/resultado"
                   : "/meus-bilhetes"
             }
-            className="flex items-center gap-2 text-emerald-600 hover:text-emerald-700 font-bold mb-8"
+            className="flex items-center gap-2 text-azul-royal hover:text-azul-claro font-bold mb-8"
           >
             <ArrowLeft className="w-5 h-5" />
             {authUser ? "Voltar para Perfil" : "Voltar para Meus Bilhetes"}
           </Link>
 
           {/* Purchase Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 mb-8">
-            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-gray-200">
-              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 overflow-hidden">
+          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro mb-8">
+            <div className="flex items-center gap-4 mb-8 pb-8 border-b border-cinza-claro">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-full overflow-hidden">
                 <Image
                   src="/troncodasorte.png"
                   alt="Tronco da Sorte"
@@ -250,16 +250,16 @@ export default function PurchaseDetailPage({
                 />
               </div>
               <div className="flex-1">
-                <h1 className="text-3xl font-black text-gray-900">
+                <h1 className="text-3xl font-black text-cinza">
                   Detalhes da Compra
                 </h1>
-                <p className="text-gray-600">ID: {purchase.id}</p>
+                <p className="text-cinza">ID: {purchase.id}</p>
               </div>
               <div
                 className={`flex items-center gap-2 px-4 py-2 rounded-full font-bold ${
                   isConfirmed
-                    ? "bg-emerald-100 text-emerald-800"
-                    : "bg-yellow-100 text-yellow-800"
+                    ? "bg-verde-pastel text-verde-menta"
+                    : "bg-vermelho-pastel text-vermelho-vivo"
                 }`}
               >
                 {isConfirmed ? (
@@ -278,15 +278,15 @@ export default function PurchaseDetailPage({
 
             {/* Campaign Info */}
             <div className="mb-8">
-              <h2 className="text-sm font-bold text-gray-600 mb-4 flex items-center gap-2">
-                <Ticket className="w-4 h-4 text-emerald-600" />
+              <h2 className="text-sm font-bold text-cinza mb-4 flex items-center gap-2">
+                <Ticket className="w-4 h-4 text-azul-royal" />
                 Informações da Lote
               </h2>
-              <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
-                <p className="text-2xl font-black text-gray-900">
+              <div className="bg-azul-pastel rounded-lg p-4">
+                <p className="text-2xl font-black text-cinza">
                   {purchase.raffle?.title || "Lote"}
                 </p>
-                <p className="text-gray-600 mt-2">
+                <p className="text-cinza-claro mt-2">
                   Status:{" "}
                   <span className="font-bold capitalize">
                     {purchase.raffle?.status
@@ -305,22 +305,22 @@ export default function PurchaseDetailPage({
 
             {/* Purchase Details */}
             <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="text-gray-600 font-semibold text-sm mb-1 flex items-center gap-2">
-                  <Ticket className="w-4 h-4 text-emerald-600" />
+              <div className="bg-fundo-cinza border border-cinza-claro rounded-lg p-4">
+                <p className="text-cinza font-semibold text-sm mb-1 flex items-center gap-2">
+                  <Ticket className="w-4 h-4 text-azul-royal" />
                   Livros
                 </p>
-                <p className="text-3xl font-black text-gray-900">
+                <p className="text-3xl font-black text-cinza-escuro">
                   {purchase.livros}
                 </p>
               </div>
 
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-                <p className="text-gray-600 font-semibold text-sm mb-1 flex items-center gap-2">
-                  <DollarSign className="w-4 h-4 text-emerald-600" />
+              <div className="bg-fundo-cinza border border-cinza-claro rounded-lg p-4">
+                <p className="text-cinza font-semibold text-sm mb-1 flex items-center gap-2">
+                  <DollarSign className="w-4 h-4 text-azul-royal" />
                   Valor Investido
                 </p>
-                <p className="text-3xl font-black text-emerald-700">
+                <p className="text-3xl font-black text-azul-royal">
                   R$ {Number(purchase.amount).toFixed(2)}
                 </p>
               </div>
@@ -332,7 +332,7 @@ export default function PurchaseDetailPage({
                 <Calendar className="w-4 h-4" />
                 Data da Compra
               </p>
-              <p className="text-gray-900 font-black">
+              <p className="text-cinza-escuro font-black">
                 {purchaseDate.toLocaleDateString("pt-BR")} às{" "}
                 {purchaseDate.toLocaleTimeString("pt-BR")}
               </p>
@@ -341,16 +341,16 @@ export default function PurchaseDetailPage({
             {/* Numbers */}
             {purchase.numbers && purchase.numbers.length > 0 ? (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-600 mb-3">
+                <h3 className="text-sm font-bold text-cinza mb-3">
                   Números dos Livros ({purchase.numbers.length})
                 </h3>
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
                   {purchase.numbers.map((number, index) => (
                     <div
                       key={index}
-                      className="bg-linear-to-br from-emerald-100 to-teal-100 border border-emerald-300 rounded p-2 text-center"
+                      className="bg-azul-pastel rounded p-2 text-center"
                     >
-                      <p className="text-xs font-bold text-emerald-800">
+                      <p className="text-xs font-bold text-azul-royal">
                         {number}
                       </p>
                     </div>
@@ -359,7 +359,7 @@ export default function PurchaseDetailPage({
               </div>
             ) : (
               <div className="mb-8">
-                <h3 className="text-sm font-bold text-gray-600 mb-3">
+                <h3 className="text-sm font-bold text-cinza mb-3">
                   Números dos Livros
                 </h3>
                 <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
@@ -372,30 +372,30 @@ export default function PurchaseDetailPage({
             )}
 
             {/* User Info */}
-            <div className="border-t border-gray-200 pt-8">
-              <h3 className="text-sm font-bold text-gray-600 mb-4">
+            <div className="border-t border-cinza-claro pt-8">
+              <h3 className="text-sm font-bold text-cinza mb-4">
                 Dados do Comprador
               </h3>
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <p className="text-gray-600">Nome:</p>
-                  <p className="text-gray-900 font-bold">
+                <div className="flex justify-between items-center py-2 border-b border-cinza-claro">
+                  <p className="text-cinza">Nome:</p>
+                  <p className="text-cinza-escuro font-bold">
                     {censorName(user.name)}
                   </p>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <p className="text-gray-600">Telefone:</p>
-                  <p className="text-gray-900 font-bold">
+                <div className="flex justify-between items-center py-2 border-b border-cinza-claro">
+                  <p className="text-cinza">Telefone:</p>
+                  <p className="text-cinza-escuro font-bold">
                     {censorPhoneShort(user.phone)}
                   </p>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                  <p className="text-gray-600">Email:</p>
-                  <p className="text-gray-900 font-bold">{user.email}</p>
+                <div className="flex justify-between items-center py-2 border-b border-cinza-claro">
+                  <p className="text-cinza">Email:</p>
+                  <p className="text-cinza-escuro font-bold">{user.email}</p>
                 </div>
                 <div className="flex justify-between items-center py-2">
-                  <p className="text-gray-600">CPF:</p>
-                  <p className="text-gray-900 font-bold">{user.cpf}</p>
+                  <p className="text-cinza">CPF:</p>
+                  <p className="text-cinza-escuro font-bold">{user.cpf}</p>
                 </div>
               </div>
             </div>
@@ -406,14 +406,14 @@ export default function PurchaseDetailPage({
             <div className="grid grid-cols-2 gap-4">
               <Link
                 href="/account"
-                className="text-center bg-white border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg font-bold hover:bg-emerald-50 transition"
+                className="text-center bg-branco border-2 border-azul-royal text-azul-royal px-6 py-3 rounded-lg font-bold hover:bg-azul-pastel transition"
               >
                 ← Voltar ao Perfil
               </Link>
               {purchase.raffleId && (
                 <Link
                   href={`/lotes/${purchase.raffleId}`}
-                  className="text-center bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                  className="text-center bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border px-6 py-3 rounded-lg font-bold transition"
                 >
                   Ver Lote →
                 </Link>
@@ -428,14 +428,14 @@ export default function PurchaseDetailPage({
                     ? "/meus-bilhetes/resultado"
                     : "/meus-bilhetes"
                 }
-                className="flex-1 text-center bg-white border-2 border-emerald-600 text-emerald-600 px-6 py-3 rounded-lg font-bold hover:bg-emerald-50 transition"
+                className="flex-1 text-center bg-branco border-2 border-azul-royal text-azul-royal px-6 py-3 rounded-lg font-bold hover:bg-azul-pastel transition"
               >
                 ← Voltar para Meus Bilhetes
               </Link>
               {purchase.raffleId && (
                 <Link
                   href={`/lotes/${purchase.raffleId}`}
-                  className="flex-1 text-center bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+                  className="flex-1 text-center bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border px-6 py-3 rounded-lg font-bold transition"
                 >
                   Ver Lote →
                 </Link>

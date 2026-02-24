@@ -10,13 +10,32 @@
   --color-foreground: var(--foreground);
   --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
   --font-mono: 'Menlo', 'Monaco', 'Courier New', monospace;
-}
+  
+  /* Cores personalizadas */
+  --color-amarelo-gold: rgb(204 150 61);
+  --color-amarelo-claro: rgb(255 204 104);
+  --color-amarelo-pastel: rgb(250 249 207);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f1f5f9;
-  }
+  --color-azul-royal: rgb(15 46 92);
+  --color-azul-claro: rgb(20 80 255);
+  --color-azul-pastel: rgb(224 228 255);
+
+  --color-verde-menta: rgb(0 138 100);
+  --color-verde-agua: rgb(68 185 133);
+  --color-verde-pastel: rgb(207 250 231);
+
+  --color-vermelho-vivo: rgb(196 14 14);
+  --color-vermelho-claro: rgb(215 83 83);
+  --color-vermelho-pastel: rgb(250 207 207);
+
+  --color-cinza-escuro: rgb(19 25 33);
+  --color-cinza: rgb(50 70 70);
+  --color-cinza-claro: rgb(230 230 230);
+
+  --color-branco: rgb(255 255 255);
+  --color-preto: rgb(0 0 0);
+
+  --color-fundo-cinza: rgb(249 250 251);
 }
 
 * {

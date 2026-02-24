@@ -88,7 +88,7 @@ export default function LoginPage() {
       // Atualizar context imediatamente
       const success = await refetch()
 
-      setSuccess('✅ Login realizado com sucesso!')
+      setSuccess('Login realizado com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
       
       // Redirect baseado no tipo de usuário
@@ -110,11 +110,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center py-12 px-4">
+    <div className="min-h-screen bg-fundo-cinza flex flex-col items-center justify-center py-12 px-4">
         <div className="max-w-md w-full">
           {/* Logo Section */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-emerald-600 to-teal-600 mb-4 overflow-hidden">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full  mb-4 overflow-hidden">
               <Image 
                 src="/troncodasorte.png"
                 alt="Tronco da Sorte"
@@ -123,22 +123,22 @@ export default function LoginPage() {
                 priority
               />
             </div>
-            <h1 className="text-3xl font-black text-gray-900 mb-2">Entrar</h1>
-            <p className="text-gray-600">Acesse sua conta no Tronco da Sorte</p>
+            <h1 className="text-3xl font-black text-cinza mb-2">Entrar</h1>
+            <p className="text-cinza">Acesse sua conta no Tronco da Sorte</p>
           </div>
 
           {/* Form Card */}
-          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
             <form onSubmit={handleSubmit} className="space-y-4">
               {error && (
-                <div className="bg-red-50 border-l-4 border-red-600 text-red-700 p-4 rounded-lg mb-4 flex items-start gap-3">
+                <div className="bg-vermelho-pastel border-l-4 border-vermelho-vivo text-vermelho-vivo p-4 rounded-lg mb-4 flex items-start gap-3">
                   <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{error}</p>
                 </div>
               )}
 
               {success && (
-                <div className="bg-emerald-50 border-l-4 border-emerald-600 text-emerald-700 p-4 rounded-lg mb-4 flex items-start gap-3">
+                <div className="bg-emerald-50 border-l-4 border-verde-agua text-verde-agua p-4 rounded-lg mb-4 flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5" />
                   <p className="font-bold">{success}</p>
                 </div>
@@ -146,8 +146,8 @@ export default function LoginPage() {
 
               {/* CPF Input */}
               <div>
-                <label className=" text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <FileText className="w-4 h-4 text-emerald-600" />
+                <label className=" text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <FileText className="w-4 h-4 text-azul-royal" />
                   CPF *
                 </label>
                 <input
@@ -156,15 +156,15 @@ export default function LoginPage() {
                   value={formatCPF(formData.cpf)}
                   onChange={(e) => setFormData(prev => ({ ...prev, cpf: e.target.value }))}
                   placeholder="000.000.000-00"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                   autoFocus
                 />
               </div>
 
               {/* Phone Input */}
               <div>
-                <label className="text-gray-900 font-bold text-sm mb-2 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-emerald-600" />
+                <label className="text-cinza font-bold text-sm mb-2 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-azul-royal" />
                   Telefone
                 </label>
                 <input
@@ -173,41 +173,41 @@ export default function LoginPage() {
                   value={formatPhone(formData.phone)}
                   onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
                   placeholder="(00) 00000-0000"
-                  className="w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-emerald-600 focus:outline-none bg-gray-50 text-gray-900"
+                  className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-fundo-cinza text-cinza"
                 />
               </div>
 
-              <p className="text-xs text-gray-600 text-center">* Campos obrigatórios</p>
+              <p className="text-xs text-cinza text-center">* Campos obrigatórios</p>
 
               {/* Form Actions */}
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-linear-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-lg font-bold text-lg hover:from-emerald-700 hover:to-teal-700 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+                className="w-full bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border-2 py-3 rounded-full font-bold text-lg cursor-pointer transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
               >
-                {loading ? '⏳ Entrando...' : '🎯 Entrar'}
+                {loading ? 'Entrando...' : 'Entrar'}
               </button>
 
               <div className="relative my-4">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-300"></div>
+                  <div className="w-full border-t border-cinza-claro"></div>
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white text-gray-600 font-semibold">Não tem conta?</span>
+                  <span className="px-2 bg-branco text-cinza font-semibold">Não tem conta?</span>
                 </div>
               </div>
 
               <Link href="/auth/register" className="w-full block">
                 <button
                   type="button"
-                  className="w-full bg-white border-2 border-emerald-600 text-emerald-600 py-3 rounded-lg font-bold text-lg hover:bg-emerald-50 transition"
+                  className="w-full bg-white border-2 cursor-pointer border-azul-royal text-azul-royal hover:bg-azul-royal hover:text-branco py-3 rounded-full font-bold text-lgtransition"
                 >
-                  ✨ Criar Conta
+                  Criar Conta
                 </button>
               </Link>
 
               <div className="text-center mt-6">
-                <Link href="/" className="text-gray-600 hover:text-emerald-600 font-semibold text-sm">
+                <Link href="/" className="text-cinza hover:text-azul-royal font-semibold text-sm">
                   ← Voltar para Início
                 </Link>
               </div>

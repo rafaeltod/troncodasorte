@@ -47,23 +47,26 @@ export function RaffleCard({
               }}
             />
           ) : (
-            <div className="w-full h-full bg-linear-to-br from-emerald-100 to-teal-100 flex items-center justify-center">
-              <div className="text-emerald-400 text-5xl">📦</div>
+            <div className="w-full h-full bg-azul-pastel  flex items-center justify-center">
+              <div className="text-azul-claro text-5xl">📦</div>
             </div>
           )}
-          <div className={`absolute top-3 right-3 ${status === 'closed' ? 'bg-gray-400' : 'bg-emerald-600'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
+          <div className={`absolute top-3 right-3 ${status === 'closed' ? 'bg-gray-400' : 'bg-azul-royal'} text-white px-3 py-1 rounded-full text-sm font-semibold`}>
             R$ {formatDecimal(Number(livroPrice))}
           </div>
-          {percentageSold >= 80 && (
-            <div className="absolute top-3 left-3 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
+          {percentageSold >= 80 && status !== 'drawn' && (
+            <div className="absolute top-3 left-3 bg-vermelho-claro text-white px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
               <TrendingUp className="w-4 h-4" />
               Quase Esgotado
             </div>
           )}
           {status === 'drawn' && (
-            <div className="absolute inset-0 bg-green-500 bg-opacity-50 flex items-center justify-center">
-              <span className="text-white font-bold text-3xl">SORTEADA</span>
-            </div>
+            <>
+              <div className="absolute inset-0 bg-black/50" />
+              <div className="absolute top-3 left-3 bg-verde-agua text-white px-4 py-2 rounded-full text-base font-bold shadow-lg z-10">
+                Finalizado
+              </div>
+            </>
           )}
         </div>
 
@@ -77,7 +80,7 @@ export function RaffleCard({
           <div className="mb-4">
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
-                className="bg-emerald-600 h-3 rounded-full transition-all duration-300"
+                className="bg-azul-royal h-3 rounded-full transition-all duration-300"
                 style={{ width: `${percentageSold}%` }}
               />
             </div>
@@ -85,9 +88,9 @@ export function RaffleCard({
 
           {/* Prize Info */}
           {Number(prizeAmount) > 0 ? (
-            <div className="mb-4 p-3 bg-emerald-50 rounded-lg">
+            <div className="mb-4 p-3 bg-azul-pastel  rounded-lg">
               <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
-              <div className="text-2xl font-bold text-emerald-600">
+              <div className="text-2xl font-bold text-azul-royal">
                 R$ {formatDecimal(Number(prizeAmount))}
               </div>
             </div>
@@ -101,19 +104,19 @@ export function RaffleCard({
           {status === 'closed' ? (
             <button
               disabled
-              className="w-full bg-gray-400 text-white py-3 rounded-lg font-semibold "
+              className="w-full bg-gray-500 text-white py-3 rounded-full font-semibold "
             >
               Lote Fechado
             </button>
           ) : status === 'drawn' ? (
             <button
               disabled
-              className="w-full bg-emerald-400 text-white py-3 rounded-lg font-semibold "
+              className="w-full bg-white text-azul-royal py-3 rounded-full font-semibold border-2 border-azul-royal"
             >
               Lote Sorteado
             </button>
           ) : (
-            <button className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-lg font-semibold transition-colors">
+            <button className="w-full bg-azul-royal hover:bg-azul-claro hover:cursor-pointer text-white py-3 rounded-full font-semibold transition-colors">
               Comprar Livros
             </button>
           )}

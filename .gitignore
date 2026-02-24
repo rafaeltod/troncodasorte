@@ -26,3 +26,5 @@
 # figma exports
 /code-figma-main
 
+.vercel
+.env*.local
