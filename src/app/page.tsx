@@ -99,51 +99,6 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       
-      {/* Hero Section */}
-      <div className="bg-linear-to-r from-emerald-600 to-teal-600 text-white py-12">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl md:text-5xl font-black mb-4">Escolha uma Lote</h1>
-            <p className="text-lg md:text-xl text-emerald-100 mb-8">
-              Selecione os livros e a quantidade que deseja. Quanto mais livros, maior sua chance de ganhar!
-            </p>
-            
-            {/* Search Bar */}
-            <div className="relative max-w-2xl">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Buscar lotes..."
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
-                className="w-full pl-12 pr-4 py-3 rounded-xl bg-white/20 backdrop-blur text-white placeholder-emerald-100 border border-emerald-300 focus:border-white focus:outline-none"
-              />
-            </div>
-
-            {/* Filter Buttons */}
-            <div className="flex gap-3 mt-6 flex-wrap">
-              <button
-                onClick={() => handleStatusFilter('all')}
-                className={`px-6 py-2 rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-white text-emerald-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
-              >
-                ✨ Todas as Lotes
-              </button>
-              <button
-                onClick={() => handleStatusFilter('open')}
-                className={`px-6 py-2 rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-white text-emerald-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
-              >
-                🟢 Disponíveis
-              </button>
-              <button
-                onClick={() => handleStatusFilter('closed')}
-                className={`px-6 py-2 rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-white text-emerald-600' : 'bg-white/20 text-white hover:bg-white/30'}`}
-              >
-                🔴 Fechadas
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
 
     <div className="min-h-screen max-w-screen bg-{background}">
       {/* Rafles Grid */}
