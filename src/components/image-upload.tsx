@@ -84,7 +84,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
             accept="image/*"
             onChange={handleAddImage}
             disabled={images.length >= maxImages || uploading}
-            className="w-full border-2 border-dashed border-slate-300 rounded-xl px-5 py-8 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition cursor-pointer hover:border-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border-2 border-dashed border-cinza rounded-xl px-5 py-8 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition cursor-pointer hover:border-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <span className="text-slate-500 text-center">
@@ -95,7 +95,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
             </span>
           </div>
         </div>
-        <p className="text-slate-600 text-sm mt-2">
+        <p className="text-cinza text-sm mt-2">
           Máximo de {maxImages} imagens. Limite: 5MB por imagem. Formatos: JPG, PNG, GIF
         </p>
       </div>
@@ -118,7 +118,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
                 <button
                   type="button"
                   onClick={() => handleRemoveImage(index)}
-                  className="absolute top-1 right-1 bg-vermelho-claro hover:bg-vermelho-vivo text-branco rounded-full w-8 h-8 flex items-center justify-center font-bold transition transform hover:scale-110 shadow-lg"
+                  className="absolute top-1 right-1 bg-vermelho-vivo text-branco rounded-full w-8 h-8 pb-1.25 max-h-8 mb-1 flex items-center justify-center font-bold transition transform hover:scale-110 shadow-lg"
                 >
                   x
                 </button>

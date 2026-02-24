@@ -72,8 +72,8 @@ export default function DashboardPage() {
 
   if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
+        <div className="text-xl font-bold text-cinza">Carregando...</div>
       </div>
     )
   }
@@ -113,42 +113,46 @@ export default function DashboardPage() {
   }
 
   const tabs = [
-    { id: 'available' as const, label: `Disponíveis (${availableRaffles.length})`, icon: '🎯' },
-    { id: 'created' as const, label: `Minhas (${createdRaffles.length})`, icon: '👑' },
-    { id: 'participating' as const, label: `Participando (${participatingRaffles.length})`, icon: '🎫' },
-    { id: 'finished' as const, label: `Finalizadas (${finishedRaffles.length})`, icon: '✅' },
+    { id: 'available' as const, label: `Disponíveis (${availableRaffles.length})` },
+    { id: 'created' as const, label: `Minhas (${createdRaffles.length})` },
+    { id: 'participating' as const, label: `Participando (${participatingRaffles.length})`},
+    { id: 'finished' as const, label: `Finalizadas (${finishedRaffles.length})` },
   ]
 
   const activeRaffles = getActiveRaffles()
 
   return (
+<<<<<<< HEAD
     <div className="min-h-screen ay-bg-gr50 py-12">
+=======
+    <div className="min-h-screen bg-fundo-cinza py-12">
+>>>>>>> origin/design
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-12">
-          <h1 className="text-5xl font-black text-gray-900 mb-3">
-            👋 Olá, {censorName(user.name).split(' ')[0]}!
+          <h1 className="text-5xl font-black text-cinza mb-3">
+            Olá, {censorName(user.name).split(' ')[0]}!
           </h1>
-          <p className="text-lg text-gray-600 mb-6">
-            Bem-vindo ao seu painel de lotes. Explore, participe e crie suas próprias lotes!
+          <p className="text-lg text-cinza mb-6">
+            Bem-vindo ao seu painel de lotes. Explore, participe e crie seus próprios lotes!
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Link
               href="/criar-lote"
-              className="bg-linear-to-r from-emerald-600 to-teal-600 text-white px-6 py-4 rounded-xl font-bold hover:from-emerald-700 hover:to-teal-700 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-azul-royal text-branco px-6 py-4 rounded-full border font-bold hover:bg-branco hover:text-azul-royal transition transform hover:scale-105 shadow-lg text-center"
             >
               <Plus className="inline mr-2" size={20} /> Criar Nova Rifa
             </Link>
             <Link
               href="/historico"
-              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-azul-royal text-branco px-6 py-4 rounded-full border font-bold hover:bg-branco hover:text-azul-royal transition transform hover:scale-105 shadow-lg text-center"
             >
               <History className="inline mr-2" size={20} /> Meu Histórico
             </Link>
             <Link
               href="/account"
-              className="bg-white text-emerald-600 px-6 py-4 rounded-xl font-bold border-2 border-emerald-600 hover:bg-emerald-50 transition transform hover:scale-105 shadow-lg text-center"
+              className="bg-branco text-azul-royal px-6 py-4 rounded-xl font-bold border-2 border-azul-royal hover:bg-azul-royal hover:text-branco transition transform hover:scale-105 shadow-lg text-center"
             >
               👤 Meu Perfil
             </Link>
@@ -164,11 +168,11 @@ export default function DashboardPage() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-6 py-3 rounded-lg font-bold transition transform hover:scale-105 ${
                   activeTab === tab.id
-                    ? 'bg-emerald-600 text-white shadow-lg'
-                    : 'bg-white text-gray-900 border-2 border-gray-200 hover:border-emerald-600'
+                    ? 'bg-azul-royal text-branco shadow-lg'
+                    : 'bg-branco text-azul-royal border-2 border-azul-royal hover:border-azul-royal'
                 }`}
               >
-                {tab.icon} {tab.label}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -178,7 +182,7 @@ export default function DashboardPage() {
         <div>
           {activeRaffles.length > 0 ? (
             <>
-              <h2 className="text-3xl font-black text-gray-900 mb-6">{getTabLabel()}</h2>
+              <h2 className="text-3xl font-black text-cinza mb-6">{getTabLabel()}</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {activeRaffles.map((raffle) => (
                   <RaffleCard key={raffle.id} {...raffle} />
@@ -186,12 +190,12 @@ export default function DashboardPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-16 bg-white rounded-2xl border-2 border-dashed border-gray-300 shadow-lg">
+            <div className="text-center py-16 bg-branco rounded-2xl border-2 border-dashed border-cinza-claro shadow-lg">
               <div className="text-5xl mb-4">
-                {activeTab === 'available' && '🔍'}
-                {activeTab === 'created' && '📝'}
-                {activeTab === 'participating' && '🎫'}
-                {activeTab === 'finished' && '🏁'}
+                {activeTab === 'available'}
+                {activeTab === 'created'}
+                {activeTab === 'participating'}
+                {activeTab === 'finished'}
               </div>
               <p className="text-xl text-gray-600 mb-6 font-semibold">
                 {activeTab === 'available' && 'Nenhuma rifa disponível no momento'}
@@ -202,9 +206,9 @@ export default function DashboardPage() {
               {(activeTab === 'available' || activeTab === 'created') && (
                 <Link
                   href="/criar-lote"
-                  className="inline-block bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition"
+                  className="bg-azul-royal text-branco px-6 py-4 rounded-full border font-bold hover:bg-branco hover:text-azul-royal transition transform hover:scale-105 shadow-lg text-center"
                 >
-                  Começar Agora 🚀
+                  Começar Agora
                 </Link>
               )}
             </div>

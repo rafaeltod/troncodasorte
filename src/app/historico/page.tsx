@@ -78,24 +78,23 @@ export default function HistoricoPage() {
   // Se não há usuário e nenhuma compra anônima salva
   if (!user && purchases.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-fundo-cinza py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-black text-gray-900 mb-4">
-            <History className="inline mr-2" size={40} />
+          <h1 className="text-5xl font-black text-cinza-escuro mb-4">
             Histórico de Compras
           </h1>
-          <p className="text-gray-600 text-lg mb-8">
+          <p className="text-cinza text-lg mb-8">
             Você não tem nenhuma compra salva. Faça uma compra ou{" "}
-            <Link href="/auth/login" className="text-emerald-600 font-bold">
+            <Link href="/auth/login" className="text-azul-royal font-bold">
               faça login
             </Link>{" "}
             para ver seu histórico.
           </p>
           <Link
-            href="/lotes"
-            className="inline-block bg-linear-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+            href="/"
+              className="inline-block bg-azul-royal text-branco px-8 py-3 rounded-full font-bold hover:bg-branco hover:text-azul-royal border transition"
           >
-            Explorar Lotes 🎯
+            Explorar Lotes
           </Link>
         </div>
       </div>
@@ -104,20 +103,19 @@ export default function HistoricoPage() {
 
   if (purchases.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50 py-12">
+      <div className="min-h-screen bg-fundo-cinza py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-black text-gray-900 mb-4">
-            <History className="inline mr-2" size={40} />
+          <h1 className="text-5xl font-black text-cinza-escuro mb-4">
             Histórico de Compras
           </h1>
-          <p className="text-gray-600 text-lg mb-8">
+          <p className="text-cinza text-lg mb-8">
             Você ainda não comprou nenhuma cota
           </p>
           <Link
             href="/lotes"
-            className="inline-block bg-linear-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-lg font-bold hover:from-emerald-700 hover:to-teal-700 transition"
+            className="inline-block bg-azul-royal text-branco px-8 py-3 rounded-full font-bold hover:bg-branco hover:text-azul-royal border transition"
           >
-            Explorar Lotes 🎯
+            Explorar Lotes
           </Link>
         </div>
       </div>
@@ -128,28 +126,28 @@ export default function HistoricoPage() {
   const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12">
+    <div className="min-h-screen bg-fundo-cinza py-12">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl font-black text-gray-900 mb-2">
+        <h1 className="text-5xl font-black text-cinza-escuro mb-2">
           <History className="inline mr-2" size={40} />
           Histórico de Compras
         </h1>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-linear-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-emerald-100 text-sm font-semibold">
+          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
+            <p className="text-azul-pastel text-sm font-semibold">
               Total Gasto
             </p>
             <p className="text-2xl font-black mt-1">
               R$ {Number(totalSpent).toFixed(2)}
             </p>
           </div>
-          <div className="bg-linear-to-br from-teal-500 to-teal-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-teal-100 text-sm font-semibold">Livros</p>
+          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
+            <p className="text-azul-pastel text-sm font-semibold">Livros</p>
             <p className="text-2xl font-black mt-1">{totalLivros}</p>
           </div>
-          <div className="bg-linear-to-br from-cyan-500 to-cyan-600 rounded-lg shadow-lg p-4 text-white">
-            <p className="text-cyan-100 text-sm font-semibold">Participações</p>
+          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
+            <p className="text-azul-pastel text-sm font-semibold">Participações</p>
             <p className="text-2xl font-black mt-1">{purchases.length}</p>
           </div>
         </div>
@@ -157,19 +155,19 @@ export default function HistoricoPage() {
         <div className="space-y-3">
           {purchases.map((purchase) => (
             <Link key={purchase.id} href={`/lotes/${purchase.raffleId}`}>
-              <div className="bg-white rounded-xl shadow-md hover:shadow-lg p-6 border border-gray-200 cursor-pointer transition transform hover:scale-102">
+              <div className="bg-branco rounded-xl shadow-md hover:shadow-lg p-6 border border-cinza-claro cursor-pointer transition transform hover:scale-102">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="font-black text-gray-900 text-lg">
+                    <h3 className="font-black text-cinza-escuro text-lg">
                       {purchase.raffle?.title || "Rifa"}
                     </h3>
-                    <p className="text-gray-600 text-sm mt-1">
+                    <p className="text-cinza text-sm mt-1">
                       {purchase.livros} cota{purchase.livros !== 1 ? "s" : ""} •{" "}
                       {new Date(purchase.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-black text-emerald-600">
+                    <div className="text-2xl font-black text-azul-royal">
                       R$ {Number(purchase.amount).toFixed(2)}
                     </div>
                   </div>
@@ -180,29 +178,29 @@ export default function HistoricoPage() {
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full ${
                         purchase.status === "confirmed"
-                          ? "bg-emerald-100 text-emerald-800"
-                          : "bg-yellow-100 text-yellow-800"
+                          ? "bg-azul-pastel text-azul-royal"
+                          : "bg-cinza-claro text-cinza-escuro"
                       }`}
                     >
                       {purchase.status === "confirmed"
-                        ? "✅ Pagamento Confirmado"
-                        : "⏳ Aguardando Pagamento"}
+                        ? "Pagamento Confirmado"
+                        : "Aguardando Pagamento"}
                     </span>
 
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full ${
                         purchase.raffle?.status === "drawn"
-                          ? "bg-emerald-100 text-emerald-800"
+                          ? "bg-azul-pastel text-azul-royal"
                           : purchase.raffle?.status === "open"
-                            ? "bg-cyan-100 text-cyan-800"
-                            : "bg-gray-100 text-gray-800"
+                            ? "bg-azul-pastel text-azul-royal"
+                            : "bg-cinza-claro text-cinza-escuro"
                       }`}
                     >
                       {purchase.raffle?.status === "drawn"
-                        ? "✅ Sorteada"
+                        ? "Sorteada"
                         : purchase.raffle?.status === "open"
-                          ? "🔄 Aberta"
-                          : "⏸️ Fechada"}
+                          ? "Aberta"
+                          : "Fechada"}
                     </span>
 
                     {purchase.status === "pending" && (
@@ -214,9 +212,9 @@ export default function HistoricoPage() {
                           setSelectedPurchaseAmount(purchase.amount);
                           setShowPixModal(true);
                         }}
-                        className="text-xs font-bold px-3 py-1 rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 transition"
+                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal hover:bg-azul-royal hover:text-branco transition"
                       >
-                        📱 Ver/Pagar PIX
+                        Ver/Pagar PIX
                       </button>
                     )}
 
@@ -251,17 +249,17 @@ export default function HistoricoPage() {
                             console.error("Erro ao confirmar:", err);
                           }
                         }}
-                        className="text-xs font-bold px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 hover:bg-emerald-200 transition"
+                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal hover:bg-azul-royal hover:text-branco transition"
                       >
-                        ✅ Já Paguei
+                        Já Paguei
                       </button>
                     )}
                   </div>
 
                   {purchase.raffle?.status === "drawn" &&
                     purchase.raffle?.winner && (
-                      <span className="text-sm text-emerald-600 font-black whitespace-nowrap">
-                        🏆 Você ganhou!
+                      <span className="text-sm text-amarelo-gold font-black brancospace-nowrap">
+                        Você ganhou!
                       </span>
                     )}
                 </div>

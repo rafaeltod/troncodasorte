@@ -15,8 +15,8 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-gray-600">⏳ Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
+        <div className="text-xl font-bold text-cinza">Carregando...</div>
       </div>
     )
   }
@@ -38,8 +38,8 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
 
   if (!mounted) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-xl font-bold text-gray-600">⏳ Inicializando...</div>
+      <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
+        <div className="text-xl font-bold text-cinza">Inicializando...</div>
       </div>
     )
   }
