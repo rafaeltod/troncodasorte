@@ -100,15 +100,15 @@ export default function Home() {
     <div className="min-h-screen">
       
 
-    <div className="min-h-screen max-w-screen bg-{background}">
+    <div className="min-h-screen max-w-screen bg-background">
       {/* Rafles Grid */}
       {loading ? (
         <div className="min-h-screen flex items-center justify-center">
-          <div className="text-xl font-bold text-cinza">Carregando lotes...</div>
+          <div className="text-xl font-bold text-cinza dark:text-branco">Carregando lotes...</div>
         </div>
       ) : filteredRaffles.length === 0 ? (
         <div className={mainConfig}>
-          <p className="text-xl text-cinza">Nenhuma lote encontrada</p>
+          <p className="text-xl text-cinza dark:text-branco">Nenhuma lote encontrada</p>
         </div>
       ) : (
         <div className={mainConfig}>
@@ -120,34 +120,34 @@ export default function Home() {
           placeholder="Pesquisar lotes por título ou descrição..."
           value={searchTerm}
           onChange={(e) => handleSearch(e.target.value)}
-          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-cinza placeholder-cinza border-2 border-azul-claro focus:outline-none focus:ring-1 focus:ring-azul-royal"
+          className="w-full pl-6 pr-14 py-3 rounded-full bg-white text-cinza placeholder-cinza border-2 border-azul-claro focus:outline-none focus:ring-1 focus:ring-azul-royal dark:bg-cinza-escuro dark:text-branco dark:placeholder-cinza-claro dark:border-azul-royal"
         />
-        <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <Search className="absolute right-6 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-cinza-claro w-5 h-5" />
       </div>
 
       {/* Filter Buttons */}
       <div className="flex gap-3 mt-4 flex-wrap mb-4">
         <button
           onClick={() => handleStatusFilter('all')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-azul-claro text-white' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
         >
           Tudo ({totalCount})
         </button>
         <button
           onClick={() => handleStatusFilter('open')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-azul-claro text-white' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
         >
           Abertas ({openCount})
         </button>
         <button
           onClick={() => handleStatusFilter('closed')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-azul-claro text-white' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
         >
           Fechadas ({closedCount})
         </button>
         <button
           onClick={() => handleStatusFilter('drawn')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'drawn' ? 'bg-azul-claro text-white' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'}`}
+          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'drawn' ? 'bg-azul-claro text-white dark:bg-azul-royal' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-cinza-escuro dark:text-branco dark:border-azul-royal dark:hover:bg-azul-royal'}`}
         >
           Sorteadas ({drawnCount})
         </button>

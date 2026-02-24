@@ -1,19 +1,17 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 
 
 :root.light {
   --background: #ffffff;
   --foreground: #0f172a;
-  --lote-card: #ffffff;
-  --detalhes-pesquisa: var(--amarelo-gold);
 }
 
 :root.dark {
-  --background: #0f172a;
+  --background: #131921;
   --foreground: #f1f5f9;
-  --lote-card: #374056;
-  --detalhes-pesquisa: var(--amarelo-gold);
 }
 
 @theme inline {
