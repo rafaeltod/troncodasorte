@@ -114,7 +114,7 @@ export default function Home() {
         <div className={mainConfig}>
 
       {/* Search Bar */}
-      <div className="relative max-w-2xl">
+      <div className="relative max-w-2xl mt-5">
         <input
           type="text"
           placeholder="Pesquisar lotes por título ou descrição..."
