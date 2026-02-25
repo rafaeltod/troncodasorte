@@ -464,24 +464,24 @@ export default function RaffleDetailPage() {
               </div>
               {/* vencedor */}
               {raffle.status === 'drawn' && raffle.winner && (
-                <div className="bg-amarelo-pastel p-4 rounded-lg mt-3">
-                  <div className="flex items-center gap-2 text-amarelo-gold font-bold mb-2">
-                    <Trophy className="w-5 h-5" />
+                <div className="bg-amarelo-pastel p-4 rounded-lg mt-6">
+                  <div className="flex items-center gap-3 text-amarelo-gold text-3xl font-bold mb-3">
+                    <Trophy className="w-10 h-10" />
                     Resultado do Sorteio
                   </div>
                   {raffle.winnerNumber && (
                     <div className="mb-3">
-                      <p className="text-sm text-cinza">Número vencedor</p>
-                      <p className="text-2xl font-mono font-black text-amarelo-gold">{raffle.winnerNumber}</p>
+                      <p className="text-[20px] text-cinza">Número vencedor</p>
+                      <p className="text-[35px] font-mono font-black text-amarelo-gold">{raffle.winnerNumber}</p>
                       {raffle.drawnNumber && raffle.drawnNumber !== raffle.winnerNumber && (
-                        <p className="text-xs text-cinza mt-1">Número sorteado: {raffle.drawnNumber}</p>
+                        <p className="text-2xl text-cinza mt-1">Número sorteado: {raffle.drawnNumber}</p>
                       )}
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-cinza-escuro">Ganhador Principal</p>
-                    <p className="text-lg font-black text-amarelo-gold">
-                      {raffle.winnerUser?.name || 'Participante'}
+                    <p className="text-[20px] text-cinza-escuro">Ganhador Principal</p>
+                    <p className="text-[20px] font-black text-amarelo-gold">
+                      {raffle.winnerUser?.name ? raffle.winnerUser.name.split(' ').slice(0, 2).join(' ') : 'Participante'}
                     </p>
                   </div>
                 </div>
@@ -1035,7 +1035,7 @@ export default function RaffleDetailPage() {
  
         {/* Disclaimer */}
         <div className="mt-12 bg-fundo-cinza rounded-2xl shadow-lg p-8 border border-cinza-claro">
-          <div className="space-y-4 text-sm text-cinza leading-relaxed">
+          <div className="space-y-4 text-1xl text-cinza leading-relaxed">
             <p className="font-bold text-cinza-escuro ">Informações Importantes</p>
             <p>
               Este bilhete de loteria está autorizado com base no termo de autorização descrito no regulamento da promoção. Antes de contratar, consulte o Regulamento do produto. É proibida a venda para menores de 18 anos.
