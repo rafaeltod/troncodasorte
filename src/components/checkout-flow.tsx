@@ -67,8 +67,15 @@ export function CheckoutFlow({
   const [showPixModal, setShowPixModal] = useState(false)
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
 
+  // Upsell
+  const [selectedExtras, setSelectedExtras] = useState<number[]>([])
+  const upsellPresets = [10, 50, 100, 200]
+  const availableForExtra = availableLivros - selectedQuantity
+  const extraQuantity = selectedExtras.reduce((a, b) => a + b, 0)
+
   const numericLivroPrice = Number(livroPrice)
-  const originalTotal = selectedQuantity * numericLivroPrice
+  const totalQuantity = selectedQuantity + extraQuantity
+  const originalTotal = totalQuantity * numericLivroPrice
 
   // Calcular desconto do cupom
   let descontoTotal = 0
@@ -225,7 +232,7 @@ export function CheckoutFlow({
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
         body: JSON.stringify({
-          livros: selectedQuantity,
+          livros: totalQuantity,
           amount: totalPrice,
           phone: formData.phone.replace(/\D/g, ''),
           cupomId: cupom?.id || null,
@@ -253,33 +260,30 @@ export function CheckoutFlow({
   }
 
   return (
-    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
-      <h3 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
-        <Ticket className="w-6 h-6 text-cinza" />
-        Compre Agora
-      </h3>
-
+    <div className="bg-branco rounded-2xl ">
       {error && (
         <div className="mb-6 bg-red-50 text-vermelho-vivo p-4 rounded-lg">
           <p className="font-bold">{error}</p>
         </div>
       )}
 
-      {/* Price summary */}
-      <div className="bg-amarelo-pastel p-4 rounded-xl mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-sm text-cinza">Preço por cota:</p>
-          <p className="font-bold text-cinza-escuro">R$ {formatDecimal(numericLivroPrice)}</p>
+      {/* Price summary — hidden on confirm step (replaced by upsell panel) */}
+      {currentStep !== 'confirm' && (
+        <div className="rounded-xl mb-6">
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm text-cinza">Preço por cota:</p>
+            <p className="font-bold text-cinza-escuro">R$ {formatDecimal(numericLivroPrice)}</p>
+          </div>
+          <div className="flex justify-between items-center mb-2">
+            <p className="text-sm text-cinza-escuro">Quantidade:</p>
+            <p className="font-bold text-cinza">{selectedQuantity}x</p>
+          </div>
+          <div className="pt-2 flex justify-between items-center">
+            <p className="text-cinza-escuro">Total:</p>
+            <p className="text-2xl font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</p>
+          </div>
         </div>
-        <div className="flex justify-between items-center mb-2">
-          <p className="text-sm text-cinza-escuro">Quantidade:</p>
-          <p className="font-bold text-cinza">{selectedQuantity}x</p>
-        </div>
-        <div className=" pt-2 flex justify-between items-center">
-          <p className=" text-cinza-escuro">Total:</p>
-          <p className="text-2xl font-black text-amarelo-gold">R$ {formatDecimal(totalPrice)}</p>
-        </div>
-      </div>
+      )}
 
       {/* Step 1: Phone Input */}
       {currentStep === 'phone' && (
@@ -436,9 +440,43 @@ export function CheckoutFlow({
       {/* Step 3: Confirmation (New or Existing Customer) */}
       {currentStep === 'confirm' && (
         <div className="space-y-4">
-          <div className="bg-azul-pastel rounded-lg p-4">
-            <p className="text-sm font-bold text-cinza-escuro mb-3">Informações da Compra</p>
-            <div className="space-y-2 text-sm text-cinza-escuro">
+
+          {/* Upsell panel */}
+          <div className=" rounded-xl">
+            <p className="text-2xl font-black text-cinza mb-5">Aumente suas chances!</p>
+            <div className="grid grid-cols-2 gap-2 mb-3">
+              {upsellPresets
+                .filter(q => selectedExtras.includes(q) || (extraQuantity + q) <= availableForExtra)
+                .map(q => {
+                  const price = q * numericLivroPrice
+                  const selected = selectedExtras.includes(q)
+                  return (
+                    <button
+                      key={q}
+                      onClick={() => setSelectedExtras(prev => selected ? prev.filter(x => x !== q) : [...prev, q])}
+                      className={`rounded-xl py-2 text-2xl font-bold cursor-pointer border-2 transition ${
+                        selected
+                          ? 'bg-azul-royal text-branco border-azul-royal'
+                          : 'bg-azul-claro text-branco hover:bg-azul-royal hover:text-branco'
+                      }`}
+                    >
+                      +{q} livros<br />
+                      <span className="text-[19px] -mt-1.25 font-semibold">R$ {formatDecimal(price)}</span>
+                    </button>
+                  )
+                })}
+            </div>
+            <div className="border-t border-amarelo-gold/30 pt-3 flex justify-between items-center">
+              <p className="text-1xl text-cinza-escuro">
+                Total ({totalQuantity}x livro{totalQuantity > 1 ? 's' : ''}):
+              </p>
+              <p className="text-xl font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</p>
+            </div>
+          </div>
+
+          <div className=" rounded-lg">
+            <p className="text-2xl font-bold text-cinza-escuro mb-3">Informações da Compra</p>
+            <div className="space-y-2 text-1xl text-cinza-escuro">
               <p>
                 <strong>Nome:</strong>{' '}
                 {existingCustomer
@@ -449,15 +487,15 @@ export function CheckoutFlow({
                 <strong>Telefone:</strong> {formData.phone.slice(-4).padStart(formData.phone.length, '*')}
               </p>
               <p>
-                <strong>Livros:</strong> {selectedQuantity}x
+                <strong>Livros:</strong> {totalQuantity}x
               </p>
               <p className="border-t border-azul-pastel pt-2">
-                <strong>Total:</strong> <span className="text-lg font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</span>
+                <strong>Total:</strong> <span className="text-[22px] font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</span>
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-cinza">
+          <p className="text-1xl text-cinza">
             Ao clicar em "Concluir Reserva", você será direcionado para o pagamento via PIX.
           </p>
 
