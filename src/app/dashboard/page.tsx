@@ -122,11 +122,7 @@ export default function DashboardPage() {
   const activeRaffles = getActiveRaffles()
 
   return (
-<<<<<<< HEAD
-    <div className="min-h-screen ay-bg-gr50 py-12">
-=======
     <div className="min-h-screen bg-fundo-cinza py-12">
->>>>>>> origin/design
       <div className="max-w-7xl mx-auto px-4">
         {/* Header */}
         <div className="mb-12">

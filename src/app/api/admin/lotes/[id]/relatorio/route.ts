@@ -166,10 +166,16 @@ export async function GET(
       { header: '#', key: 'num', width: 5 },
       { header: 'Data', key: 'data', width: 18 },
       { header: 'Comprador', key: 'comprador', width: 30 },
+      { header: 'CPF', key: 'cpf', width: 16 },
+      { header: 'Email', key: 'email', width: 30 },
       { header: 'Telefone', key: 'telefone', width: 18 },
       { header: 'Livros', key: 'livros', width: 10 },
       { header: 'Valor (R$)', key: 'valor', width: 14 },
+      { header: 'Desconto (R$)', key: 'desconto', width: 14 },
       { header: 'Status', key: 'status', width: 14 },
+      { header: 'Pagamento (PIX)', key: 'paymentId', width: 22 },
+      { header: 'Cupom', key: 'cupom', width: 14 },
+      { header: 'Vendedor', key: 'vendedor', width: 20 },
       { header: 'Números', key: 'numeros', width: 80 },
     ]
 
@@ -190,7 +196,7 @@ export async function GET(
 
     vendasSheet.autoFilter = {
       from: 'A1',
-      to: `H${purchases.length + 1}`,
+      to: `N${purchases.length + 1}`,
     }
 
     purchases.forEach((p, index) => {
@@ -198,10 +204,16 @@ export async function GET(
         num: index + 1,
         data: new Date(p.purchaseCreatedAt).toLocaleString('pt-BR'),
         comprador: p.userName || '(Anônimo)',
+        cpf: p.userCpf || '-',
+        email: p.userEmail || '-',
         telefone: p.userPhone || p.phone || '-',
         livros: p.livros,
         valor: Number(p.amount),
+        desconto: Number(p.descontoAplicado || 0),
         status: p.status === 'confirmed' ? 'Confirmado' : 'Pendente',
+        paymentId: p.payment_id || '-',
+        cupom: p.cupomCode || '-',
+        vendedor: p.vendedorName || '-',
         numeros: p.numbers || '-',
       })
 
@@ -225,6 +237,7 @@ export async function GET(
       }
 
       row.getCell('valor').numFmt = '#,##0.00'
+      row.getCell('desconto').numFmt = '#,##0.00'
     })
 
     // Linha de totais
@@ -234,15 +247,71 @@ export async function GET(
         num: '',
         data: '',
         comprador: 'TOTAL',
+        cpf: '',
+        email: '',
         telefone: '',
-        livros: { formula: `SUM(E2:E${lastRow - 1})` },
-        valor: { formula: `SUM(F2:F${lastRow - 1})` },
+        livros: { formula: `SUM(G2:G${lastRow - 1})` },
+        valor: { formula: `SUM(H2:H${lastRow - 1})` },
+        desconto: { formula: `SUM(I2:I${lastRow - 1})` },
         status: '',
+        paymentId: '',
+        cupom: '',
+        vendedor: '',
         numeros: '',
       })
       totalsRow.font = { bold: true, size: 12 }
       totalsRow.getCell('valor').numFmt = '#,##0.00'
+      totalsRow.getCell('desconto').numFmt = '#,##0.00'
     }
+
+    // ── Aba 3: Clientes (só primeiro nome e números) ──
+    const clientesSheet = workbook.addWorksheet('Clientes', {
+      properties: { tabColor: { argb: 'FFF59E0B' } },
+    })
+
+    clientesSheet.columns = [
+      { header: '#', key: 'num', width: 5 },
+      { header: 'Cliente', key: 'cliente', width: 20 },
+      { header: 'Números', key: 'numeros', width: 80 },
+    ]
+
+    const clientesHeaderStyle: Partial<ExcelJS.Style> = {
+      font: { bold: true, color: { argb: 'FFFFFFFF' }, size: 11 },
+      fill: { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFF59E0B' } },
+      alignment: { horizontal: 'center', vertical: 'middle' },
+      border: {
+        bottom: { style: 'thin', color: { argb: 'FF000000' } },
+      },
+    }
+
+    clientesSheet.getRow(1).eachCell((cell) => {
+      cell.style = clientesHeaderStyle
+    })
+    clientesSheet.getRow(1).height = 28
+
+    clientesSheet.autoFilter = {
+      from: 'A1',
+      to: `C${confirmedPurchases.length + 1}`,
+    }
+
+    confirmedPurchases.forEach((p, index) => {
+      const firstName = (p.userName || 'Anônimo').split(' ')[0]
+      const row = clientesSheet.addRow({
+        num: index + 1,
+        cliente: firstName,
+        numeros: p.numbers || '-',
+      })
+
+      if (index % 2 === 0) {
+        row.eachCell((cell) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: 'FFFFFBEB' },
+          }
+        })
+      }
+    })
 
     // Gerar buffer
     const buffer = await workbook.xlsx.writeBuffer()

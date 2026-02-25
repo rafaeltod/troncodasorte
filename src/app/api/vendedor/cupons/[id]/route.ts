@@ -37,9 +37,9 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
       return NextResponse.json({ error: 'Cupom não encontrado' }, { status: 404 })
     }
 
-    // Buscar acessos recentes
+    // Buscar acessos recentes (sem IP para vendedor)
     const acessos = await queryMany(
-      `SELECT id, ip, "userAgent", "createdAt"
+      `SELECT id, "createdAt"
        FROM cupom_acesso
        WHERE "cupomId" = $1
        ORDER BY "createdAt" DESC
@@ -47,10 +47,10 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
       [id]
     )
 
-    // Buscar compras com este cupom
+    // Buscar compras com este cupom (só primeiro nome do cliente)
     const compras = await queryMany(
-      `SELECT l.id, l.livros, l.amount, l.status, l."descontoAplicado", l."createdAt",
-        json_build_object('name', u.name, 'email', u.email) as cliente,
+      `SELECT l.id, l.amount, l.status, l."descontoAplicado", l."createdAt",
+        json_build_object('name', split_part(u.name, ' ', 1)) as cliente,
         json_build_object('id', lt.id, 'title', lt.title) as lote
       FROM livros l
       LEFT JOIN "user" u ON l."userId" = u.id

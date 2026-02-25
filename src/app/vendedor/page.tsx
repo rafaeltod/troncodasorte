@@ -317,7 +317,6 @@ export default function VendedorPage() {
                                     <tr className="text-left border-b border-gray-200">
                                       <th className="pb-2 font-bold text-gray-700">Cliente</th>
                                       <th className="pb-2 font-bold text-gray-700">Lote</th>
-                                      <th className="pb-2 font-bold text-gray-700">Cotas</th>
                                       <th className="pb-2 font-bold text-gray-700">Valor</th>
                                       <th className="pb-2 font-bold text-gray-700">Desconto</th>
                                       <th className="pb-2 font-bold text-gray-700">Status</th>
@@ -329,7 +328,6 @@ export default function VendedorPage() {
                                       <tr key={compra.id} className="border-b border-gray-100">
                                         <td className="py-2 text-gray-900">{compra.cliente?.name || 'Anônimo'}</td>
                                         <td className="py-2 text-gray-600">{compra.lote?.title || '-'}</td>
-                                        <td className="py-2 font-bold">{compra.livros}</td>
                                         <td className="py-2 font-bold">R$ {Number(compra.amount).toFixed(2)}</td>
                                         <td className="py-2 text-blue-600">
                                           {Number(compra.descontoAplicado) > 0
@@ -370,14 +368,12 @@ export default function VendedorPage() {
                                   <thead>
                                     <tr className="text-left border-b border-gray-200">
                                       <th className="pb-2 font-bold text-gray-700">Data</th>
-                                      <th className="pb-2 font-bold text-gray-700">IP</th>
                                     </tr>
                                   </thead>
                                   <tbody>
                                     {detalhe.acessos.slice(0, 20).map((acesso: any) => (
                                       <tr key={acesso.id} className="border-b border-gray-100">
                                         <td className="py-2 text-gray-600">{formatDate(acesso.createdAt)}</td>
-                                        <td className="py-2 font-mono text-gray-500">{acesso.ip}</td>
                                       </tr>
                                     ))}
                                   </tbody>
