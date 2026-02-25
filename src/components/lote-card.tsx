@@ -91,7 +91,7 @@ export function RaffleCard({
             <div className="mb-4 p-3 bg-azul-pastel rounded-lg">
               <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
               <div className="text-2xl font-bold text-azul-royal">
-                R$ {formatDecimal(Number(prizeAmount))}
+                R$ {Number(prizeAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </div>
             </div>
           ) : (

@@ -230,7 +230,7 @@ export default function EditLotePage() {
                 name="title"
                 value={formData.title}
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 text-cinza-claro border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
+                className="w-full px-4 py-3 text-cinza border-2 border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
               />
             </div>
@@ -246,7 +246,7 @@ export default function EditLotePage() {
                 value={formData.description}
                 onChange={handleInputChange}
                 rows={5}
-                className="w-full px-4 py-3 border-2 text-cinza-claro border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium resize-none"
+                className="w-full px-4 py-3 border-2 text-cinza border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium resize-none"
                 required
               />
             </div>
@@ -264,7 +264,7 @@ export default function EditLotePage() {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0"
-                className="w-full px-4 py-3 border-2 text-cinza-claro border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
+                className="w-full px-4 py-3 border-2 text-cinza border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 placeholder="0.00 (deixe vazio se não for em dinheiro)"
               />
               <p className="text-sm text-fundo-cinza0 mt-1">Se o prêmio não for em dinheiro, deixe em branco ou zero.</p>
@@ -282,7 +282,7 @@ export default function EditLotePage() {
                 value={formData.totalLivros}
                 onChange={handleInputChange}
                 min="1"
-                className="w-full px-4 py-3 text-cinza-claro border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
+                className="w-full px-4 py-3 text-cinza border-2 border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
                 disabled={lote.soldLivros > 0}
               />
@@ -306,7 +306,7 @@ export default function EditLotePage() {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0.01"
-                className="w-full text-cinza-claro px-4 py-3 border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
+                className="w-full px-4 py-3 text-cinza border-2 border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
                 disabled={lote.soldLivros > 0}
               />
@@ -327,12 +327,12 @@ export default function EditLotePage() {
                 name="status"
                 value={formData.status}
                 onChange={handleInputChange}
-                className="w-full px-4 text-cinza-claro hover:cursor-pointer py-3 border-2 border-fundo-cinza0 rounded-xl focus:border-azul-royal focus:outline-none font-medium"
+                className="w-full px-4 text-cinza hover:cursor-pointer py-3 border-2 border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
               >
-                <option className='text-cinza-claro hover:cursor-pointer' value="open">Aberta</option>
-                <option className='text-cinza-claro hover:cursor-pointer' value="closed">Fechada</option>
-                <option className='text-cinza-claro hover:cursor-pointer' value="finished">Finalizada</option>
+                <option className='text-cinza hover:cursor-pointer' value="open">Aberta</option>
+                <option className='text-cinza hover:cursor-pointer' value="closed">Fechada</option>
+                <option className='text-cinza hover:cursor-pointer' value="finished">Finalizada</option>
               </select>
             </div>
 

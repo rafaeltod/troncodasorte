@@ -124,12 +124,6 @@ export default function Home() {
       {/* Filter Buttons */}
       <div className="flex gap-3 mt-4 flex-wrap mb-4">
         <button
-          onClick={() => handleStatusFilter('all')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'all' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
-        >
-          Tudo ({totalCount})
-        </button>
-        <button
           onClick={() => handleStatusFilter('open')}
           className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'open' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
         >
