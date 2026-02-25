@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus, DollarSign, Package, Tag, X } from 'lucide-react'
 import { censorName, formatDecimal } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
@@ -21,6 +21,12 @@ interface RaffleDetail {
   livroPrice: number | string
   status: string
   winner?: string | null
+  winnerNumber?: string | null
+  drawnNumber?: string | null
+  winnerUser?: { name: string; email: string } | null
+  premiosAleatorios?: string | any[] | null
+  premiosConfig?: string | any[] | null
+  purchases?: any[]
   image?: string | null
   images?: string[] | null
 }
@@ -51,6 +57,27 @@ export default function RaffleDetailPage() {
   const [adminShowConfirm, setAdminShowConfirm] = useState(false)
   const [adminError, setAdminError] = useState<string | null>(null)
   const [adminSuccess, setAdminSuccess] = useState(false)
+  const [resultadoShowForm, setResultadoShowForm] = useState(false)
+  const [resultadoDrawnNumber, setResultadoDrawnNumber] = useState('')
+  const [resultadoLoading, setResultadoLoading] = useState(false)
+  const [resultadoError, setResultadoError] = useState<string | null>(null)
+  const [resultadoData, setResultadoData] = useState<any>(null)
+  const [downloadingRelatorio, setDownloadingRelatorio] = useState(false)
+
+  // Cupom states
+  const [cupom, setCupom] = useState<{
+    id: string
+    code: string
+    discount: number
+    tipoDesconto: string
+    description: string | null
+    loteId: string | null
+    vendedor: { name: string }
+  } | null>(null)
+  const [cupomError, setCupomError] = useState('')
+  const [loadingCupom, setLoadingCupom] = useState(false)
+  const [cupomInputCode, setCupomInputCode] = useState('')
+  const [showCupomInput, setShowCupomInput] = useState(false)
 
   // Presets para seleção de quantidade
   const presetOptions = [1, 50, 100, 200, 300, 500]
@@ -100,6 +127,49 @@ export default function RaffleDetailPage() {
 
     return () => {
       isMounted = false
+    }
+  }, [id])
+
+  // Validar cupom
+  const validateCupom = async (code: string) => {
+    setLoadingCupom(true)
+    setCupomError('')
+    try {
+      const res = await fetch('/api/cupom/validate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, loteId: id }),
+      })
+      const data = await res.json()
+      if (res.ok && data.valid) {
+        setCupom(data.cupom)
+        setShowCupomInput(false)
+        setCupomInputCode('')
+      } else {
+        setCupomError(data.error || 'Cupom inválido')
+      }
+    } catch {
+      setCupomError('Erro ao validar cupom')
+    } finally {
+      setLoadingCupom(false)
+    }
+  }
+
+  const removeCupom = () => {
+    setCupom(null)
+    setCupomError('')
+    // Remover cupom da URL sem recarregar
+    const url = new URL(window.location.href)
+    url.searchParams.delete('cupom')
+    window.history.replaceState({}, '', url.toString())
+  }
+
+  // Detectar cupom na URL (?cupom=CODIGO)
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const cupomCode = params.get('cupom')
+    if (cupomCode) {
+      validateCupom(cupomCode)
     }
   }, [id])
 
@@ -167,7 +237,17 @@ export default function RaffleDetailPage() {
   const progress = (raffle.soldLivros / raffle.totalLivros) * 100
   const isOpen = raffle.status === 'open'
   const availableLivros = raffle.totalLivros - raffle.soldLivros
-  const totalPrice = selectedQuantity * Number(raffle.livroPrice)
+  // Calcular preço com desconto do cupom
+  const originalTotal = selectedQuantity * Number(raffle.livroPrice)
+  let descontoTotal = 0
+  if (cupom) {
+    if (cupom.tipoDesconto === 'percentual') {
+      descontoTotal = originalTotal * (cupom.discount / 100)
+    } else {
+      descontoTotal = Math.min(cupom.discount, originalTotal)
+    }
+  }
+  const totalPrice = originalTotal - descontoTotal
   const images = Array.isArray(raffle.images) ? raffle.images : []
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
@@ -325,16 +405,142 @@ export default function RaffleDetailPage() {
                   </div>
                 </div>
               </div>
-
+              {/* vencedor */}
               {raffle.status === 'drawn' && raffle.winner && (
                 <div className="bg-amarelo-pastel p-4 rounded-lg mt-4">
                   <div className="flex items-center gap-2 text-amarelo-gold font-bold mb-2">
                     <Trophy className="w-5 h-5" />
-                    Vencedor
+                    Resultado do Sorteio
                   </div>
-                  <div className="text-lg font-black text-amarelo-gold">{raffle.winner}</div>
+                  {raffle.winnerNumber && (
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-500">Número vencedor</p>
+                      <p className="text-2xl font-mono font-black text-emerald-700">{raffle.winnerNumber}</p>
+                      {raffle.drawnNumber && raffle.drawnNumber !== raffle.winnerNumber && (
+                        <p className="text-xs text-gray-400 mt-1">Número sorteado: {raffle.drawnNumber}</p>
+                      )}
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm text-gray-500">Ganhador Principal</p>
+                    <p className="text-lg font-black text-emerald-900">
+                      {raffle.winnerUser?.name || 'Participante'}
+                    </p>
+                  </div>
                 </div>
               )}
+
+              {/* Prêmios Aleatórios — mostra com número sorteado (gerado na criação) */}
+              {/* Depois do sorteio: mostra número, prêmio e ganhador */}
+              {raffle.status === 'drawn' && raffle.premiosAleatorios && (() => {
+                const premios = typeof raffle.premiosAleatorios === 'string' 
+                  ? JSON.parse(raffle.premiosAleatorios) 
+                  : raffle.premiosAleatorios
+                if (!Array.isArray(premios) || premios.length === 0) return null
+                return (
+                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
+                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-3">
+                      <Gift className="w-5 h-5" />
+                      Prêmios Aleatórios ({premios.length})
+                    </div>
+                    <div className="space-y-2">
+                      {premios.map((premio: any) => (
+                        <div key={premio.posicao} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
+                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
+                            {premio.posicao}º
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                              <p className="font-mono font-bold text-gray-800">{premio.number}</p>
+                              {premio.tipo === 'dinheiro' && premio.valor && (
+                                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <DollarSign className="w-3 h-3" />
+                                  R$ {premio.valor}
+                                </span>
+                              )}
+                              {premio.tipo === 'item' && premio.descricao && (
+                                <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                  <Package className="w-3 h-3" />
+                                  {premio.descricao}
+                                </span>
+                              )}
+                            </div>
+                            {premio.drawnNumber && premio.drawnNumber !== premio.number && (
+                              <p className="text-xs text-gray-400">Número sorteado: {premio.drawnNumber}</p>
+                            )}
+                            <p className="text-sm text-gray-600 truncate">{premio.winner?.name || 'Participante'}</p>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })()}
+
+              {/* Antes do sorteio: mostra os prêmios configurados com o número já sorteado */}
+              {raffle.status !== 'drawn' && raffle.premiosConfig && (() => {
+                const config = typeof raffle.premiosConfig === 'string'
+                  ? JSON.parse(raffle.premiosConfig)
+                  : raffle.premiosConfig
+                if (!Array.isArray(config) || config.length === 0) return null
+
+                // Buscar dono de cada número de prêmio nas compras confirmadas
+                const purchases = Array.isArray(raffle.purchases) ? raffle.purchases : []
+                function findOwner(premioNumber: string) {
+                  for (const p of purchases) {
+                    if (p.status !== 'confirmed' || !p.numbers) continue
+                    const nums = p.numbers.split(',').map((n: string) => n.trim())
+                    if (nums.includes(premioNumber)) {
+                      return p.user?.name || null
+                    }
+                  }
+                  return null
+                }
+
+                return (
+                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
+                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-1">
+                      <Gift className="w-5 h-5" />
+                      Prêmios Aleatórios ({config.length})
+                    </div>
+                    <p className="text-xs text-purple-500 mb-3">Números já sorteados — ganhadores definidos ao cadastrar resultado</p>
+                    <div className="space-y-2">
+                      {config.map((premio: any, index: number) => {
+                        const ownerName = findOwner(premio.number)
+                        return (
+                          <div key={index} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
+                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
+                              {index + 1}º
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                                <p className="font-mono font-bold text-2xl text-purple-700">{premio.number}</p>
+                                {premio.tipo === 'dinheiro' && premio.valor && (
+                                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                    <DollarSign className="w-3 h-3" />
+                                    R$ {premio.valor}
+                                  </span>
+                                )}
+                                {premio.tipo === 'item' && premio.descricao && (
+                                  <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
+                                    <Package className="w-3 h-3" />
+                                    {premio.descricao}
+                                  </span>
+                                )}
+                              </div>
+                              {ownerName ? (
+                                <p className="text-sm text-purple-700 font-semibold mt-1">🏆 {ownerName}</p>
+                              ) : (
+                                <p className="text-xs text-gray-400 mt-1">Aguardando comprador</p>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )
+              })()}
             </div>
 
             {isOpen && progress < 100 && (
@@ -352,7 +558,18 @@ export default function RaffleDetailPage() {
                     {availableLivros <= selectedQuantity && (
                       <p className="text-vermelho-vivo text-sm">Limite atingido</p>
                     )}
-                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 h-15 border-gray-300">
+                    <div className="flex items-center gap-3 bg-fundo-cinza rounded-xl p-4 mb-4 border-2 border-cinza-claro">
+                      <button
+                        onClick={() => {
+                          const newValue = Math.max(1, selectedQuantity - 1)
+                          setSelectedQuantity(newValue)
+                        }}
+                        className="flex items-center justify-center w-12 h-12 bg-cinza hover:bg-vermelho-vivo text-branco rounded-lg font-black text-xl transition cursor-pointer"
+                        title="Diminuir quantidade"
+                      >
+                        <Minus className="w-5 h-5" />
+                      </button>
+
                       <input
                         type="number"
                         min="1"
@@ -368,6 +585,18 @@ export default function RaffleDetailPage() {
                         }}
                         className="flex-1 text-center text-2xl font-black text-cinza-escuro bg-transparent border-0 focus:outline-none"
                       />
+
+                      <button
+                        onClick={() => {
+                          const newValue = Math.min(availableLivros, selectedQuantity + 1)
+                          setSelectedQuantity(newValue)
+                        }}
+                        disabled={selectedQuantity >= availableLivros}
+                        className="flex items-center justify-center w-12 h-12 bg-cinza hover:bg-azul-claro text-branco rounded-lg font-black text-xl transition cursor-pointer disabled:bg-cinza-claro disabled:cursor-not-allowed"
+                        title="Aumentar quantidade"
+                      >
+                        <Plus className="w-5 h-5" />
+                      </button>
                     </div>
                   </div>
 
@@ -399,13 +628,104 @@ export default function RaffleDetailPage() {
                   </div>
                 </div>
 
+                {/* Cupom Banner */}
+                {loadingCupom && (
+                  <div className="mb-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-center">
+                    <p className="text-blue-700 font-bold">⏳ Validando cupom...</p>
+                  </div>
+                )}
+
+                {cupomError && (
+                  <div className="mb-4 bg-red-50 border-2 border-red-200 rounded-xl p-4">
+                    <p className="text-red-700 font-bold text-sm">{cupomError}</p>
+                  </div>
+                )}
+
+                {cupom && (
+                  <div className="mb-4 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-xl p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Tag className="w-5 h-5 text-blue-600" />
+                        <div>
+                          <p className="font-black text-blue-800 text-sm">
+                            Cupom aplicado: <span className="font-mono bg-blue-100 px-2 py-0.5 rounded">{cupom.code}</span>
+                          </p>
+                          <p className="text-xs text-blue-600 mt-0.5">
+                            {cupom.tipoDesconto === 'percentual'
+                              ? `${cupom.discount}% de desconto`
+                              : `R$ ${cupom.discount.toFixed(2)} de desconto`}
+                            {cupom.vendedor && ` — via ${cupom.vendedor.name}`}
+                          </p>
+                        </div>
+                      </div>
+                      <button onClick={removeCupom} className="text-gray-400 hover:text-gray-600 p-1">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                )}
+
+                {/* Inserir cupom manualmente */}
+                {!cupom && (
+                  <div className="mb-4">
+                    {!showCupomInput ? (
+                      <button
+                        onClick={() => setShowCupomInput(true)}
+                        className="text-sm text-azul-royal font-semibold hover:underline flex items-center gap-1"
+                      >
+                        <Tag className="w-4 h-4" />
+                        Tem um cupom de desconto?
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={cupomInputCode}
+                          onChange={(e) => setCupomInputCode(e.target.value.toUpperCase())}
+                          placeholder="Digite o código"
+                          className="flex-1 border-2 border-azul-royal rounded-lg px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
+                        />
+                        <button
+                          onClick={() => {
+                            if (cupomInputCode.trim()) validateCupom(cupomInputCode.trim())
+                          }}
+                          disabled={loadingCupom || !cupomInputCode.trim()}
+                          className="bg-azul-royal text-branco px-4 py-2 rounded-lg text-sm font-bold hover:bg-azul-claro disabled:bg-cinza transition"
+                        >
+                          {loadingCupom ? 'Validando...' : 'Aplicar'}
+                        </button>
+                        <button
+                          onClick={() => { setShowCupomInput(false); setCupomInputCode(''); setCupomError('') }}
+                          className="text-cinza hover:text-cinza-escuro p-2"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 <div className="mt-8 bg-amarelo-pastel p-6 rounded-xl">
                   <div className="flex justify-between items-center mb-6">
                     <div>
                       <p className="text-sm text-cinza-escuro font-semibold mb-1">Total a Pagar</p>
-                      <p className="text-3xl font-black text-amarelo-gold">
-                        R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                      </p>
+                      {descontoTotal > 0 ? (
+                        <>
+                          <p className="text-lg text-gray-400 line-through">
+                            R$ {originalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </p>
+                          <p className="text-3xl font-black text-amarelo-gold">
+                            R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                          </p>
+                          <p className="text-xs text-blue-600 font-bold mt-1">
+                            Desconto de R$ {descontoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} com cupom {cupom?.code}
+                          </p>
+                        </>
+                      ) : (
+                        <p className="text-3xl font-black text-amarelo-gold">
+                          R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </p>
+                      )}
                     </div>
                   </div>
 
@@ -432,6 +752,7 @@ export default function RaffleDetailPage() {
                     availableLivros={availableLivros}
                     isOpen={isOpen}
                     selectedQuantity={selectedQuantity}
+                    cupom={cupom || undefined}
                   />
                 </Drawer>
               </>
@@ -439,7 +760,7 @@ export default function RaffleDetailPage() {
 
             {progress >= 100 && isOpen && (
               <div className="w-full bg-azul-pastel text-azul-claro py-4 rounded-lg font-black text-center flex items-center justify-center gap-2">
-                Todas os Livros Vendidas
+                Todos os Livros foram Vendidos
               </div>
             )}
 
@@ -464,6 +785,45 @@ export default function RaffleDetailPage() {
                   >
                     Editar
                   </a>
+                  <button
+                    onClick={async () => {
+                      setDownloadingRelatorio(true)
+                      try {
+                        const res = await fetch(`/api/admin/lotes/${id}/relatorio`, { credentials: 'include' })
+                        if (!res.ok) throw new Error('Erro ao gerar relatório')
+                        const blob = await res.blob()
+                        const url = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        const disposition = res.headers.get('Content-Disposition')
+                        const filenameMatch = disposition?.match(/filename="(.+)"/)
+                        a.download = filenameMatch?.[1] || `relatorio-lote-${id}.xlsx`
+                        document.body.appendChild(a)
+                        a.click()
+                        document.body.removeChild(a)
+                        URL.revokeObjectURL(url)
+                      } catch (err) {
+                        console.error('Erro ao baixar relatório:', err)
+                        alert('Erro ao gerar relatório. Tente novamente.')
+                      } finally {
+                        setDownloadingRelatorio(false)
+                      }
+                    }}
+                    disabled={downloadingRelatorio}
+                    className="flex-1 min-w-35 bg-branco border border-azul-royal hover:bg-azul-royal hover:text-branco text-azul-royal font-semibold py-2 px-4 rounded-full transition text-center flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  >
+                    {downloadingRelatorio ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Gerando...
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-4 h-4" />
+                        Relatório Excel
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 {/* Finalizar Lote Section */}
@@ -555,6 +915,151 @@ export default function RaffleDetailPage() {
                       <div className="bg-emerald-100 border-2 border-emerald-400 text-emerald-700 px-6 py-4 rounded-xl flex items-center gap-3 font-bold">
                         <CheckCircle2 className="w-5 h-5" />
                         Campanha finalizada com sucesso!
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Cadastrar Resultado Section */}
+                {raffle.status === 'closed' && (
+                  <div className="mt-6">
+                    {resultadoData ? (
+                      <div className="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-6">
+                        <div className="flex items-center gap-2 text-emerald-700 font-bold mb-4">
+                          <Trophy className="w-5 h-5" />
+                          Resultado Cadastrado!
+                        </div>
+                        <div className="space-y-3">
+                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                            <p className="text-sm text-gray-500 mb-1">Número sorteado (digitado)</p>
+                            <p className="text-2xl font-mono font-bold text-gray-800">{resultadoData.drawnNumber}</p>
+                          </div>
+                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                            <p className="text-sm text-gray-500 mb-1">Número vencedor (correspondente)</p>
+                            <p className="text-2xl font-mono font-bold text-emerald-600">{resultadoData.winnerNumber}</p>
+                            {resultadoData.incrementos > 0 && (
+                              <p className="text-xs text-gray-400 mt-1">
+                                +{resultadoData.incrementos} incremento{resultadoData.incrementos > 1 ? 's' : ''} a partir do número sorteado
+                              </p>
+                            )}
+                          </div>
+                          {resultadoData.winner && (
+                            <div className="bg-white rounded-lg p-4 border border-emerald-200">
+                              <p className="text-sm text-gray-500 mb-1">Ganhador Principal</p>
+                              <p className="text-lg font-bold text-gray-800">{resultadoData.winner.name}</p>
+                              <p className="text-sm text-gray-500">{resultadoData.winner.email}</p>
+                            </div>
+                          )}
+                        </div>
+                        <button
+                          onClick={() => window.location.reload()}
+                          className="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition"
+                        >
+                          Recarregar Página
+                        </button>
+                      </div>
+                    ) : !resultadoShowForm ? (
+                      <button
+                        onClick={() => setResultadoShowForm(true)}
+                        className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-full cursor-pointer text-white font-bold py-3 px-6 transition flex items-center justify-center gap-2"
+                      >
+                        <Trophy className="w-5 h-5" />
+                        Cadastrar Resultado
+                      </button>
+                    ) : (
+                      <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6">
+                        <p className="text-emerald-700 font-semibold mb-4 flex items-center gap-2">
+                          Informe o número
+                        </p>
+                        <p className="text-emerald-600 text-sm mb-4">
+                          Digite o número entre 000000 e 999999. O sistema irá verificar se existe um bilhete correspondente.
+                          Caso não exista, será feito o incremento automático até encontrar um bilhete válido.
+                        </p>
+
+                        <div className="mb-4">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            value={resultadoDrawnNumber}
+                            onChange={(e) => {
+                              const cleaned = e.target.value.replace(/\D/g, '').slice(0, 6)
+                              setResultadoDrawnNumber(cleaned)
+                            }}
+                            placeholder="000000"
+                            maxLength={6}
+                            className="w-full text-center text-3xl font-mono font-bold tracking-[0.3em] bg-white border-2 border-emerald-300 rounded-lg py-3 px-4 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 text-gray-800 placeholder-gray-300"
+                          />
+                          <p className="text-xs text-gray-400 mt-1 text-center">
+                            {resultadoDrawnNumber.length}/6 dígitos — será completado com zeros à esquerda
+                          </p>
+                        </div>
+
+                        {resultadoError && (
+                          <p className="text-vermelho-vivo bg-vermelho-pastel px-4 py-2 rounded mb-4 text-sm">
+                            {resultadoError}
+                          </p>
+                        )}
+
+                        <div className="flex gap-3">
+                          <button
+                            onClick={async () => {
+                              if (resultadoDrawnNumber.length === 0) {
+                                setResultadoError('Informe o número do sorteio')
+                                return
+                              }
+
+                              const numberPadded = resultadoDrawnNumber.padStart(6, '0')
+                              setResultadoLoading(true)
+                              setResultadoError(null)
+
+                              try {
+                                const response = await fetch(`/api/admin/lotes/${id}/resultado`, {
+                                  method: 'POST',
+                                  headers: { 'Content-Type': 'application/json' },
+                                  body: JSON.stringify({ drawnNumber: numberPadded }),
+                                })
+
+                                const data = await response.json()
+
+                                if (!response.ok) {
+                                  throw new Error(data.error || 'Erro ao cadastrar resultado')
+                                }
+
+                                setResultadoData(data.resultado)
+                                setResultadoShowForm(false)
+                              } catch (err: any) {
+                                setResultadoError(err.message)
+                              } finally {
+                                setResultadoLoading(false)
+                              }
+                            }}
+                            disabled={resultadoLoading}
+                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold py-3 px-4 rounded-full transition flex items-center justify-center gap-2"
+                          >
+                            {resultadoLoading ? (
+                              <>
+                                <Loader2 className="w-4 h-4 animate-spin" />
+                                Buscando bilhete...
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircle2 className="w-4 h-4" />
+                                Cadastrar Resultado
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={() => {
+                              setResultadoShowForm(false)
+                              setResultadoError(null)
+                              setResultadoDrawnNumber('')
+                            }}
+                            disabled={resultadoLoading}
+                            className="flex-1 bg-cinza-claro hover:bg-cinza-escuro hover:text-branco cursor-pointer text-cinza font-bold py-3 px-4 rounded-full transition"
+                          >
+                            Cancelar
+                          </button>
+                        </div>
                       </div>
                     )}
                   </div>

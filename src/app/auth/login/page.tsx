@@ -26,7 +26,11 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user) {
-      router.push('/')
+      if (user.isVendedor) {
+        router.push('/vendedor')
+      } else {
+        router.push('/')
+      }
     }
   }, [user, router])
 
@@ -76,14 +80,26 @@ export default function LoginPage() {
 
       if (!response.ok) {
         const data = await response.json()
-        throw new Error(data.error || 'Erro ao fazer login')
+        setError(data.error || 'Erro ao fazer login')
+        setLoading(false)
+        return
       }
 
       // Atualizar context imediatamente
-      await refetch()
+      const success = await refetch()
 
       setSuccess('Login realizado com sucesso!')
       await new Promise(resolve => setTimeout(resolve, 300))
+      
+      // Redirect baseado no tipo de usuário
+      const meRes = await fetch('/api/auth/me', { credentials: 'include' })
+      if (meRes.ok) {
+        const meData = await meRes.json()
+        if (meData.user?.isVendedor) {
+          router.push('/vendedor')
+          return
+        }
+      }
       router.push('/')
     } catch (err) {
       console.error('[LoginPage] Error:', err)

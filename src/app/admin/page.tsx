@@ -5,7 +5,7 @@ import { AdminRoute } from '@/components/admin-route'
 import { useAuth } from '@/context/auth-context'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/formatters'
-import { Plus, Edit, Trash2, Eye, Users, TrendingUp, DollarSign, Award } from 'lucide-react'
+import { Plus, Edit, Trash2, Eye, Users, TrendingUp, DollarSign, Award, Tag } from 'lucide-react'
 import { mainConfig } from '../../lib/layout-config'
 
 interface Lote {
@@ -131,6 +131,12 @@ export default function AdminDashboardPage() {
               className="inline-flex items-center gap-2 bg-azul-royal text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco hover:text-azul-royal border shadow-lg"
             >
               <Plus size={20} /> Criar Novo Lote
+            </Link>
+            <Link
+              href="/admin/cupons"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition transform hover:scale-105 shadow-lg ml-3"
+            >
+              <Tag size={20} /> Gerenciar Cupons
             </Link>
           </div>
 

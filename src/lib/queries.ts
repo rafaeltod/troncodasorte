@@ -34,10 +34,19 @@ export async function getRaffleById(id: string) {
       r."livroPrice",
       r.status,
       r.winner,
+      r."drawnNumber",
+      r."winnerNumber",
+      r."qtdPremiosAleatorios",
+      r."premiosAleatorios",
+      r."premiosConfig",
       r."creatorId",
       r."createdAt",
       r."updatedAt",
       json_build_object('name', u.name, 'email', u.email) as creator,
+      CASE WHEN r.winner IS NOT NULL 
+        THEN (SELECT json_build_object('name', uw.name, 'email', uw.email) FROM "user" uw WHERE uw.id = r.winner)
+        ELSE NULL
+      END as "winnerUser",
       coalesce(json_agg(
         json_build_object(
           'id', rp.id,
@@ -56,7 +65,7 @@ export async function getRaffleById(id: string) {
     LEFT JOIN livros rp ON r.id = rp."raffleId"
     LEFT JOIN "user" u2 ON rp."userId" = u2.id
     WHERE r.id = $1
-    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
+    GROUP BY r.id, r.title, r.description, r.image, r.images, r."prizeAmount", r."totalLivros", r."soldLivros", r."livroPrice", r.status, r.winner, r."drawnNumber", r."winnerNumber", r."qtdPremiosAleatorios", r."premiosAleatorios", r."premiosConfig", r."creatorId", r."createdAt", r."updatedAt", u.name, u.email
   `
 
   return queryOne(query, [id])

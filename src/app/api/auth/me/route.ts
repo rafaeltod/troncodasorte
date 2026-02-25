@@ -15,7 +15,7 @@ export async function GET(req: NextRequest) {
 
     // O token é o ID do usuário
     const user = await queryOne(
-      `SELECT id, name, email, cpf, phone, "createdAt", "isAdmin" FROM "user" WHERE id = $1`,
+      `SELECT id, name, email, cpf, phone, "createdAt", "isAdmin", "isVendedor" FROM "user" WHERE id = $1`,
       [token]
     )
 

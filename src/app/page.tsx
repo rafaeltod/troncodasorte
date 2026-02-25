@@ -106,12 +106,8 @@ export default function Home() {
         <div className="min-h-screen flex items-center justify-center">
           <div className="text-xl font-bold text-cinza dark:text-branco">Carregando lotes...</div>
         </div>
-      ) : filteredRaffles.length === 0 ? (
-        <div className={mainConfig}>
-          <p className="text-xl text-cinza dark:text-branco">Nenhuma lote encontrada</p>
-        </div>
       ) : (
-        <div className={mainConfig}>
+        <div className={`${mainConfig} min-h-screen`}>
 
       {/* Search Bar */}
       <div className="relative max-w-2xl mt-5">
@@ -152,7 +148,7 @@ export default function Home() {
           Sorteadas ({drawnCount})
         </button>
       </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 ">
+          <div className="grid grid-cols-1  md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredRaffles.map((raffle) => (
               <RaffleCard 
                 key={raffle.id}
@@ -168,6 +164,12 @@ export default function Home() {
               />
             ))}
           </div>
+
+          {filteredRaffles.length === 0 && (
+        <div className='pb-23 w-full max-h-screen h-screen flex items-center justify-center shadow-none'>
+          <p className="text-xl text-cinza">Nenhum lote encontrado</p>
+        </div>
+          )}
         </div>
       )}
     </div>

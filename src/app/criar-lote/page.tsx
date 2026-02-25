@@ -4,7 +4,13 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { ImageUpload } from '@/components/image-upload'
-import { Plus, FileText, DollarSign, Ticket, Image as ImageIcon, AlertCircle } from 'lucide-react'
+import { Plus, FileText, DollarSign, Ticket, Image as ImageIcon, AlertCircle, Gift, Package, Trash2 } from 'lucide-react'
+
+interface PremioConfig {
+  tipo: 'dinheiro' | 'item'
+  descricao: string
+  valor: string
+}
 
 export default function CreateRafflePageContent() {
   const router = useRouter()
@@ -18,6 +24,7 @@ export default function CreateRafflePageContent() {
     livroPrice: '0.50',
     images: [] as string[],
   })
+  const [premios, setPremios] = useState<PremioConfig[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
@@ -76,6 +83,8 @@ export default function CreateRafflePageContent() {
           prizeAmount: formData.prizeAmount ? parseFloat(formData.prizeAmount) : 0,
           totalLivros: parseInt(formData.totalLivros),
           livroPrice: parseFloat(formData.livroPrice),
+          qtdPremiosAleatorios: premios.length,
+          premiosConfig: premios.length > 0 ? premios : undefined,
         }),
       })
 
@@ -223,6 +232,106 @@ export default function CreateRafflePageContent() {
               Imagens da Lote (Opcional)
             </label>
             <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
+          </div>
+
+          <div>
+            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
+              <Gift className="w-5 h-5 text-emerald-600" />
+              Prêmios Aleatórios
+              <span className="text-sm font-normal text-gray-500">(opcional)</span>
+            </label>
+            <p className="text-sm text-gray-500 mb-4">Adicione prêmios extras que serão sorteados junto com o resultado principal. Cada prêmio pode ser em dinheiro ou um item.</p>
+
+            {premios.length > 0 && (
+              <div className="space-y-3 mb-4">
+                {premios.map((premio, index) => (
+                  <div key={index} className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="text-sm font-bold text-purple-700">{index + 1}º Prêmio Aleatório</span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPremios(prev => prev.filter((_, i) => i !== index))
+                        }}
+                        className="text-red-400 hover:text-red-600 transition"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    <div className="flex gap-2 mb-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPremios(prev => prev.map((p, i) => i === index ? { ...p, tipo: 'dinheiro', descricao: '' } : p))
+                        }}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition border-2 ${
+                          premio.tipo === 'dinheiro'
+                            ? 'bg-emerald-100 border-emerald-400 text-emerald-700'
+                            : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                        }`}
+                      >
+                        <DollarSign className="w-4 h-4" />
+                        Dinheiro
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setPremios(prev => prev.map((p, i) => i === index ? { ...p, tipo: 'item', valor: '' } : p))
+                        }}
+                        className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition border-2 ${
+                          premio.tipo === 'item'
+                            ? 'bg-purple-100 border-purple-400 text-purple-700'
+                            : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                        }`}
+                      >
+                        <Package className="w-4 h-4" />
+                        Item
+                      </button>
+                    </div>
+
+                    {premio.tipo === 'dinheiro' ? (
+                      <div>
+                        <input
+                          type="number"
+                          value={premio.valor}
+                          onChange={(e) => {
+                            setPremios(prev => prev.map((p, i) => i === index ? { ...p, valor: e.target.value } : p))
+                          }}
+                          step="0.01"
+                          min="0.01"
+                          placeholder="Valor em R$"
+                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition text-sm"
+                        />
+                      </div>
+                    ) : (
+                      <div>
+                        <input
+                          type="text"
+                          value={premio.descricao}
+                          onChange={(e) => {
+                            setPremios(prev => prev.map((p, i) => i === index ? { ...p, descricao: e.target.value } : p))
+                          }}
+                          placeholder="Ex: Fone Bluetooth, Camiseta, etc"
+                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition text-sm"
+                        />
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              type="button"
+              onClick={() => {
+                setPremios(prev => [...prev, { tipo: 'dinheiro', descricao: '', valor: '' }])
+              }}
+              className="w-full border-2 border-dashed border-purple-300 text-purple-600 hover:bg-purple-50 rounded-xl py-3 px-4 font-bold transition flex items-center justify-center gap-2"
+            >
+              <Plus className="w-4 h-4" />
+              Adicionar Prêmio Aleatório
+            </button>
           </div>
 
           <button

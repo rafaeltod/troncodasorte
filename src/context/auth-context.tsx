@@ -10,6 +10,7 @@ interface User {
   phone: string
   createdAt: string
   isAdmin: boolean
+  isVendedor: boolean
 }
 
 interface AuthContextType {

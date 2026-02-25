@@ -7,9 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home } from 'lucide-react'
-import { FaAdjust } from "react-icons/fa";
-
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home, TrendingUp } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -70,17 +68,54 @@ export function Navbar() {
             <span className="font-bold text-xl hidden sm:inline">Tronco da Sorte</span>
           </Link>
 
-          {/* Desktop Navigation + Theme Toggle + Mobile Menu Button */}
-          <div className="flex items-center gap-4 ml-auto">
-            <button
-              onClick={handleToggleTheme}
-              aria-label={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
-              title={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-            >
-              <FaAdjust />
-            </button>
-            <nav className="hidden md:flex items-center gap-6">
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              href="/" className=" gap-2 flex items-center hover:text-branco/50 transition-colors"> 
+              <Home className="w-4 h-4" />
+              Lotes
+            </Link>
+            {user ? (
+              <>
+                
+                {user.isAdmin && (
+                  <>
+                    <Link
+                      href="/admin"
+                      className="flex items-center gap-2 hover:text-branco/50 transition-colors"
+                    >
+                      <Shield className="w-4 h-4" />
+                      Painel Admin
+                    </Link>
+                  </>
+                )}
+                {user.isVendedor && !user.isAdmin && (
+                  <Link
+                    href="/vendedor"
+                    className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                  >
+                    <TrendingUp className="w-4 h-4" />
+                    Painel Vendedor
+                  </Link>
+                )}
+
+                <Link
+                  href="/account"
+                  className="flex items-center gap-2 hover:text-branco/50 transition-colors"
+                >
+                  <User className="w-4 h-4" />
+                  {censorName(user.name)}
+                </Link>
+
+                <button
+                  onClick={handleLogout}
+                  className="flex items-center gap-2 border cursor-pointer bg-branco text-azul-royal hover:bg-branco/50 px-4 py-2 rounded-full transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Sair
+                </button>
+              </>
+            ) : (
               <Link
                 href="/"
                 className="hover:text-emerald-100 transition-colors"
@@ -180,6 +215,16 @@ export function Navbar() {
                         + Criar Lote
                       </Link>
                     </>
+                  )}
+                  {user.isVendedor && !user.isAdmin && (
+                    <Link
+                      href="/vendedor"
+                      className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
+                      onClick={() => setMobileMenuOpen(false)}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      Painel Vendedor
+                    </Link>
                   )}
                   <button
                     onClick={handleLogout}

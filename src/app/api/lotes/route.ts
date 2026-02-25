@@ -31,9 +31,26 @@ export async function POST(req: NextRequest) {
     const validatedData = createRaffleSchema.parse(body)
 
     // Create raffle com o userId do token
+    // Gerar número aleatório de 6 dígitos para cada prêmio aleatório na criação
+    let premiosConfigWithNumbers = validatedData.premiosConfig || []
+    if (premiosConfigWithNumbers.length > 0) {
+      const usedNumbers = new Set<string>()
+      premiosConfigWithNumbers = premiosConfigWithNumbers.map((premio) => {
+        let number: string
+        do {
+          number = String(Math.floor(Math.random() * 1000000)).padStart(6, '0')
+        } while (usedNumbers.has(number))
+        usedNumbers.add(number)
+        return { ...premio, number }
+      })
+    }
+    const premiosConfigJson = premiosConfigWithNumbers.length > 0
+      ? JSON.stringify(premiosConfigWithNumbers)
+      : null
+
     const raffle = await queryOne(
-      `INSERT INTO lotes (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, NOW(), NOW())
+      `INSERT INTO lotes (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "qtdPremiosAleatorios", "premiosConfig", "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, $9, $10, NOW(), NOW())
        RETURNING *`,
       [
         validatedData.title,
@@ -44,6 +61,8 @@ export async function POST(req: NextRequest) {
         token, // userId do token autenticado
         validatedData.images?.[0] || null,
         validatedData.images || [],
+        validatedData.qtdPremiosAleatorios || 0,
+        premiosConfigJson,
       ]
     )
 
