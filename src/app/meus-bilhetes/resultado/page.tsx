@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
-import { ArrowLeft, Ticket, Eye, ChevronDown, X } from 'lucide-react'
+import { ArrowLeft, Ticket, Eye, ChevronDown, X, Gift, Trophy } from 'lucide-react'
 import { censorName, censorPhoneShort, censorEmail, formatDecimal } from '@/lib/formatters'
 
 interface Purchase {
@@ -30,6 +30,13 @@ interface TicketData {
   purchases: Purchase[]
 }
 
+interface Premio {
+  number: string
+  tipo: 'dinheiro' | 'item'
+  valor?: number
+  descricao?: string
+}
+
 // Interface para agrupar compras por lote
 interface RaffleGroup {
   raffleId: string
@@ -42,6 +49,39 @@ interface RaffleGroup {
   allNumbers: string[]
 }
 
+// Pure utility function defined outside component to avoid recreation on every render
+function groupPurchasesByRaffle(purchases: Purchase[]): RaffleGroup[] {
+  const groups: { [key: string]: RaffleGroup } = {}
+
+  purchases.forEach(purchase => {
+    if (!groups[purchase.raffleId]) {
+      groups[purchase.raffleId] = {
+        raffleId: purchase.raffleId,
+        raffleTitle: purchase.raffleTitle,
+        raffleStatus: purchase.raffleStatus,
+        raffleImage: purchase.raffleImage,
+        purchases: [],
+        totalSpent: 0,
+        totalLivros: 0,
+        allNumbers: [],
+      }
+    }
+    groups[purchase.raffleId].purchases.push(purchase)
+    groups[purchase.raffleId].totalSpent += Number(purchase.amount)
+    groups[purchase.raffleId].totalLivros += purchase.livros
+    // Consolidar números - using concat to avoid stack overflow with large arrays
+    if (purchase.numbers && Array.isArray(purchase.numbers)) {
+      groups[purchase.raffleId].allNumbers = groups[purchase.raffleId].allNumbers.concat(purchase.numbers)
+    } else if (typeof purchase.numbers === 'string' && purchase.numbers) {
+      groups[purchase.raffleId].allNumbers = groups[purchase.raffleId].allNumbers.concat(
+        purchase.numbers.split(',').filter(Boolean)
+      )
+    }
+  })
+
+  return Object.values(groups)
+}
+
 export default function TicketsResultPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
@@ -50,37 +90,31 @@ export default function TicketsResultPage() {
   const [expandedRaffles, setExpandedRaffles] = useState<Set<string>>(new Set())
   const [selectedRaffleNumbers, setSelectedRaffleNumbers] = useState<string | null>(null)
   const [selectedRaffleProofs, setSelectedRaffleProofs] = useState<string | null>(null)
+  const [premiosMap, setPremiosMap] = useState<Record<string, Premio[]>>({})
+  const [winnerNumberMap, setWinnerNumberMap] = useState<Record<string, string>>({})
 
-  // Agrupar compras por lote com totalizações
-  const groupPurchasesByRaffle = (purchases: Purchase[]): RaffleGroup[] => {
-    const groups: { [key: string]: RaffleGroup } = {}
-
-    purchases.forEach(purchase => {
-      if (!groups[purchase.raffleId]) {
-        groups[purchase.raffleId] = {
-          raffleId: purchase.raffleId,
-          raffleTitle: purchase.raffleTitle,
-          raffleStatus: purchase.raffleStatus,
-          raffleImage: purchase.raffleImage,
-          purchases: [],
-          totalSpent: 0,
-          totalLivros: 0,
-          allNumbers: [],
+  // Buscar prêmios de cada lote quando os dados carregarem
+  useEffect(() => {
+    if (!ticketData) return
+    const raffleIds = [...new Set(ticketData.purchases.map(p => p.raffleId))]
+    raffleIds.forEach(async (raffleId) => {
+      try {
+        const res = await fetch(`/api/lotes/${raffleId}`)
+        if (!res.ok) return
+        const data = await res.json()
+        const raw = data.status === 'drawn' ? data.premiosAleatorios : data.premiosConfig
+        if (raw) {
+          const parsed = typeof raw === 'string' ? JSON.parse(raw) : raw
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setPremiosMap(prev => ({ ...prev, [raffleId]: parsed }))
+          }
         }
-      }
-      groups[purchase.raffleId].purchases.push(purchase)
-      groups[purchase.raffleId].totalSpent += Number(purchase.amount)
-      groups[purchase.raffleId].totalLivros += purchase.livros
-      // Consolidar números
-      if (purchase.numbers && Array.isArray(purchase.numbers)) {
-        groups[purchase.raffleId].allNumbers.push(...purchase.numbers)
-      } else if (typeof purchase.numbers === 'string' && purchase.numbers) {
-        groups[purchase.raffleId].allNumbers.push(...purchase.numbers.split(',').filter(Boolean))
-      }
+        if (data.winnerNumber) {
+          setWinnerNumberMap(prev => ({ ...prev, [raffleId]: data.winnerNumber }))
+        }
+      } catch { /* silently ignore */ }
     })
-
-    return Object.values(groups)
-  }
+  }, [ticketData])
 
   useEffect(() => {
     const loadTickets = async () => {
@@ -384,20 +418,98 @@ export default function TicketsResultPage() {
                           <h4 className="font-bold text-cinza-escuro">Seus Números</h4>
                           <button
                             onClick={() => setSelectedRaffleNumbers(null)}
-                            className="text-cinza  hover:text-cinza-escuro  cursor-pointer"
+                            className="text-cinza hover:text-cinza-escuro cursor-pointer"
                           >
                             <X className="w-4 h-4" />
                           </button>
                         </div>
+
+                        {/* Banner prêmio principal / bilhetes premiados / não foi dessa vez */}
+                        {(() => {
+                          const winnerNum = winnerNumberMap[raffleGroup.raffleId] ?? null
+                          const isMainWinner = winnerNum !== null && raffleGroup.allNumbers.includes(winnerNum)
+                          const premios = premiosMap[raffleGroup.raffleId] || []
+                          const premioMap = new Map(premios.map(p => [p.number, p]))
+                          const ganhadores = raffleGroup.allNumbers.filter(n => premioMap.has(n))
+
+                          return (
+                            <>
+                              {isMainWinner && (
+                                <div className="mb-3 bg-amarelo-pastel border-2 border-amarelo-gold rounded-xl p-4 flex items-start gap-3">
+                                  <Trophy className="w-5 h-5 text-amarelo-gold shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="font-black text-1xl text-amarelo-gold">Parabéns! Você é o vencedor do Prêmio Principal!</p>
+                                    <p className="text-[20px] text-cinza-escuro mt-1">
+                                      Número sorteado:{' '}
+                                      <span className="font-mono font-bold bg-amarelo-gold text-branco rounded px-2 py-0.5">{winnerNum}</span>
+                                    </p>
+                                    <p className="text-1xl text-cinza mt-1"><a href='#' className='text-cinza-escuro underline hover:text-amarelo-gold'>Entre em contato</a> para resgatar seu prêmio!</p>
+                                  </div>
+                                </div>
+                              )}
+                              {ganhadores.length > 0 && (
+                                <div className="mb-3 bg-verde-pastel rounded-xl p-4 flex items-start gap-3">
+                                  <Gift className="w-5 h-5 text-verde-menta shrink-0 mt-0.5" />
+                                  <div>
+                                    <p className="font-black text-verde-menta">
+                                      Parabéns! Você tem {ganhadores.length === 1 ? '1 bilhete premiado' : `${ganhadores.length} bilhetes premiados`}!
+                                    </p>
+                                    <div className="mt-2 space-y-1">
+                                      {ganhadores.map(n => {
+                                        const p = premioMap.get(n)!
+                                        return (
+                                          <p key={n} className="text-sm text-cinza-escuro">
+                                            <span className="font-mono font-bold bg-verde-menta text-branco rounded px-2 py-0.5">{n}</span>
+                                            {' → '}
+                                            {p.tipo === 'dinheiro' && p.valor ? `R$ ${Number(p.valor).toFixed(2)}` : p.descricao || 'Prêmio'}
+                                          </p>
+                                        )
+                                      })}
+                                    </div>
+                                    <p className="text-1xl text-cinza mt-1"><a href='#' className='text-cinza-escuro underline hover:text-verde-menta'>Entre em contato</a> para resgatar seu prêmio!</p>
+                                  </div>
+                                </div>
+                              )}
+                              {!isMainWinner && (premios.length > 0 || winnerNum !== null) && ganhadores.length === 0 && (
+                                <div className="mb-3">
+                                  <p className="font-bold text-cinza-escuro">Não foi dessa vez... Continue participando!</p>
+                                </div>
+                              )}
+                            </>
+                          )
+                        })()}
+
                         <div className="flex flex-wrap gap-2">
-                          {raffleGroup.allNumbers.map((num, idx) => (
-                            <span
-                              key={idx}
-                              className="bg-azul-royal text-branco px-3 py-1 rounded-full text-sm font-bold"
-                            >
-                              {num}
-                            </span>
-                          ))}
+                          {raffleGroup.allNumbers.map((num, idx) => {
+                            const winnerNum = winnerNumberMap[raffleGroup.raffleId] ?? null
+                            const isMain = winnerNum === num
+                            const premios = premiosMap[raffleGroup.raffleId] || []
+                            const premio = !isMain ? premios.find(p => p.number === num) : null
+                            return isMain ? (
+                              <span
+                                key={idx}
+                                title="Número vencedor do Prêmio Principal!"
+                                className="bg-amarelo-gold text-branco px-3 py-1 rounded-full text-sm font-black flex items-center gap-1"
+                              >
+                                <Trophy className="w-3 h-3" />{num}
+                              </span>
+                            ) : premio ? (
+                              <span
+                                key={idx}
+                                title={premio.tipo === 'dinheiro' && premio.valor ? `R$ ${Number(premio.valor).toFixed(2)}` : premio.descricao || 'Premiado'}
+                                className="bg-verde-menta text-branco px-3 py-1 rounded-full text-sm font-black flex items-center gap-1"
+                              >
+                                {num}
+                              </span>
+                            ) : (
+                              <span
+                                key={idx}
+                                className="bg-azul-royal text-branco px-3 py-1 rounded-full text-sm font-bold"
+                              >
+                                {num}
+                              </span>
+                            )
+                          })}
                         </div>
                       </div>
                     )}
