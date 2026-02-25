@@ -84,7 +84,7 @@ function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loadin
               </div>
             </div>
             <div className="text-right">
-              <div className="font-black text-lg text-cinza-escuro">R$ {formatDecimal(buyer.totalSpent)}</div>
+              <div className="font-black text-lg text-cinza-escuro">R$ {buyer.totalSpent.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
             </div>
           </div>
         ))}
@@ -123,7 +123,7 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
               <div className="flex gap-2"> 
                 {p.tipo === 'dinheiro' && p.valor && (
                   <span className="inline-flex items-center gap-1 bg-amarelo-pastel text-amarelo-gold text-1xl font-bold px-2 py-1 rounded-full w-fit">
-                    <DollarSign className="w-5 h-5" /> R$ {p.valor}
+                    R$ {Number(p.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 )}
                 {p.tipo === 'item' && p.descricao && (
@@ -430,7 +430,7 @@ export default function RaffleDetailPage() {
                     Livro
                   </div>
                   <div className="text-2xl font-black text-cinza">
-                    R$ {formatDecimal(Number(raffle.livroPrice))}
+                    R$ {Number(raffle.livroPrice).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
 
@@ -441,7 +441,7 @@ export default function RaffleDetailPage() {
                     Prêmio em Dinheiro
                   </div>
                   <div className="text-3xl font-black text-amarelo-gold">
-                    R$ {formatDecimal(Number(raffle.prizeAmount))}
+                    R$ {Number(raffle.prizeAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
               )}
