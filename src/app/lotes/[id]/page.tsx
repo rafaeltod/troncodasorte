@@ -299,10 +299,10 @@ export default function RaffleDetailPage() {
                   </div>
 
                   <div className="space-y-3">
-                    {buyers.map((buyer, index) => (
+                    {buyers.slice(0, 5).map((buyer, index) => (
                       <div
                         key={buyer.id}
-                        className="flex items-center justify-between p-4 bg-cinza-claro  rounded-lg border border-cinza-claro hover:border-emerald-300 transition"
+                        className="flex items-center justify-between p-4 bg-cinza-claro  rounded-lg border border-cinza-claro hover:border-azul-royal transition"
                       >
                         <div className="flex items-center gap-3">
                           <div className="flex items-center justify-center w-10 h-10 rounded-full bg-branco font-black text-lg">
@@ -395,7 +395,7 @@ export default function RaffleDetailPage() {
                     {Math.round(progress)}%
                   </span>
                 </div>
-                <div className="w-full bg-cinza-claro rounded-full h-5 border border-gray-300 overflow-hidden">
+                <div className="w-full bg-cinza-claro rounded-full h-5 border border-cinza overflow-hidden">
                   <div
                     className="bg-azul-royal h-5 rounded-full    transition-all flex items-center justify-center"
                     style={{ width: `${progress}%` }}
@@ -413,133 +413,23 @@ export default function RaffleDetailPage() {
                   </div>
                   {raffle.winnerNumber && (
                     <div className="mb-3">
-                      <p className="text-sm text-gray-500">Número vencedor</p>
-                      <p className="text-2xl font-mono font-black text-emerald-700">{raffle.winnerNumber}</p>
+                      <p className="text-sm text-cinza">Número vencedor</p>
+                      <p className="text-2xl font-mono font-black text-amarelo-gold">{raffle.winnerNumber}</p>
                       {raffle.drawnNumber && raffle.drawnNumber !== raffle.winnerNumber && (
-                        <p className="text-xs text-gray-400 mt-1">Número sorteado: {raffle.drawnNumber}</p>
+                        <p className="text-xs text-cinza mt-1">Número sorteado: {raffle.drawnNumber}</p>
                       )}
                     </div>
                   )}
                   <div>
-                    <p className="text-sm text-gray-500">Ganhador Principal</p>
-                    <p className="text-lg font-black text-emerald-900">
+                    <p className="text-sm text-cinza-escuro">Ganhador Principal</p>
+                    <p className="text-lg font-black text-amarelo-gold">
                       {raffle.winnerUser?.name || 'Participante'}
                     </p>
                   </div>
                 </div>
               )}
 
-              {/* Prêmios Aleatórios — mostra com número sorteado (gerado na criação) */}
-              {/* Depois do sorteio: mostra número, prêmio e ganhador */}
-              {raffle.status === 'drawn' && raffle.premiosAleatorios && (() => {
-                const premios = typeof raffle.premiosAleatorios === 'string' 
-                  ? JSON.parse(raffle.premiosAleatorios) 
-                  : raffle.premiosAleatorios
-                if (!Array.isArray(premios) || premios.length === 0) return null
-                return (
-                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
-                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-3">
-                      <Gift className="w-5 h-5" />
-                      Prêmios Aleatórios ({premios.length})
-                    </div>
-                    <div className="space-y-2">
-                      {premios.map((premio: any) => (
-                        <div key={premio.posicao} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
-                            {premio.posicao}º
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                              <p className="font-mono font-bold text-gray-800">{premio.number}</p>
-                              {premio.tipo === 'dinheiro' && premio.valor && (
-                                <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                                  <DollarSign className="w-3 h-3" />
-                                  R$ {premio.valor}
-                                </span>
-                              )}
-                              {premio.tipo === 'item' && premio.descricao && (
-                                <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                                  <Package className="w-3 h-3" />
-                                  {premio.descricao}
-                                </span>
-                              )}
-                            </div>
-                            {premio.drawnNumber && premio.drawnNumber !== premio.number && (
-                              <p className="text-xs text-gray-400">Número sorteado: {premio.drawnNumber}</p>
-                            )}
-                            <p className="text-sm text-gray-600 truncate">{premio.winner?.name || 'Participante'}</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )
-              })()}
-
-              {/* Antes do sorteio: mostra os prêmios configurados com o número já sorteado */}
-              {raffle.status !== 'drawn' && raffle.premiosConfig && (() => {
-                const config = typeof raffle.premiosConfig === 'string'
-                  ? JSON.parse(raffle.premiosConfig)
-                  : raffle.premiosConfig
-                if (!Array.isArray(config) || config.length === 0) return null
-
-                // Buscar dono de cada número de prêmio nas compras confirmadas
-                const purchases = Array.isArray(raffle.purchases) ? raffle.purchases : []
-                function findOwner(premioNumber: string) {
-                  for (const p of purchases) {
-                    if (p.status !== 'confirmed' || !p.numbers) continue
-                    const nums = p.numbers.split(',').map((n: string) => n.trim())
-                    if (nums.includes(premioNumber)) {
-                      return p.user?.name || null
-                    }
-                  }
-                  return null
-                }
-
-                return (
-                  <div className="bg-purple-50 p-4 rounded-lg border-2 border-purple-300">
-                    <div className="flex items-center gap-2 text-purple-700 font-bold mb-1">
-                      <Gift className="w-5 h-5" />
-                      Prêmios Aleatórios ({config.length})
-                    </div>
-                    <p className="text-xs text-purple-500 mb-3">Números já sorteados — ganhadores definidos ao cadastrar resultado</p>
-                    <div className="space-y-2">
-                      {config.map((premio: any, index: number) => {
-                        const ownerName = findOwner(premio.number)
-                        return (
-                          <div key={index} className="bg-white rounded-lg p-3 border border-purple-200 flex items-center gap-3">
-                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-100 text-purple-700 font-black flex items-center justify-center text-xs">
-                              {index + 1}º
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                                <p className="font-mono font-bold text-2xl text-purple-700">{premio.number}</p>
-                                {premio.tipo === 'dinheiro' && premio.valor && (
-                                  <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                                    <DollarSign className="w-3 h-3" />
-                                    R$ {premio.valor}
-                                  </span>
-                                )}
-                                {premio.tipo === 'item' && premio.descricao && (
-                                  <span className="inline-flex items-center gap-1 bg-purple-100 text-purple-700 text-xs font-bold px-2 py-0.5 rounded-full">
-                                    <Package className="w-3 h-3" />
-                                    {premio.descricao}
-                                  </span>
-                                )}
-                              </div>
-                              {ownerName ? (
-                                <p className="text-sm text-purple-700 font-semibold mt-1">🏆 {ownerName}</p>
-                              ) : (
-                                <p className="text-xs text-gray-400 mt-1">Aguardando comprador</p>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </div>
-                )
-              })()}
+              
             </div>
 
             {isOpen && progress < 100 && (
@@ -629,27 +519,27 @@ export default function RaffleDetailPage() {
 
                 {/* Cupom Banner */}
                 {loadingCupom && (
-                  <div className="mb-4 bg-blue-50 border-2 border-blue-200 rounded-xl p-4 text-center">
-                    <p className="text-blue-700 font-bold">⏳ Validando cupom...</p>
+                  <div className="mb-4 bg-azul-pastel rounded-xl p-4 text-center">
+                    <p className="text-azul-royal font-bold">Validando cupom...</p>
                   </div>
                 )}
 
                 {cupomError && (
-                  <div className="mb-4 bg-red-50 border-2 border-red-200 rounded-xl p-4">
-                    <p className="text-red-700 font-bold text-sm">{cupomError}</p>
+                  <div className="mb-4 bg-vermelho-pastel rounded-xl p-4">
+                    <p className="text-vermelho-vivo font-bold text-sm">{cupomError}</p>
                   </div>
                 )}
 
                 {cupom && (
-                  <div className="mb-4 bg-gradient-to-r from-blue-50 to-purple-50 border-2 border-blue-300 rounded-xl p-4">
+                  <div className="mb-4 bg-azul-pastel rounded-xl p-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
-                        <Tag className="w-5 h-5 text-blue-600" />
+                        <Tag className="w-5 h-5 text-azul-claro" />
                         <div>
-                          <p className="font-black text-blue-800 text-sm">
-                            Cupom aplicado: <span className="font-mono bg-blue-100 px-2 py-0.5 rounded">{cupom.code}</span>
+                          <p className="font-black text-azul-claro text-sm">
+                            Cupom aplicado: <span className="font-mono bg-azul-claro px-2 py-0.5 rounded">{cupom.code}</span>
                           </p>
-                          <p className="text-xs text-blue-600 mt-0.5">
+                          <p className="text-xs text-azul-claro mt-0.5">
                             {cupom.tipoDesconto === 'percentual'
                               ? `${cupom.discount}% de desconto`
                               : `R$ ${cupom.discount.toFixed(2)} de desconto`}
@@ -657,7 +547,7 @@ export default function RaffleDetailPage() {
                           </p>
                         </div>
                       </div>
-                      <button onClick={removeCupom} className="text-gray-400 hover:text-gray-600 p-1">
+                      <button onClick={removeCupom} className="text-cinza hover:text-cinza p-1">
                         <X className="w-4 h-4" />
                       </button>
                     </div>
@@ -710,7 +600,7 @@ export default function RaffleDetailPage() {
                       <p className="text-sm text-cinza-escuro font-semibold mb-1">Total a Pagar</p>
                       {descontoTotal > 0 ? (
                         <>
-                          <p className="text-lg text-gray-400 line-through">
+                          <p className="text-lg text-cinza line-through">
                             R$ {originalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                           </p>
                           <p className="text-3xl font-black text-amarelo-gold">
@@ -758,13 +648,13 @@ export default function RaffleDetailPage() {
             )}
 
             {progress >= 100 && isOpen && (
-              <div className="w-full bg-azul-pastel text-azul-claro py-4 rounded-lg font-black text-center flex items-center justify-center gap-2">
-                Todas os Livros Vendidas
+              <div className="w-full bg-cinza text-branco py-4 rounded-full font-black text-center flex items-center justify-center gap-2">
+                Todos os Livros Vendidos
               </div>
             )}
 
             {!isOpen && (
-              <div className="w-full bg-cinza-claro text-cinza-escuro py-4 rounded-lg font-black text-center">
+              <div className="w-full bg-cinza-claro text-cinza-escuro py-4 rounded-full font-black text-center">
                 Lote {raffle.status === 'drawn' ? 'Sorteado' : 'Fechado'}
               </div>
             )}
@@ -872,7 +762,7 @@ export default function RaffleDetailPage() {
                         )}
                       </>
                     ) : (
-                      <div className="bg-emerald-100 border-2 border-emerald-400 text-emerald-700 px-6 py-4 rounded-xl flex items-center gap-3 font-bold">
+                      <div className="bg-azul-pastel border-2 border-azul-royal text-azul-royal px-6 py-4 rounded-xl flex items-center gap-3 font-bold">
                         <CheckCircle2 className="w-5 h-5" />
                         Campanha finalizada com sucesso!
                       </div>
@@ -884,36 +774,36 @@ export default function RaffleDetailPage() {
                 {raffle.status === 'closed' && (
                   <div className="mt-6">
                     {resultadoData ? (
-                      <div className="bg-emerald-50 border-2 border-emerald-300 rounded-xl p-6">
-                        <div className="flex items-center gap-2 text-emerald-700 font-bold mb-4">
+                      <div className="bg-azul-pastel border-2 border-azul-royal rounded-xl p-6">
+                        <div className="flex items-center gap-2 text-azul-royal font-bold mb-4">
                           <Trophy className="w-5 h-5" />
                           Resultado Cadastrado!
                         </div>
                         <div className="space-y-3">
-                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
-                            <p className="text-sm text-gray-500 mb-1">Número sorteado (digitado)</p>
-                            <p className="text-2xl font-mono font-bold text-gray-800">{resultadoData.drawnNumber}</p>
+                          <div className="bg-branco rounded-lg p-4 border border-azul-claro">
+                            <p className="text-sm text-cinza mb-1">Número sorteado (digitado)</p>
+                            <p className="text-2xl font-mono font-bold text-cinza-escuro">{resultadoData.drawnNumber}</p>
                           </div>
-                          <div className="bg-white rounded-lg p-4 border border-emerald-200">
-                            <p className="text-sm text-gray-500 mb-1">Número vencedor (correspondente)</p>
-                            <p className="text-2xl font-mono font-bold text-emerald-600">{resultadoData.winnerNumber}</p>
+                          <div className="bg-branco rounded-lg p-4 border border-azul-claro">
+                            <p className="text-sm text-cinza mb-1">Número vencedor (correspondente)</p>
+                            <p className="text-2xl font-mono font-bold text-azul-royal">{resultadoData.winnerNumber}</p>
                             {resultadoData.incrementos > 0 && (
-                              <p className="text-xs text-gray-400 mt-1">
+                              <p className="text-xs text-cinza mt-1">
                                 +{resultadoData.incrementos} incremento{resultadoData.incrementos > 1 ? 's' : ''} a partir do número sorteado
                               </p>
                             )}
                           </div>
                           {resultadoData.winner && (
-                            <div className="bg-white rounded-lg p-4 border border-emerald-200">
-                              <p className="text-sm text-gray-500 mb-1">Ganhador Principal</p>
-                              <p className="text-lg font-bold text-gray-800">{resultadoData.winner.name}</p>
-                              <p className="text-sm text-gray-500">{resultadoData.winner.email}</p>
+                            <div className="bg-branco rounded-lg p-4 border border-azul-claro">
+                              <p className="text-sm text-cinza mb-1">Ganhador Principal</p>
+                              <p className="text-lg font-bold text-cinza-escuro">{resultadoData.winner.name}</p>
+                              <p className="text-sm text-cinza">{resultadoData.winner.email}</p>
                             </div>
                           )}
                         </div>
                         <button
                           onClick={() => window.location.reload()}
-                          className="mt-4 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-xl transition"
+                          className="mt-4 w-full bg-azul-royal hover:bg-azul-royal text-branco font-bold py-3 px-6 rounded-xl transition"
                         >
                           Recarregar Página
                         </button>
@@ -921,17 +811,17 @@ export default function RaffleDetailPage() {
                     ) : !resultadoShowForm ? (
                       <button
                         onClick={() => setResultadoShowForm(true)}
-                        className="w-full bg-emerald-600 hover:bg-emerald-700 rounded-full cursor-pointer text-white font-bold py-3 px-6 transition flex items-center justify-center gap-2"
+                        className="w-full bg-azul-royal hover:bg-azul-royal rounded-full cursor-pointer text-branco font-bold py-3 px-6 transition flex items-center justify-center gap-2"
                       >
                         <Trophy className="w-5 h-5" />
                         Cadastrar Resultado
                       </button>
                     ) : (
-                      <div className="bg-emerald-50 border-2 border-emerald-200 rounded-xl p-6">
-                        <p className="text-emerald-700 font-semibold mb-4 flex items-center gap-2">
+                      <div className="bg-azul-pastel border-2 border-azul-claro rounded-xl p-6">
+                        <p className="text-azul-royal font-semibold mb-4 flex items-center gap-2">
                           Informe o número
                         </p>
-                        <p className="text-emerald-600 text-sm mb-4">
+                        <p className="text-azul-royal text-sm mb-4">
                           Digite o número entre 000000 e 999999. O sistema irá verificar se existe um bilhete correspondente.
                           Caso não exista, será feito o incremento automático até encontrar um bilhete válido.
                         </p>
@@ -947,9 +837,9 @@ export default function RaffleDetailPage() {
                             }}
                             placeholder="000000"
                             maxLength={6}
-                            className="w-full text-center text-3xl font-mono font-bold tracking-[0.3em] bg-white border-2 border-emerald-300 rounded-lg py-3 px-4 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 text-gray-800 placeholder-gray-300"
+                            className="w-full text-center text-3xl font-mono font-bold tracking-[0.3em] bg-branco border-2 border-azul-royal rounded-lg py-3 px-4 focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro text-cinza-escuro placeholder-cinza"
                           />
-                          <p className="text-xs text-gray-400 mt-1 text-center">
+                          <p className="text-xs text-cinza mt-1 text-center">
                             {resultadoDrawnNumber.length}/6 dígitos — será completado com zeros à esquerda
                           </p>
                         </div>
@@ -994,7 +884,7 @@ export default function RaffleDetailPage() {
                               }
                             }}
                             disabled={resultadoLoading}
-                            className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-400 text-white font-bold py-3 px-4 rounded-full transition flex items-center justify-center gap-2"
+                            className="flex-1 bg-azul-royal hover:bg-azul-royal disabled:bg-azul-royal text-branco font-bold py-3 px-4 rounded-full transition flex items-center justify-center gap-2"
                           >
                             {resultadoLoading ? (
                               <>
@@ -1029,38 +919,102 @@ export default function RaffleDetailPage() {
           </div>
         </div>
 
+        {(() => {
+                const premios = raffle.status === 'drawn' && raffle.premiosAleatorios
+                  ? (typeof raffle.premiosAleatorios === 'string' ? JSON.parse(raffle.premiosAleatorios) : raffle.premiosAleatorios)
+                  : raffle.status !== 'drawn' && raffle.premiosConfig
+                  ? (typeof raffle.premiosConfig === 'string' ? JSON.parse(raffle.premiosConfig) : raffle.premiosConfig)
+                  : null
+
+                if (!Array.isArray(premios) || premios.length === 0) return null
+
+                const purchases = Array.isArray(raffle.purchases) ? raffle.purchases : []
+                const findOwner = (num: string) => purchases.find(p => p.status === 'confirmed' && p.numbers?.split(',').map((n: string) => n.trim()).includes(num))?.user?.name
+                const shortName = (name: string) => name.split(' ').slice(0, 2).join(' ')
+                
+                
+                {/* bilhetes premiados */}
+                return (
+                  <div className="bg-branco p-8 rounded-lg mt-5">
+                    <div className="flex items-center gap-2  font-bold mb-3">
+                      <Gift className="w-6 h-6 text-azul-royal" />
+                      <p className="text-azul-royal text-2xl">Bilhetes premiados ({premios.length})</p>
+                    </div>
+                    <div className="space-y-2">
+                      {premios.map((p: any, i: number) => {
+                        const owner = raffle.status !== 'drawn' && findOwner(p.number)
+                        return (
+                          <div key={i} className="bg-fundo-cinza border border-cinza-claro hover:bg-cinza-claro rounded-lg px-3 py-5 flex items-center gap-4">
+                            <p className="font-mono h-12 w-35 pt-1 flex items-center justify-center rounded-full bg-azul-royal font-bold text-branco text-[20px] brancospace-nowrap">
+                              {p.number}
+                            </p>
+
+                            <div className="flex-1 flex flex-col">
+                              {p.tipo === 'dinheiro' && p.valor && (
+                                <span className="inline-flex items-center gap-1 bg-amarelo-pastel text-amarelo-gold text-1xl font-bold px-2 py-1 rounded-full w-fit">
+                                  <DollarSign className="w-5 h-5" /> R$ {p.valor}
+                                </span>
+                              )}
+                              {p.tipo === 'item' && p.descricao && (
+                                <span className="inline-flex items-center gap-1 bg-azul-pastel text-azul-royal text-1xl font-bold px-2 py-1 rounded-full w-fit">
+                                  <Package className="w-5 h-5" /> {p.descricao}
+                                </span>
+                              )}
+
+                              {p.drawnNumber && p.drawnNumber !== p.number && (
+                                <p className="text-1xl text-cinza mt-1">Sorteado: {p.drawnNumber}</p>
+                              )}
+
+                              {(owner || p.winner?.name) ? (
+                                <p className="text-[20px] font-semibold text-amarelo-gold mt-1">
+                                  🏆 {owner ? shortName(owner) : shortName(p.winner.name)}
+                                </p>
+                              ) : (
+                                <p className="text-[20px] font-semibold text-cinza mt-1">
+                                  Disponivel
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        )     
+                      })}
+                    </div>
+                  </div>
+                )
+              })()}
+
         {/* Top Compradores - mobile*/}
           <div className="lg:hidden block mt-8">
             {buyersLoading ? (
-              <div className="bg-white rounded-2xl shadow-lg p-8 border border-cinza-claro">
+              <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
                 <div className="flex items-center gap-3 mb-6">
                   <Trophy className="w-6 h-6 text-amarelo-gold" />
                   <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
                 </div>
-                <div className="text-center text-gray-600">Carregando...</div>
+                <div className="text-center text-cinza">Carregando...</div>
               </div>
             ) : buyersError ? null : buyers.length === 0 ? (
-              <div className="bg-white rounded-2xl shadow-lg p-8 border border-cinza-claro">
+              <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
                 <div className="flex items-center gap-3 mb-6">
                   <Trophy className="w-6 h-6 text-amarelo-gold" />
                   <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
                 </div>
-                <div className="text-center text-gray-600 py-8">
+                <div className="text-center text-cinza py-8">
                   Nenhum comprador registrado ainda
                 </div>
               </div>
             ) : (
-              <div className="bg-white rounded-2xl shadow-lg p-8 border border-cinza-claro">
+              <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
                 <div className="flex items-center gap-3 mb-6">
                   <Trophy className="w-6 h-6 text-amarelo-gold" />
                   <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
                 </div>
 
                 <div className="space-y-3">
-                  {buyers.map((buyer, index) => (
+                  {buyers.slice(0, 5).map((buyer, index) => (
                     <div
                       key={buyer.id}
-                      className="flex items-center justify-between p-4 bg-cinza-claro  rounded-lg border border-cinza-claro100 hover:border-emerald-300 transition"
+                      className="flex items-center justify-between p-4 text-[20px] bg-cinza-claro  rounded-lg hover:border-azul-royal transition"
                     >
                       <div className="flex items-center gap-3">
                         <div className="flex items-center justify-center w-10 h-10 rounded-full bg-branco font-black text-lg">
@@ -1071,7 +1025,7 @@ export default function RaffleDetailPage() {
                         </div>
                         <div>
                           <div className="font-black text-sm text-cinza-escuro">{censorName(buyer.name)}</div>
-                          <div className="text-1xl text-cinza">
+                          <div className="text-[20px] text-cinza">
                             {buyer.totalLivros} {buyer.totalLivros === 1 ? 'livro' : 'livros'}
                           </div>
                         </div>
@@ -1088,6 +1042,8 @@ export default function RaffleDetailPage() {
               </div>
             )}
           </div>
+
+        
  
         {/* Disclaimer */}
         <div className="mt-12 bg-fundo-cinza rounded-2xl shadow-lg p-8 border border-cinza-claro">
@@ -1097,7 +1053,7 @@ export default function RaffleDetailPage() {
               Este bilhete de loteria está autorizado com base no termo de autorização descrito no regulamento da promoção. Antes de contratar, consulte o Regulamento do produto. É proibida a venda para menores de 18 anos.
             </p>
             <p>
-              Os sorteios e entrega dos prêmios serão realizados de acordo com os critérios estabelecidos neste site, nos termos seguintes: O adquirente concorrerá em todos os sorteios previstos no bilhete digital emitido, mesmo sendo contemplado em alguns deles.
+              Os sorteios e entrega dos prêmios serão realizados de acordo com os critérios estabelecidos neste site, nos termos seguintes: O adquirente concorrerá em todos os sorteios previstos no bilhete digital emitido, mesmo do contemplado em alguns deles.
             </p>
             <p>
               Ao contribuir, o titular do BILHETE Digital concorda desde já e sem ônus a utilização de seu nome, sua voz e imagem para a divulgação desta lote social.

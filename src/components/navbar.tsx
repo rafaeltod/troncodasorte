@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home } from 'lucide-react'
+import { Ticket, User, Trophy, TrendingUp, Menu, X, LogOut, Shield, Home } from 'lucide-react'
 import { FaAdjust } from "react-icons/fa";
 
 export function Navbar() {

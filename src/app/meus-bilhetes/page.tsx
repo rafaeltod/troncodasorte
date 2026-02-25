@@ -75,20 +75,20 @@ export default function MyTicketsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-{background}">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-5">
-          <a href="/" className=" items-center gap-2 text-azul-royal text-1xl font-bold inline-flex transition">
+          <a href="/" className=" items-center gap-2 text-azul-royal dark:text-amarelo-claro text-1xl font-bold inline-flex transition">
             <ArrowLeft className="w-5 h-5" />
             Voltar
           </a>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-          <h1 className="text-3xl font-black text-cinza-escuro mb-2 flex items-center gap-2">
+        <div className="bg-white dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-gray-200 dark:border-gray-700">
+          <h1 className="text-3xl font-black text-cinza-escuro dark:text-amarelo-claro mb-2 flex items-center gap-2">
             Meus Bilhetes
           </h1>
-          <p className="text-cinza mb-6">
+          <p className="text-cinza mb-6 dark:text-gray-400">
             Consulte suas compras usando telefone e CPF
           </p>
 
@@ -100,7 +100,7 @@ export default function MyTicketsPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-bold text-cinza-escuro mb-2">
+              <label className="block text-sm font-bold text-cinza-escuro dark:text-amarelo-claro mb-2">
                 <Phone className="w-4 h-4 inline mr-2" />
                 Telefone
               </label>
@@ -117,7 +117,7 @@ export default function MyTicketsPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-cinza-escuro mb-2">
+              <label className="block text-sm font-bold text-cinza-escuro dark:text-amarelo-claro mb-2">
                 <FileText className="w-4 h-4 inline mr-2" />
                 CPF
               </label>
@@ -136,13 +136,13 @@ export default function MyTicketsPage() {
             <button
               type="submit"
               disabled={loading || !formData.phone || !formData.cpf}
-              className="w-full bg-azul-royal text-branco py-4 cursor-pointer rounded-full font-black text-lg hover:bg-branco hover:text-azul-royal transition disabled:hover:bg-azul-royal disabled:hover:text-branco disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
+              className="w-full bg-azul-royal dark:bg-azul-claro/70 text-branco py-4 cursor-pointer rounded-full font-black text-lg hover:bg-azul-royal/80 hover:text-azul-royal dark:hover:text-branco dark:hover:bg-azul-claro/30 transition disabled:hover:bg-azul-royal disabled:hover:text-branco disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6"
             >
               {loading ? "Consultando..." : "Consultar Bilhetes"}
             </button>
           </form>
 
-          <div className="bg-azul-pastel  rounded-lg p-4 mt-6">
+          <div className="bg-azul-pastel rounded-lg p-4 mt-6">
             <p className="text-sm text-azul-royal font-semibold">
               Seus dados são protegidos e usados apenas para localizar suas
               compras.

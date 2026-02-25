@@ -33,7 +33,7 @@ export function RaffleCard({
 
   return (
     <Link href={`/lotes/${id}`} className="block">
-      <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+      <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 dark:bg-[#232F3E]">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">
           {image ? (
@@ -72,7 +72,7 @@ export function RaffleCard({
 
         {/* Content */}
         <div className="p-5" style={{ minHeight: '250px' }}>
-          <h3 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-1">
+          <h3 className="text-xl font-semibold text-foreground mb-2 line-clamp-1">
             {title}
           </h3>
 
@@ -80,7 +80,7 @@ export function RaffleCard({
           <div className="mb-4">
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div
-                className="bg-azul-royal h-3 rounded-full transition-all duration-300"
+                className="bg-azul-royal dark:bg-verde-menta h-3 rounded-full transition-all duration-300"
                 style={{ width: `${percentageSold}%` }}
               />
             </div>
@@ -88,14 +88,14 @@ export function RaffleCard({
 
           {/* Prize Info */}
           {Number(prizeAmount) > 0 ? (
-            <div className="mb-4 p-3 bg-azul-pastel  rounded-lg">
+            <div className="mb-4 p-3 bg-azul-pastel rounded-lg">
               <div className="text-sm text-gray-600">Prêmio em Dinheiro</div>
               <div className="text-2xl font-bold text-azul-royal">
                 R$ {formatDecimal(Number(prizeAmount))}
               </div>
             </div>
           ) : (
-            <div className="mb-4 p-3 h-[75.99px] line-clamp-2 py-3 px-4 rounded-lg">
+            <div className="mb-4 p-3 h-[75.99px] line-clamp-2 py-3 px-4 rounded-lg bg-azul-pastel">
               <p className="text-gray-700 text-1x1 line-clamp-3">{description}</p>
             </div>
           )}
@@ -116,7 +116,7 @@ export function RaffleCard({
               Lote Sorteado
             </button>
           ) : (
-            <button className="w-full bg-azul-royal hover:bg-azul-claro hover:cursor-pointer text-white py-3 rounded-full font-semibold transition-colors">
+            <button className="w-full bg-azul-royal dark:bg-azul-claro hover:bg-azul-claro dark:hover:bg-azul-claro/50 hover:cursor-pointer text-white py-3 rounded-full font-semibold transition-colors">
               Comprar Livros
             </button>
           )}
