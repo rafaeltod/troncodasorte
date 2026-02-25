@@ -893,8 +893,7 @@ export default function RaffleDetailPage() {
                           {resultadoData.winner && (
                             <div className="bg-branco rounded-lg p-4 border border-azul-claro">
                               <p className="text-sm text-cinza mb-1">Ganhador Principal</p>
-                              <p className="text-lg font-bold text-cinza-escuro">{resultadoData.winner.name}</p>
-                              <p className="text-sm text-cinza">{resultadoData.winner.email}</p>
+                              <p className="text-lg font-bold text-cinza-escuro">{resultadoData.winner.name.split(' ').slice(0, 2).join(' ')}</p>
                             </div>
                           )}
                         </div>
