@@ -200,7 +200,7 @@ export default function AdminDashboardPage() {
           {/* Lotes List */}
           {loading ? (
             <div className="text-center py-16">
-              <div className="text-xl font-bold text-cinza">Carregando...</div>
+              <div className="text-xl font-bold text-cinza dark:text-cinza-claro">Carregando...</div>
             </div>
           ) : filteredLotes.length > 0 ? (
             <div className="bg-branco rounded-xl shadow-lg overflow-hidden border-2 border-cinza-claro">

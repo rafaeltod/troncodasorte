@@ -193,7 +193,7 @@ export default function VendedorPage() {
           {/* Cupons List */}
           {loading ? (
             <div className="text-center py-12">
-              <p className="text-gray-600 text-lg">⏳ Carregando seus dados...</p>
+              <p className="text-gray-600 dark:text-cinza-claro text-lg">⏳ Carregando seus dados...</p>
             </div>
           ) : cupons.length === 0 ? (
             <div className="text-center py-12 bg-white rounded-2xl shadow border border-gray-200">
@@ -299,7 +299,7 @@ export default function VendedorPage() {
                   {expandedCupom === cupom.id && (
                     <div className="border-t border-gray-200 p-6 bg-gray-50/50">
                       {loadingDetalhe ? (
-                        <p className="text-center text-gray-600 py-4">⏳ Carregando detalhes...</p>
+                        <p className="text-center text-gray-600 dark:text-cinza-claro py-4">⏳ Carregando detalhes...</p>
                       ) : detalhe ? (
                         <div className="space-y-6">
                           {/* Compras com este cupom */}

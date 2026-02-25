@@ -44,12 +44,12 @@ interface TopBuyer {
 
 function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loading: boolean; error: string | null }) {
   if (loading) return (
-    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+    <div className="bg-{background} dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
         <Trophy className="w-6 h-6 text-amarelo-gold" />
-        <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
+        <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
-      <div className="text-center text-cinza">Carregando...</div>
+      <div className="text-center text-cinza dark:text-cinza-claro">Carregando...</div>
     </div>
   )
   if (error) return null
@@ -313,8 +313,8 @@ export default function RaffleDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-fundo-cinza flex flex-col items-center justify-center">
-        <div className="text-center text-cinza-escuro font-semibold">Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro flex flex-col items-center justify-center">
+        <div className="text-center text-cinza-escuro dark:text-cinza-claro font-semibold">Carregando...</div>
       </div>
     )
   }

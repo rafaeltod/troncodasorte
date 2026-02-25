@@ -41,8 +41,8 @@ export default function TopBuyersPage() {
 
   if (loading || pageLoading) {
     return (
-      <div className="min-h-screen bg-fundo-cinza flex items-center justify-center">
-        <div className="text-xl font-bold text-cinza">Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro flex items-center justify-center">
+        <div className="text-xl font-bold text-cinza dark:text-cinza-claro">Carregando...</div>
       </div>
     )
   }
