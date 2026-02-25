@@ -7,6 +7,9 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
+import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home } from 'lucide-react'
+import { FaAdjust } from "react-icons/fa";
+
 import { Ticket, User, Trophy, Menu, X, LogOut, Shield, Home, TrendingUp } from 'lucide-react'
 
 export function Navbar() {
@@ -68,6 +71,17 @@ export function Navbar() {
             <span className="font-bold text-xl hidden sm:inline">Tronco da Sorte</span>
           </Link>
 
+          {/* Desktop Navigation + Theme Toggle + Mobile Menu Button */}
+          <div className="flex items-center gap-4 ml-auto">
+            <button
+              onClick={handleToggleTheme}
+              aria-label={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              title={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              className="p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+            >
+              <FaAdjust />
+            </button>
+            <nav className="hidden md:flex items-center gap-6">
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-6">
             <Link
