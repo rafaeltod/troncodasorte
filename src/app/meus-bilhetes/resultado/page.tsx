@@ -175,9 +175,9 @@ export default function TicketsResultPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-cinza-claro flex items-center justify-center">
+      <div className="min-h-screen bg-cinza-claro dark:bg-cinza-escuro flex items-center justify-center">
         <div className="text-center">
-          <p className="text-cinza font-semibold">Carregando seus bilhetes...</p>
+          <p className="text-cinza dark:text-cinza-claro font-semibold">Carregando seus bilhetes...</p>
         </div>
       </div>
     )

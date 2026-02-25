@@ -72,7 +72,11 @@ export default function HistoricoPage() {
 
   // Se ainda está carregando auth
   if (loading || pageLoading) {
-    return <div className="min-h-screen flex items-center justify-center">Carregando...</div>
+    return (
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro flex items-center justify-center">
+        <div className="text-cinza dark:text-cinza-claro font-semibold">Carregando...</div>
+      </div>
+    )
   }
 
   // Se não há usuário e nenhuma compra anônima salva

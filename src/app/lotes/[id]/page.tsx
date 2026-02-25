@@ -44,29 +44,29 @@ interface TopBuyer {
 
 function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loading: boolean; error: string | null }) {
   if (loading) return (
-    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+    <div className="bg-{background} dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
         <Trophy className="w-6 h-6 text-amarelo-gold" />
-        <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
+        <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
-      <div className="text-center text-cinza">Carregando...</div>
+      <div className="text-center text-cinza dark:text-cinza-claro">Carregando...</div>
     </div>
   )
   if (error) return null
   if (buyers.length === 0) return (
-    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+    <div className="bg-branco dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
         <Trophy className="w-6 h-6 text-amarelo-gold" />
-        <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
+        <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
       <div className="text-center text-cinza py-8">Nenhum comprador registrado ainda</div>
     </div>
   )
   return (
-    <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+    <div className="bg-branco dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
         <Trophy className="w-6 h-6 text-amarelo-gold" />
-        <h2 className="text-2xl font-black text-cinza-escuro">Top Compradores</h2>
+        <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
       <div className="space-y-3">
         {buyers.slice(0, 5).map((buyer, index) => (
@@ -107,16 +107,16 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
   const shortName = (name: string) => name.split(' ').slice(0, 2).join(' ')
 
   return (
-    <div className="bg-branco rounded-lg p-8 lg:p-0 mt-5">
-      <div className="flex items-center gap-2 font-bold mb-3">
-        <Gift className="w-6 h-6 text-azul-royal" />
-        <p className="text-azul-royal text-2xl">Bilhetes premiados ({premios.length})</p>
+    <div className="bg-{background} rounded-lg p-8 lg:p-0 mt-5">
+      <div className="flex items-center gap-2 font-bold mb-3 ">
+        <Gift className="w-6 h-6 text-azul-royal dark:text-amarelo-claro" />
+        <p className="text-azul-royal dark:text-amarelo-claro text-2xl">Bilhetes premiados ({premios.length})</p>
       </div>
       <div className="space-y-2">
         {premios.map((p: any, i: number) => {
           const owner = raffle.status !== 'drawn' && findOwner(p.number)
           return (
-            <div key={i} className="bg-fundo-cinza border border-cinza-claro hover:bg-cinza-claro rounded-lg px-3 py-4 flex items-center gap-2">
+            <div key={i} className="bg-fundo-cinza dark:bg-amarelo-pastel border-cinza-claro dark:border-cinza-claro/50 hover:bg-cinza-claro dark:hover:bg-amarelo-claro rounded-lg px-3 py-4 flex items-center gap-2">
               <p className="font-mono h-11 w-29 pt-1 flex items-center justify-center rounded-full bg-azul-royal font-bold text-branco text-[20px] whitespace-nowrap">
                 {p.number}
               </p>
@@ -313,8 +313,8 @@ export default function RaffleDetailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-fundo-cinza flex flex-col items-center justify-center">
-        <div className="text-center text-cinza-escuro font-semibold">Carregando...</div>
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro flex flex-col items-center justify-center">
+        <div className="text-center text-cinza-escuro dark:text-cinza-claro font-semibold">Carregando...</div>
       </div>
     )
   }
@@ -366,8 +366,8 @@ export default function RaffleDetailPage() {
   return (
     <div className="min-h-screen bg-{background}">
       <main className="max-w-6xl mx-auto py-8">
-        <div className="flex items-center justify-between mb-6 px-8">
-          <a href="/" className=" items-center gap-2 text-azul-royal font-semibold inline-flex transition">
+        <div className="flex items-center justify-between px-8">
+          <a href="/" className=" items-center gap-2 text-azul-royal dark:text-amarelo-claro font-semibold inline-flex transition">
             <ArrowLeft className="w-4 h-4" />
             Voltar
           </a>
@@ -414,12 +414,12 @@ export default function RaffleDetailPage() {
           </div>
 
           {/* Info */}
-          <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+          <div className="bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-[#232F3E]">
 
-            <h1 className="text-3xl md:text-4xl font-black text-cinza-escuro">{raffle.title}</h1>
+            <h1 className="text-3xl md:text-4xl font-black text-cinza-escuro dark:text-amarelo-gold">{raffle.title}</h1>
 
             {raffle.description && (
-              <p className="text-cinza-escuro mb-6 text-lg leading-relaxed">{raffle.description}</p>
+              <p className="text-cinza-escuro dark:text-amarelo-pastel mb-6 text-lg leading-relaxed">{raffle.description}</p>
             )}
 
             <div className="mb-4">
@@ -448,8 +448,8 @@ export default function RaffleDetailPage() {
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-bold text-cinza-escuro">Progresso de Vendas</span>
-                  <span className="text-sm font-bold text-azul-royal">
+                  <span className="text-sm font-bold text-cinza-escuro dark:text-branco">Progresso de Vendas</span>
+                  <span className="text-sm font-bold text-azul-royal dark:text-branco">
                     {Math.round(progress)}%
                   </span>
                 </div>
@@ -493,15 +493,15 @@ export default function RaffleDetailPage() {
             {isOpen && progress < 100 && (
               <>
                 <div className="w-full mb-4">
-                  <a href="/meus-bilhetes" className="block w-full bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border hover:border-azul-royal py-3 rounded-full font-bold text-center transition">
+                  <a href="/meus-bilhetes" className="block w-full bg-azul-royal text-branco hover:bg-branco hover:text-azul-royal border dark:border-cinza/40 hover:border-azul-royal py-3 rounded-full font-bold text-center transition">
                     Meus Bilhetes
                   </a>
                 </div>
 
                 {/* Livro Selector */}
-                <div className="bg-branco rounded-2xl">
+                <div className="bg-branco dark:bg-cinza-cards rounded-2xl">
                   <div className="space-y-3">
-                    <p className="text-1xl md:text-2xl font-black text-cinza">Digite a quantidade:</p>
+                    <p className="text-1xl md:text-2xl font-black text-cinza dark:text-amarelo-claro">Digite a quantidade:</p>
                     {availableLivros <= selectedQuantity && (
                       <p className="text-vermelho-vivo text-sm">Limite atingido</p>
                     )}
@@ -547,7 +547,7 @@ export default function RaffleDetailPage() {
                     </div>
                   </div>
 
-                  <h3 className="text-1xl md:text-2xl font-black text-cinza mb-6">Ou selecione abaixo:</h3>
+                  <h3 className="text-1xl md:text-2xl font-black text-cinza dark:text-amarelo-claro mb-6">Ou selecione abaixo:</h3>
 
                   <div className="grid grid-cols-2 gap-3 mb-4">
                     {presetOptions.map((quantity) => {
@@ -595,7 +595,7 @@ export default function RaffleDetailPage() {
                         <Tag className="w-5 h-5 text-azul-claro" />
                         <div>
                           <p className="font-black text-azul-claro text-sm">
-                            Cupom aplicado: <span className="font-mono bg-azul-claro px-2 py-0.5 rounded">{cupom.code}</span>
+                            Cupom aplicado: <span className="font-mono bg-amarelo-claro text-azul-royal px-2 py-0.5 rounded">{cupom.code}</span>
                           </p>
                           <p className="text-xs text-azul-claro mt-0.5">
                             {cupom.tipoDesconto === 'percentual'
@@ -605,9 +605,11 @@ export default function RaffleDetailPage() {
                           </p>
                         </div>
                       </div>
-                      <button onClick={removeCupom} className="text-cinza hover:text-cinza p-1">
-                        <X className="w-4 h-4" />
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button onClick={removeCupom} className="cursor-pointer text-cinza-escuro p-1">
+                          <X className="w-4 h-4 " />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -618,7 +620,7 @@ export default function RaffleDetailPage() {
                     {!showCupomInput ? (
                       <button
                         onClick={() => setShowCupomInput(true)}
-                        className="text-lx text-azul-royal font-semibold hover:underline cursor-pointer flex items-center gap-1"
+                        className="text-lx text-azul-royal dark:text-amarelo-claro font-semibold hover:underline cursor-pointer flex items-center gap-1"
                       >
                         <Tag className="w-4 h-4" />
                         Tem um cupom de desconto?
@@ -630,20 +632,20 @@ export default function RaffleDetailPage() {
                           value={cupomInputCode}
                           onChange={(e) => setCupomInputCode(e.target.value.toUpperCase())}
                           placeholder="Digite o código"
-                          className="flex-1 border text-cinza border-azul-royal rounded-lg px-3 py-2 text-lx font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
+                          className="flex-1 dark:bg-amarelo-pastel border text-cinza border-azul-royal dark:border-amarelo-gold rounded-lg px-3 py-2 text-lx font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
                         />
                         <button
                           onClick={() => {
                             if (cupomInputCode.trim()) validateCupom(cupomInputCode.trim())
                           }}
                           disabled={loadingCupom || !cupomInputCode.trim()}
-                          className="bg-azul-royal text-branco px-4 py-2 rounded-lg text-sm font-bold hover:bg-azul-claro disabled:bg-cinza transition"
+                          className="cursor-pointer bg-azul-royal dark:bg-amarelo-gold text-branco px-4 py-2 rounded-lg text-sm font-bold hover:bg-azul-claro dark:hover:bg-amarelo-gold/50 disabled:bg-cinza transition"
                         >
                           {loadingCupom ? 'Validando...' : 'Aplicar'}
                         </button>
                         <button
                           onClick={() => { setShowCupomInput(false); setCupomInputCode(''); setCupomError('') }}
-                          className="text-cinza hover:text-cinza-escuro p-2"
+                          className="cursor-pointer text-cinza hover:text-cinza-escuro dark:text-amarelo-claro dark:hover:text-cinza p-2"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1033,24 +1035,24 @@ export default function RaffleDetailPage() {
         
  
         {/* Disclaimer */}
-        <div className="mt-12 bg-fundo-cinza rounded-2xl shadow-lg p-8 border border-cinza-claro">
+        <div className="mt-12 bg-fundo-cinza dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
           <div className="space-y-4 text-1xl text-cinza leading-relaxed">
-            <p className="font-bold text-cinza-escuro ">Informações Importantes</p>
-            <p>
+            <p className="font-bold text-cinza-escuro dark:text-amarelo-gold">Informações Importantes</p>
+            <p className='dark:text-cinza-claro'>
               Este bilhete de loteria está autorizado com base no termo de autorização descrito no regulamento da promoção. Antes de contratar, consulte o Regulamento do produto. É proibida a venda para menores de 18 anos.
             </p>
-            <p>
+            <p className='dark:text-cinza-claro'>
               Os sorteios e entrega dos prêmios serão realizados de acordo com os critérios estabelecidos neste site, nos termos seguintes: O adquirente concorrerá em todos os sorteios previstos no bilhete digital emitido, mesmo do contemplado em alguns deles.
             </p>
-            <p>
+            <p className='dark:text-cinza-claro'>
               Ao contribuir, o titular do BILHETE Digital concorda desde já e sem ônus a utilização de seu nome, sua voz e imagem para a divulgação desta lote social.
             </p>
           </div>
         </div>
 
         {/* Regulamento */}
-        <div className="mt-16 bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
-      <h2 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
+        <div className="mt-16 bg-branco dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
+      <h2 className="text-2xl dark:text-amarelo-gold font-black text-cinza mb-6 flex items-center gap-2">
         Regulamento
       </h2>
 

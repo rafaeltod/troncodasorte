@@ -8,7 +8,7 @@
 }
 
 :root.dark {
-  --background: #131921;
+  --background: #0f172a;
   --foreground: #f1f5f9;
 }
 
@@ -39,11 +39,12 @@
   --color-cinza-escuro: rgb(19 25 33);
   --color-cinza: rgb(50 70 70);
   --color-cinza-claro: rgb(230 230 230);
-
+  
   --color-branco: rgb(255 255 255);
-  --color-preto: rgb(0 0 0);
-
+  --color-preto: rgb(1 1 1);
+  
   --color-fundo-cinza: rgb(249 250 251);
+  --color-cinza-cards: rgb(35 47 62);
 }
 
 
