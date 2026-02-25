@@ -62,6 +62,7 @@ export default function RaffleDetailPage() {
   const [resultadoLoading, setResultadoLoading] = useState(false)
   const [resultadoError, setResultadoError] = useState<string | null>(null)
   const [resultadoData, setResultadoData] = useState<any>(null)
+  const [downloadingRelatorio, setDownloadingRelatorio] = useState(false)
 
   // Cupom states
   const [cupom, setCupom] = useState<{
@@ -758,7 +759,7 @@ export default function RaffleDetailPage() {
 
             {progress >= 100 && isOpen && (
               <div className="w-full bg-azul-pastel text-azul-claro py-4 rounded-lg font-black text-center flex items-center justify-center gap-2">
-                Todas os Livros Vendidas
+                Todos os Livros foram Vendidos
               </div>
             )}
 
@@ -783,6 +784,45 @@ export default function RaffleDetailPage() {
                   >
                     Editar
                   </a>
+                  <button
+                    onClick={async () => {
+                      setDownloadingRelatorio(true)
+                      try {
+                        const res = await fetch(`/api/admin/lotes/${id}/relatorio`, { credentials: 'include' })
+                        if (!res.ok) throw new Error('Erro ao gerar relatório')
+                        const blob = await res.blob()
+                        const url = URL.createObjectURL(blob)
+                        const a = document.createElement('a')
+                        a.href = url
+                        const disposition = res.headers.get('Content-Disposition')
+                        const filenameMatch = disposition?.match(/filename="(.+)"/)
+                        a.download = filenameMatch?.[1] || `relatorio-lote-${id}.xlsx`
+                        document.body.appendChild(a)
+                        a.click()
+                        document.body.removeChild(a)
+                        URL.revokeObjectURL(url)
+                      } catch (err) {
+                        console.error('Erro ao baixar relatório:', err)
+                        alert('Erro ao gerar relatório. Tente novamente.')
+                      } finally {
+                        setDownloadingRelatorio(false)
+                      }
+                    }}
+                    disabled={downloadingRelatorio}
+                    className="flex-1 min-w-35 bg-branco border border-azul-royal hover:bg-azul-royal hover:text-branco text-azul-royal font-semibold py-2 px-4 rounded-full transition text-center flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
+                  >
+                    {downloadingRelatorio ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                        Gerando...
+                      </>
+                    ) : (
+                      <>
+                        <FileText className="w-4 h-4" />
+                        Relatório Excel
+                      </>
+                    )}
+                  </button>
                 </div>
 
                 {/* Finalizar Lote Section */}
