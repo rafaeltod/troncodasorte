@@ -131,9 +131,10 @@ export function CheckoutFlow({
       const data = await response.json()
 
       if (data.exists) {
-        // Existing customer
+        // Existing customer - já foi autenticado pela API (cookie setado)
         setExistingCustomer(data.customer)
-        setFormData({ ...formData, phone: phoneInput })
+        setFormData({ ...formData, phone: phoneInput, cpf: data.customer.cpf || '' })
+        await refetch() // Atualizar contexto de auth com o usuário logado
         setCurrentStep('confirm')
       } else {
         // New customer - show registration form
@@ -539,9 +540,10 @@ export function CheckoutFlow({
           if (purchaseId) {
             // Se é compra anônima, salva dados para não precisar preencher novamente
             if (!user) {
+              const cpfValue = formData.cpf || existingCustomer?.cpf || ''
               localStorage.setItem('ticketQuery', JSON.stringify({
                 phone: formData.phone.replace(/\D/g, ''),
-                cpf: formData.cpf.replace(/\D/g, ''),
+                cpf: cpfValue.replace(/\D/g, ''),
               }))
             }
             

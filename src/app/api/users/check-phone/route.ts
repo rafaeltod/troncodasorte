@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
     )
 
     if (user) {
-      return NextResponse.json({
+      // Autenticar automaticamente o cliente existente (setar cookie token)
+      const response = NextResponse.json({
         exists: true,
         customer: {
           name: user.name,
@@ -26,6 +27,16 @@ export async function POST(req: NextRequest) {
           cpf: user.cpf,
         },
       })
+
+      response.cookies.set('token', user.id, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 60 * 60 * 24 * 30,
+        path: '/',
+      })
+
+      return response
     }
 
     return NextResponse.json({
