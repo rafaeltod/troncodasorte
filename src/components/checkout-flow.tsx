@@ -131,10 +131,9 @@ export function CheckoutFlow({
       const data = await response.json()
 
       if (data.exists) {
-        // Existing customer - já foi autenticado pela API (cookie setado)
+        // Existing customer - sem login, apenas guarda dados para redirecionar depois
         setExistingCustomer(data.customer)
         setFormData({ ...formData, phone: phoneInput, cpf: data.customer.cpf || '' })
-        await refetch() // Atualizar contexto de auth com o usuário logado
         setCurrentStep('confirm')
       } else {
         // New customer - show registration form
@@ -536,16 +535,14 @@ export function CheckoutFlow({
           setShowPixModal(false)
           setPurchaseId(null)
           
-          // Redirecionar automaticamente para Meus Bilhetes
+          // Sempre salvar phone+cpf para consulta de bilhetes (sem login)
           if (purchaseId) {
-            // Se é compra anônima, salva dados para não precisar preencher novamente
-            if (!user) {
-              const cpfValue = formData.cpf || existingCustomer?.cpf || ''
-              localStorage.setItem('ticketQuery', JSON.stringify({
-                phone: formData.phone.replace(/\D/g, ''),
-                cpf: cpfValue.replace(/\D/g, ''),
-              }))
-            }
+            const phoneValue = formData.phone.replace(/\D/g, '')
+            const cpfValue = (formData.cpf || existingCustomer?.cpf || '').replace(/\D/g, '')
+            localStorage.setItem('ticketQuery', JSON.stringify({
+              phone: phoneValue,
+              cpf: cpfValue,
+            }))
             
             // Redirecionar para visualizar bilhetes confirmados
             router.push('/meus-bilhetes/resultado')
