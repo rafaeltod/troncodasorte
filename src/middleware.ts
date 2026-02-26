@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname
 
   // Rotas públicas que não precisam de token
-  const publicRoutes = ['/', '/auth/login', '/auth/register', '/lotes', '/top-compradores']
+  const publicRoutes = ['/', '/auth/login', '/auth/register', '/lotes', '/top-compradores', '/meus-bilhetes', '/compra', '/privacidade', '/termos']
   const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith(route + '/'))
 
   // Se não tem token e está tentando acessar rota protegida, redireciona para home
