@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { useParams } from 'next/navigation'
-import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus, DollarSign, Package, Tag, X, ShoppingCart } from 'lucide-react'
+import { ArrowLeft, Gift, Ticket, Trophy, Settings, Loader2, CheckCircle2, FileText, Plus, Minus, DollarSign, Package, Tag, X, ShoppingCart, Info, Lock, Shield, CreditCard } from 'lucide-react'
 import { censorName, formatDecimal } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import { RaffleImageGallery } from '@/components/lote-galeria-imagen'
@@ -46,7 +46,6 @@ function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loadin
   if (loading) return (
     <div className="bg-{background} dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
-        <Trophy className="w-6 h-6 text-amarelo-gold" />
         <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
       <div className="text-center text-cinza dark:text-cinza-claro">Carregando...</div>
@@ -56,7 +55,6 @@ function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loadin
   if (buyers.length === 0) return (
     <div className="bg-branco dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
-        <Trophy className="w-6 h-6 text-amarelo-gold" />
         <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
       <div className="text-center text-cinza py-8">Nenhum comprador registrado ainda</div>
@@ -65,7 +63,6 @@ function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loadin
   return (
     <div className="bg-branco dark:bg-cinza-cards rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-cinza-cards">
       <div className="flex items-center gap-3 mb-6">
-        <Trophy className="w-6 h-6 text-amarelo-gold" />
         <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">Top Compradores</h2>
       </div>
       <div className="space-y-3">
@@ -107,10 +104,9 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
   const shortName = (name: string) => name.split(' ').slice(0, 2).join(' ')
 
   return (
-    <div className="bg-{background} rounded-lg p-4 mt-5">
+    <section className="bg-branco dark:bg-cinza-cards rounded-lg p-2 md:p-4 mt-5">
       <div className="flex items-center gap-2 font-bold mb-3 ">
-        <Gift className="w-6 h-6 text-azul-royal dark:text-amarelo-claro" />
-        <p className="text-azul-royal dark:text-amarelo-claro text-2xl">Bilhetes premiados ({premios.length})</p>
+        <h1 className="text-azul-royal dark:text-amarelo-claro text-2xl">Bilhetes premiados</h1>
       </div>
       <div className="space-y-2">
         {premios.map((p: any, i: number) => {
@@ -149,7 +145,7 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
           )
         })}
       </div>
-    </div>
+    </section>
   )
 }
 
@@ -178,6 +174,7 @@ export default function RaffleDetailPage() {
   const [resultadoError, setResultadoError] = useState<string | null>(null)
   const [resultadoData, setResultadoData] = useState<any>(null)
   const [downloadingRelatorio, setDownloadingRelatorio] = useState(false)
+  const [showDescontoInfo, setShowDescontoInfo] = useState(false)
 
   // Cupom states
   const [cupom, setCupom] = useState<{
@@ -195,7 +192,7 @@ export default function RaffleDetailPage() {
   const [showCupomInput, setShowCupomInput] = useState(false)
 
   // Presets para seleção de quantidade
-  const presetOptions = [1, 50, 100, 200, 300, 500]
+  const presetOptions = [10, 50, 100, 200]
 
   useEffect(() => {
     let isMounted = true
@@ -352,17 +349,26 @@ export default function RaffleDetailPage() {
   const progress = (raffle.soldLivros / raffle.totalLivros) * 100
   const isOpen = raffle.status === 'open'
   const availableLivros = raffle.totalLivros - raffle.soldLivros
-  // Calcular preço com desconto do cupom
-  const originalTotal = selectedQuantity * Number(raffle.livroPrice)
-  let descontoTotal = 0
+  // Desconto progressivo
+  const progressiveDiscountPct =
+    selectedQuantity >= 200 ? 14 :
+    selectedQuantity >= 150 ? 11 :
+    selectedQuantity >= 100 ? 8 :
+    selectedQuantity >= 50 ? 5 : 0
+  // Calcular preço com descontos
+  const originalTotal = Math.round(selectedQuantity * Number(raffle.livroPrice) * 100) / 100
+  const progressiveDiscountAmount = Math.round(originalTotal * (progressiveDiscountPct / 100) * 100) / 100
+  let descontoTotal = progressiveDiscountAmount
   if (cupom) {
+    const baseAfterProgressive = originalTotal - progressiveDiscountAmount
     if (cupom.tipoDesconto === 'percentual') {
-      descontoTotal = originalTotal * (cupom.discount / 100)
+      descontoTotal += Math.round(baseAfterProgressive * (cupom.discount / 100) * 100) / 100
     } else {
-      descontoTotal = Math.min(cupom.discount, originalTotal)
+      descontoTotal += Math.min(cupom.discount, baseAfterProgressive)
     }
+    descontoTotal = Math.round(descontoTotal * 100) / 100
   }
-  const totalPrice = originalTotal - descontoTotal
+  const totalPrice = Math.round((originalTotal - descontoTotal) * 100) / 100
   const images = Array.isArray(raffle.images) ? raffle.images : []
   const mainImage = typeof raffle.image === 'string' ? raffle.image : (images?.[0] || null)
 
@@ -439,11 +445,11 @@ export default function RaffleDetailPage() {
 
               {Number(raffle.prizeAmount) > 0 && (
                 <div className="bg-amarelo-pastel px-3 py-2 rounded-xl">
-                  <div className="flex items-center gap-1 text-sm text-cinza-escuro font-semibold">
+                  <div className="flex items-center gap-1 text-sm text-amarelo-gold font-semibold">
                     <Gift className="w-4 h-4" />
                     Prêmio em Dinheiro
                   </div>
-                  <div className="text-3xl font-black text-amarelo-gold">
+                  <div className="text-2xl font-black text-amarelo-gold">
                     R$ {Number(raffle.prizeAmount).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </div>
                 </div>
@@ -494,46 +500,108 @@ export default function RaffleDetailPage() {
             </div>
 
             <div className="mb-6">
-              <h2>Desconto Progressivo</h2>
-              <p className="text-sm text-cinza-500">Quanto mais livros forem vendidos, maior será o desconto.</p>
-              <ol className="grid grid-cols-2 w-full gap-2 mt-3 text-cinza">
-                <li className='w-full flex items-center justify-between bg-cinza-claro rounded-lg py-2 px-5'>
-                  +50 Livros
-                  <span className='py-1 px-2 bg-cinza text-branco rounded-lg text-1xl'> -5%</span>
-                </li>
-                <li className='w-full flex items-center justify-between bg-cinza-claro rounded-lg py-2 px-5'>
-                  +100 Livros
-                  <span className='py-1 px-2 bg-cinza text-branco rounded-lg text-1xl'> -8%</span>
-                </li>
-                <li className='w-full flex items-center justify-between bg-cinza-claro rounded-lg py-2 px-5'>
-                  +150 Livros
-                  <span className='py-1 px-2 bg-cinza text-branco rounded-lg text-1xl'> -11%</span>
-                </li>
-                <li className='w-full flex items-center justify-between bg-cinza-claro rounded-lg py-2 px-5'>
-                  +200 Livros
-                  <span className='py-1 px-2 bg-cinza text-branco rounded-lg text-1xl'> -14%</span>
-                </li>
-
+              <div className="flex items-center justify-between">
+                <h2 className="text-1xl font-bold text-cinza dark:text-branco">Desconto Progressivo</h2>
+                <div className="relative">
+                  <button
+                    onClick={() => setShowDescontoInfo(v => !v)}
+                    className="text-cinza hover:text-azul-royal dark:text-cinza-claro transition cursor-pointer"
+                  >
+                    <Info className="w-4 h-4" />
+                  </button>
+                  {showDescontoInfo && (
+                    <>
+                      <div className="fixed inset-0 z-10" onClick={() => setShowDescontoInfo(false)} />
+                      <div className="absolute right-0 top-6 z-20 w-69 bg-cinza-escuro dark:bg-cinza-cards text-branco text-sm rounded-xl shadow-xl px-4 py-3">
+                        Quanto mais livros forem vendidos, maior será o desconto.
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              <ol className="grid grid-cols-2 w-full gap-2 mt-3">
+                {[
+                  { min: 50,  pct: 5  },
+                  { min: 100, pct: 8  },
+                  { min: 150, pct: 11 },
+                  { min: 200, pct: 14 },
+                ].map(({ min, pct }) => {
+                  const active = progressiveDiscountPct === pct
+                  return (
+                    <li
+                      key={min}
+                      className={`w-full flex items-center justify-between rounded-lg py-1 px-4 transition ${
+                        active
+                          ? 'bg-azul-royal text-branco font-bold ring-2 ring-azul-royal'
+                          : 'bg-azul-pastel text-azul-royal'
+                      }`}
+                    >
+                      +{min} Livros
+                      <span className={`py-1 px-2 rounded-lg text-1xl ${
+                        active ? 'bg-branco text-azul-royal font-bold' : 'bg-azul-royal text-branco'
+                      }`}>
+                        -{pct}%
+                      </span>
+                    </li>
+                  )
+                })}
               </ol>
                 
             </div>
 
             {isOpen && progress < 100 && (
               <>
-                {/* Livro Selector */}
+                {/* Valores Fixos */}
                 <div className="bg-branco dark:bg-cinza-cards rounded-2xl">
-                  <div className="space-y-3">
+                  <h3 className="text-1xl md:text-1xl font-black text-cinza dark:text-amarelo-claro mb-2">Compra rápida: Ebook + Titulos</h3>
+                  <p className='text-cinza dark:text-branco text-sm mb-3'>Ao escolher um dos pacotes abaixo, você receberá o e-Book digital desta ação no email cadastrado, junto com os seus titulos</p>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2  gap-3 mb-4">
+                    {presetOptions.map((quantity) => {
+                      const isDisabled = quantity > availableLivros
+                      return (
+                        <button
+                          key={quantity}
+                          onClick={() => {
+                            if (!isDisabled) {
+                              setSelectedQuantity(quantity)
+                              setIsDrawerOpen(true)
+                            }
+                          }}
+                          disabled={isDisabled}
+                          className={`py-1 px-3 rounded-xl flex h-15 justify-between font-bold text-lg transition transform ${
+                            isDisabled
+                              ? 'bg-cinza-claro text-cinza cursor-not-allowed'
+                              : 'bg-azul-claro text-branco border-2 border-azul-claro hover:bg-branco hover:text-azul-royal cursor-pointer hover:scale-105'
+                          }`}
+                        >
+                          <div>
+                            {quantity} {quantity === 1 ? 'livro' : 'livros'}
+                            <p className="text-xs ">Livros + Ebook</p>
+                          </div>
+                          <span className='bg-azul-pastel font-[15px] w-25 text-azul-royal px-2 py-1 rounded-lg flex items-center justify-center'>
+                            R$ {(quantity * Number(raffle.livroPrice)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </span>
+                        </button>
+                      )
+                    })}
+
+                    
+                  </div>
+                  {/* Digitar quantidade */}
+
+                    <div className="space-y-3 w">
                     <p className="text-1xl md:text-1xl font-black text-cinza dark:text-amarelo-claro">Digite a quantidade:</p>
                     {availableLivros <= selectedQuantity && (
                       <p className="text-vermelho-vivo text-sm">Limite atingido</p>
                     )}
-                    <div className="flex items-center bg-cinza-claro rounded-full box-border mb-4 h-13">
+                    <div className="flex items-center bg-cinza-claro rounded-full box-border mb-4 h-10">
                       <button
                         onClick={() => {
                           const newValue = Math.max(1, selectedQuantity - 1)
                           setSelectedQuantity(newValue)
                         }}
-                        className="flex items-center justify-center w-12 h-12 hover:bg-cinza hover:text-branco text-cinza rounded-lg font-black text-xl transition cursor-pointer rounded-tl-full rounded-bl-full"
+                        className="flex items-center justify-center w-10 h-10 hover:bg-cinza hover:text-branco text-cinza rounded-lg font-black text-xl transition cursor-pointer rounded-tl-full rounded-bl-full"
                         title="Diminuir quantidade"
                       >
                         <Minus className="w-5 h-5" />
@@ -552,7 +620,7 @@ export default function RaffleDetailPage() {
                           )
                           setSelectedQuantity(clamped)
                         }}
-                        className="flex-1 text-center text-2xl font-black text-cinza bg-transparent border-0 focus:outline-none"
+                        className="flex-1 text-center text-1xl font-black text-cinza bg-transparent border-0 focus:outline-none"
                       />
 
                       <button
@@ -561,7 +629,7 @@ export default function RaffleDetailPage() {
                           setSelectedQuantity(newValue)
                         }}
                         disabled={selectedQuantity >= availableLivros}
-                        className="flex  items-center justify-center w-12 h-12 hover:bg-cinza hover:text-branco text-cinza font-black text-xl transition cursor-pointer disabled:bg-cinza-claro disabled:cursor-not-allowed"
+                        className="flex  items-center justify-center w-10 h-10 hover:bg-cinza hover:text-branco text-cinza font-black text-xl transition cursor-pointer disabled:bg-cinza-claro disabled:cursor-not-allowed"
                         title="Aumentar quantidade"
                       >
                         <Plus className="w-5 h-5" />
@@ -570,38 +638,11 @@ export default function RaffleDetailPage() {
                       <button
                         onClick={() => setIsDrawerOpen(true)}
                         disabled={!isOpen}
-                        className="flex w-50 items-center justify-center gap-2 bg-azul-royal hover:bg-branco hover:text-azul-royal cursor-pointer disabled:bg-cinza rounded-br-full rounded-tr-full disabled:border-cinza text-branco font-black text-lg py-3 rounded-xl transition shadow-lg"
+                        className="flex h-10 w-20 md:w-50 items-center justify-center gap-2 bg-azul-royal hover:bg-branco hover:text-azul-royal cursor-pointer disabled:bg-cinza rounded-br-full rounded-tr-full disabled:border-cinza text-branco font-black text-[15px] md:text-lg py-3 rounded-xl transition shadow-lg"
                       >
                         Comprar
                       </button>
                     </div>
-                  </div>
-
-                  <h3 className="text-1xl md:text-1xl font-black text-cinza dark:text-amarelo-claro mb-6">Ou selecione abaixo:</h3>
-
-                  <div className="grid grid-cols-2 gap-3 mb-4">
-                    {presetOptions.map((quantity) => {
-                      const newTotal = selectedQuantity + quantity
-                      const isDisabled = newTotal > availableLivros
-                      return (
-                        <button
-                          key={quantity}
-                          onClick={() => {
-                            if (!isDisabled) {
-                              setSelectedQuantity(selectedQuantity + quantity)
-                            }
-                          }}
-                          disabled={isDisabled}
-                          className={`py-2 px-1 rounded-xl font-bold  text-lg transition transform ${
-                            isDisabled
-                              ? 'bg-cinza-claro text-cinza cursor-not-allowed'
-                              : 'bg-branco text-azul-royal border-2 border-azul-royal hover:bg-azul-royal hover:text-branco  cursor-pointer hover:scale-105'
-                          }`}
-                        >
-                          +{quantity}
-                        </button>
-                      )
-                    })}
                   </div>
                 </div>
 
@@ -685,19 +726,6 @@ export default function RaffleDetailPage() {
                 )}
 
                     <div>
-                      {descontoTotal > 0 && (
-                        <div className="mt-8 bg-amarelo-pastel p-6 rounded-xl">
-                          <p className="text-lg text-cinza line-through">
-                            R$ {originalTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                          </p>
-                          <p className="text-3xl font-black text-amarelo-gold">
-                            R$ {totalPrice.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                          </p>
-                          <p className="text-xs text-blue-600 font-bold mt-1">
-                            Desconto de R$ {descontoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} com cupom {cupom?.code}
-                          </p>
-                        </div>
-                      )}
                   </div>
 
                 <Drawer
@@ -712,6 +740,7 @@ export default function RaffleDetailPage() {
                     isOpen={isOpen}
                     selectedQuantity={selectedQuantity}
                     cupom={cupom || undefined}
+                    progressiveDiscountPct={progressiveDiscountPct}
                   />
                 </Drawer>
               </>
@@ -1024,7 +1053,26 @@ export default function RaffleDetailPage() {
                 )}
               </div>
             )}
+            {/* caixinhas dos "termos"?? */}
+            <ol className='w-full flex flex-wrap gap-2 mt-5 align-top'>
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+                <Lock className="w-3 h-3" />
+                <p>Conexão segura (HTTPS)</p>
+              </li>
+              
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+                <Shield className="w-3 h-3" />
+                <p>Proteção LGPD</p>
+              </li>
+
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+                <CreditCard className="w-3 h-3" />
+                <p>Pagamento confiavel</p>
+              </li>
+                
+            </ol>
           </div>
+          
         </div>
 
         

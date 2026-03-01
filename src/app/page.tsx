@@ -129,12 +129,7 @@ export default function Home() {
         >
           Abertas ({openCount})
         </button>
-        <button
-          onClick={() => handleStatusFilter('closed')}
-          className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'closed' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
-        >
-          Fechadas ({closedCount})
-        </button>
+
         <button
           onClick={() => handleStatusFilter('drawn')}
           className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${statusFilter === 'drawn' ? 'bg-azul-claro text-white dark:text-azul-royal dark:bg-amarelo-claro' : 'bg-white text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel dark:bg-amarelo-pastel dark:text-azul-royal dark:border-amarelo-claro dark:hover:bg-amarelo-claro'}`}
