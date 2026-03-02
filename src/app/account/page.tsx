@@ -198,7 +198,7 @@ export default function AccountPage() {
               <form onSubmit={handleUpdateProfile} className="space-y-6">
                 <div>
                   <label className="text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                    <User className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                     Nome
                   </label>
                   <input
@@ -212,7 +212,7 @@ export default function AccountPage() {
 
                 <div>
                   <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                    <Phone className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                     Telefone
                   </label>
                   <input
@@ -227,7 +227,7 @@ export default function AccountPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div>
                     <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <Mail className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Email
                     </label>
                     <input
@@ -240,7 +240,7 @@ export default function AccountPage() {
 
                   <div>
                     <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <FileText className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       CPF
                     </label>
                     <input
@@ -265,14 +265,14 @@ export default function AccountPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                      <User className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <User className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Nome
                     </p>
                     <p className="text-cinza-escuro dark:text-cinza-claro font-black text-lg">{censorName(user.name)}</p>
                   </div>
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Phone className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <Phone className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Telefone
                     </p>
                     <p className="text-cinza-escuro dark:text-cinza-claro font-black text-lg">{censorPhoneShort(user.phone)}</p>
@@ -282,14 +282,14 @@ export default function AccountPage() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Mail className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <Mail className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Email
                     </p>
                     <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.email}</p>
                   </div>
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                      <FileText className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <FileText className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       CPF
                     </p>
                     <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.cpf}</p>
@@ -299,7 +299,7 @@ export default function AccountPage() {
                 {user.birthDate && (
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Calendar className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                      <Calendar className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Data de Nascimento
                     </p>
                     <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.birthDate}</p>
@@ -308,7 +308,7 @@ export default function AccountPage() {
 
                 <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                   <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
-                    <Calendar className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                    <Calendar className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                     Membro desde
                   </p>
                   <p className="text-cinza-escuro dark:text-cinza-claro font-black">
@@ -321,18 +321,18 @@ export default function AccountPage() {
 
           {/* Estatísticas */}
           <div className="space-y-4">
-            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
+            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-claro font-semibold text-sm">Livros Adquiridas</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Livros Adquiridas</p>
               </div>
               <p className="text-4xl font-black">{totalLivros}</p>
             </div>
 
-            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
+            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-claro font-semibold text-sm">Rifas Participadas</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Rifas Participadas</p>
               </div>
               <p className="text-4xl font-black">{purchases.length}</p>
             </div>
@@ -341,8 +341,8 @@ export default function AccountPage() {
 
         {/* Histórico de Compras */}
         <div className="bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-gray-700 max-w-6xl mx-auto mt-8">
-          <h2 className="text-2xl font-black text-cinza-escuro dark:text-cinza-claro mb-8 flex items-center gap-2">
-            <ShoppingBag className="w-6 h-6 text-azul-royal dark:text-azul-claro" />
+          <h2 className="text-2xl font-black text-cinza-escuro dark:text-amarelo-claro mb-8 flex items-center gap-2">
+            <ShoppingBag className="w-6 h-6 text-azul-royal  dark:text-amarelo-claro" />
             Histórico de Compras
           </h2>
 
@@ -357,12 +357,12 @@ export default function AccountPage() {
                           {purchase.raffle?.title || 'Rifa'}
                         </p>
                         <p className="text-cinza dark:text-gray-400 text-sm flex items-center gap-2">
-                          <Ticket className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
+                          <Ticket className="w-4 h-4 text-azul-royal dark:text-azul-pastel" />
                           {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-black text-azul-royal dark:text-azul-claro text-lg mb-2">
+                        <p className="font-black text-azul-royal dark:text-azul-pastel text-lg mb-2">
                           R$ {formatDecimal(Number(purchase.amount))}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
