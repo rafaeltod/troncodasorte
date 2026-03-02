@@ -119,25 +119,27 @@ export default function AdminDashboardPage() {
         <div className={mainConfig}>
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-5xl font-black text-cinza-escuro dark:text-cinza-claro mb-3">
+            <h1 className="text-5xl font-black text-cinza-escuro dark:text-amarelo-claro mb-3">
               Painel do Admin
             </h1>
             <p className="text-lg text-cinza dark:text-gray-400 mb-6">
               Gerencie todas os seus lotes em um só lugar
             </p>
 
-            <Link
-              href="/criar-lote"
-              className="inline-flex items-center gap-2 bg-azul-royal dark:bg-azul-claro text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal border shadow-lg"
-            >
-              <Plus size={20} /> Criar Novo Lote
-            </Link>
-            <Link
-              href="/admin/cupons"
-              className="inline-flex items-center gap-2 bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-blue-400 transition transform hover:scale-105 shadow-lg ml-3"
-            >
-              <Tag size={20} /> Gerenciar Cupons
-            </Link>
+            <div className="flex flex-col sm:flex-row items-start gap-3">
+              <Link
+                href="/criar-lote"
+                className="inline-flex items-center gap-2 bg-azul-royal dark:bg-azul-claro text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal border shadow-lg"
+              >
+                <Plus size={20} /> Criar Novo Lote
+              </Link>
+              <Link
+                href="/admin/cupons"
+                className="inline-flex items-center gap-2 bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-blue-400 transition transform hover:scale-105 shadow-lg"
+              >
+                <Tag size={20} /> Gerenciar Cupons
+              </Link>
+            </div>
           </div>
 
           {/* Stats */}
@@ -145,7 +147,7 @@ export default function AdminDashboardPage() {
             <div className="bg-branco dark:bg-[#232F3E] p-6 rounded-xl shadow-lg border-2 border-cinza-claro dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
                 <h3 className="text-cinza dark:text-gray-400 font-bold">Total de Lotes</h3>
-                <Award className="text-azul-royal dark:text-azul-claro" size={24} />
+                <Award className="text-azul-royal dark:text-gray-400" size={24} />
               </div>
               <p className="text-3xl font-black text-cinza-escuro dark:text-cinza-claro">{stats.total}</p>
             </div>
