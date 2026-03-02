@@ -75,7 +75,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-cinza-escuro font-bold text-lg mb-3">
+        <label className="block text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3">
           Imagens ({images.length}/{maxImages})
         </label>
         <div className="relative">
@@ -84,25 +84,25 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
             accept="image/*"
             onChange={handleAddImage}
             disabled={images.length >= maxImages || uploading}
-            className="w-full border-2 border-dashed border-cinza rounded-xl px-5 py-8 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-indigo-600 focus:ring-2 focus:ring-indigo-200 transition cursor-pointer hover:border-indigo-400 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full border-2 border-dashed border-cinza dark:border-gray-600 rounded-xl px-5 py-8 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-indigo-600 dark:focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 dark:focus:ring-indigo-300/50 transition cursor-pointer hover:border-indigo-400 dark:hover:border-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           />
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-            <span className="text-slate-500 text-center">
+            <span className="text-slate-500 dark:text-gray-400 text-center">
               <div className="text-3xl mb-2">{uploading ? '⏳' : '📁'}</div>
-              <div className="text-sm font-semibold">
+              <div className="text-sm font-semibold dark:text-gray-300">
                 {uploading ? 'Fazendo upload...' : 'Clique para selecionar uma imagem'}
               </div>
             </span>
           </div>
         </div>
-        <p className="text-cinza text-sm mt-2">
+        <p className="text-cinza dark:text-gray-300 text-sm mt-2">
           Máximo de {maxImages} imagens. Limite: 5MB por imagem. Formatos: JPG, PNG, GIF
         </p>
       </div>
 
       {images.length > 0 && (
         <div>
-          <p className="text-cinza-escuro font-semibold mb-3">{images.length} imagem(ns) adicionada(s)</p>
+          <p className="text-cinza-escuro dark:text-cinza-claro font-semibold mb-3">{images.length} imagem(ns) adicionada(s)</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {images.map((image, index) => (
               <div key={index} className="relative group">
