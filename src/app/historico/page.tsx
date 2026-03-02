@@ -82,21 +82,21 @@ export default function HistoricoPage() {
   // Se não há usuário e nenhuma compra anônima salva
   if (!user && purchases.length === 0) {
     return (
-      <div className="min-h-screen bg-fundo-cinza py-12">
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-black text-cinza-escuro mb-4">
+          <h1 className="text-5xl font-black text-cinza-escuro dark:text-cinza-claro mb-4">
             Histórico de Compras
           </h1>
-          <p className="text-cinza text-lg mb-8">
+          <p className="text-cinza dark:text-gray-400 text-lg mb-8">
             Você não tem nenhuma compra salva. Faça uma compra ou{" "}
-            <Link href="/auth/login" className="text-azul-royal font-bold">
+            <Link href="/auth/login" className="text-azul-royal dark:text-azul-claro font-bold">
               faça login
             </Link>{" "}
             para ver seu histórico.
           </p>
           <Link
             href="/"
-              className="inline-block bg-azul-royal text-branco px-8 py-3 rounded-full font-bold hover:bg-branco hover:text-azul-royal border transition"
+              className="inline-block bg-azul-royal dark:bg-azul-claro text-branco px-8 py-3 rounded-full font-bold hover:bg-branco dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal border transition"
           >
             Explorar Lotes
           </Link>
@@ -107,17 +107,17 @@ export default function HistoricoPage() {
 
   if (purchases.length === 0) {
     return (
-      <div className="min-h-screen bg-fundo-cinza py-12">
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h1 className="text-5xl font-black text-cinza-escuro mb-4">
+          <h1 className="text-5xl font-black text-cinza-escuro dark:text-cinza-claro mb-4">
             Histórico de Compras
           </h1>
-          <p className="text-cinza text-lg mb-8">
+          <p className="text-cinza dark:text-gray-400 text-lg mb-8">
             Você ainda não comprou nenhuma cota
           </p>
           <Link
             href="/lotes"
-            className="inline-block bg-azul-royal text-branco px-8 py-3 rounded-full font-bold hover:bg-branco hover:text-azul-royal border transition"
+            className="inline-block bg-azul-royal dark:bg-azul-claro text-branco px-8 py-3 rounded-full font-bold hover:bg-branco dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal border transition"
           >
             Explorar Lotes
           </Link>
@@ -130,28 +130,28 @@ export default function HistoricoPage() {
   const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
-    <div className="min-h-screen bg-fundo-cinza py-12">
+    <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
       <div className="max-w-4xl mx-auto px-4">
-        <h1 className="text-5xl font-black text-cinza-escuro mb-2">
+        <h1 className="text-5xl font-black text-cinza-escuro dark:text-cinza-claro mb-2">
           <History className="inline mr-2" size={40} />
           Histórico de Compras
         </h1>
 
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
-            <p className="text-azul-pastel text-sm font-semibold">
+          <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-lg shadow-lg p-4 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
+            <p className="text-azul-pastel dark:text-azul-claro/70 text-sm font-semibold">
               Total Gasto
             </p>
             <p className="text-2xl font-black mt-1">
               R$ {Number(totalSpent).toFixed(2)}
             </p>
           </div>
-          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
-            <p className="text-azul-pastel text-sm font-semibold">Livros</p>
+          <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-lg shadow-lg p-4 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
+            <p className="text-azul-pastel dark:text-azul-claro/70 text-sm font-semibold">Livros</p>
             <p className="text-2xl font-black mt-1">{totalLivros}</p>
           </div>
-          <div className="bg-azul-royal rounded-lg shadow-lg p-4 text-branco">
-            <p className="text-azul-pastel text-sm font-semibold">Participações</p>
+          <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-lg shadow-lg p-4 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
+            <p className="text-azul-pastel dark:text-azul-claro/70 text-sm font-semibold">Participações</p>
             <p className="text-2xl font-black mt-1">{purchases.length}</p>
           </div>
         </div>
@@ -159,19 +159,19 @@ export default function HistoricoPage() {
         <div className="space-y-3">
           {purchases.map((purchase) => (
             <Link key={purchase.id} href={`/lotes/${purchase.raffleId}`}>
-              <div className="bg-branco rounded-xl shadow-md hover:shadow-lg p-6 border border-cinza-claro cursor-pointer transition transform hover:scale-102">
+              <div className="bg-branco dark:bg-[#232F3E] rounded-xl shadow-md hover:shadow-lg p-6 border border-cinza-claro dark:border-gray-700 cursor-pointer transition transform hover:scale-102">
                 <div className="flex justify-between items-start">
                   <div className="flex-1">
-                    <h3 className="font-black text-cinza-escuro text-lg">
+                    <h3 className="font-black text-cinza-escuro dark:text-cinza-claro text-lg">
                       {purchase.raffle?.title || "Rifa"}
                     </h3>
-                    <p className="text-cinza text-sm mt-1">
+                    <p className="text-cinza dark:text-gray-400 text-sm mt-1">
                       {purchase.livros} cota{purchase.livros !== 1 ? "s" : ""} •{" "}
                       {new Date(purchase.createdAt).toLocaleDateString("pt-BR")}
                     </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-2xl font-black text-azul-royal">
+                    <div className="text-2xl font-black text-azul-royal dark:text-azul-claro">
                       R$ {Number(purchase.amount).toFixed(2)}
                     </div>
                   </div>
@@ -182,8 +182,8 @@ export default function HistoricoPage() {
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full ${
                         purchase.status === "confirmed"
-                          ? "bg-azul-pastel text-azul-royal"
-                          : "bg-cinza-claro text-cinza-escuro"
+                          ? "bg-azul-pastel text-azul-royal dark:bg-azul-claro/20 dark:text-azul-claro"
+                          : "bg-cinza-claro text-cinza-escuro dark:bg-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {purchase.status === "confirmed"
@@ -194,10 +194,10 @@ export default function HistoricoPage() {
                     <span
                       className={`text-xs font-bold px-3 py-1 rounded-full ${
                         purchase.raffle?.status === "drawn"
-                          ? "bg-azul-pastel text-azul-royal"
+                          ? "bg-azul-pastel text-azul-royal dark:bg-azul-claro/20 dark:text-azul-claro"
                           : purchase.raffle?.status === "open"
-                            ? "bg-azul-pastel text-azul-royal"
-                            : "bg-cinza-claro text-cinza-escuro"
+                            ? "bg-azul-pastel text-azul-royal dark:bg-azul-claro/20 dark:text-azul-claro"
+                            : "bg-cinza-claro text-cinza-escuro dark:bg-gray-700 dark:text-gray-300"
                       }`}
                     >
                       {purchase.raffle?.status === "drawn"
@@ -216,7 +216,7 @@ export default function HistoricoPage() {
                           setSelectedPurchaseAmount(purchase.amount);
                           setShowPixModal(true);
                         }}
-                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal hover:bg-azul-royal hover:text-branco transition"
+                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal dark:bg-azul-claro/20 dark:text-azul-claro hover:bg-azul-royal hover:text-branco dark:hover:bg-azul-claro dark:hover:text-azul-royal transition"
                       >
                         Ver/Pagar PIX
                       </button>
@@ -253,7 +253,7 @@ export default function HistoricoPage() {
                             console.error("Erro ao confirmar:", err);
                           }
                         }}
-                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal hover:bg-azul-royal hover:text-branco transition"
+                        className="text-xs font-bold px-3 py-1 rounded-full bg-azul-pastel text-azul-royal dark:bg-azul-claro/20 dark:text-azul-claro hover:bg-azul-royal hover:text-branco dark:hover:bg-azul-claro dark:hover:text-azul-royal transition"
                       >
                         Já Paguei
                       </button>
@@ -262,7 +262,7 @@ export default function HistoricoPage() {
 
                   {purchase.raffle?.status === "drawn" &&
                     purchase.raffle?.winner && (
-                      <span className="text-sm text-amarelo-gold font-black brancospace-nowrap">
+                      <span className="text-sm text-amarelo-gold dark:text-yellow-400 font-black brancospace-nowrap">
                         Você ganhou!
                       </span>
                     )}

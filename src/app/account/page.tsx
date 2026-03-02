@@ -136,7 +136,7 @@ export default function AccountPage() {
   const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
-    <div className="min-h-screen bg-fundo-cinza py-12">
+    <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="max-w-6xl mx-auto mb-10">
@@ -151,22 +151,22 @@ export default function AccountPage() {
               />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-cinza-escuro">Minha Conta</h1>
-              <p className="text-cinza">Gerenciar informações e histórico de compras</p>
+              <h1 className="text-4xl font-black text-cinza-escuro dark:text-cinza-claro">Minha Conta</h1>
+              <p className="text-cinza dark:text-gray-400">Gerenciar informações e histórico de compras</p>
             </div>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {/* Perfil */}
-          <div className="lg:col-span-2 bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
+          <div className="lg:col-span-2 bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-gray-700">
             <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-black text-cinza flex items-center gap-2">
+              <h2 className="text-2xl font-black text-cinza dark:text-cinza-claro flex items-center gap-2">
                 Informações Pessoais
               </h2>
               <button
                 onClick={() => setEditing(!editing)}
-                className="flex items-center gap-2 bg-azul-royal hover:bg-branco hover:text-azul-royal border cursor-pointer text-branco px-4 py-2 rounded-full font-bold transition"
+                className="flex items-center gap-2 bg-azul-royal dark:bg-azul-claro hover:bg-branco hover:text-azul-royal dark:hover:bg-amarelo-claro dark:hover:text-azul-royal border cursor-pointer text-branco px-4 py-2 rounded-full font-bold transition"
               >
                 {editing ? (
                   <>
@@ -183,13 +183,13 @@ export default function AccountPage() {
             </div>
 
             {error && (
-              <div className="bg-vermelho-pastel text-vermelho-vivo p-4 rounded-lg mb-6">
+              <div className="bg-vermelho-pastel dark:bg-red-900/20 text-vermelho-vivo dark:text-red-400 p-4 rounded-lg mb-6">
                 {error}
               </div>
             )}
 
             {success && (
-              <div className="bg-azul-pastel border-l-4 border-azul-royal text-azul-royal p-4 rounded-lg mb-6">
+              <div className="bg-azul-pastel dark:bg-azul-claro/20 border-l-4 border-azul-royal dark:border-azul-claro text-azul-royal dark:text-azul-claro p-4 rounded-lg mb-6">
                 {success}
               </div>
             )}
@@ -197,8 +197,8 @@ export default function AccountPage() {
             {editing ? (
               <form onSubmit={handleUpdateProfile} className="space-y-6">
                 <div>
-                  <label className="text-cinza-escuro font-bold text-sm mb-2 flex items-center gap-2">
-                    <User className="w-4 h-4 text-azul-royal" />
+                  <label className="text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
+                    <User className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                     Nome
                   </label>
                   <input
@@ -206,13 +206,13 @@ export default function AccountPage() {
                     name="name"
                     value={formData.name}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-cinza-claro rounded-lg px-4 py-3 text-cinza-escuro focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-royal transition"
+                    className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-lg px-4 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-royal transition"
                   />
                 </div>
 
                 <div>
-                  <label className=" text-cinza-escuro font-bold text-sm mb-2 flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-azul-royal" />
+                  <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                     Telefone
                   </label>
                   <input
@@ -220,41 +220,41 @@ export default function AccountPage() {
                     name="phone"
                     value={formData.phone}
                     onChange={handleInputChange}
-                    className="w-full border-2 border-cinza-claro rounded-lg px-4 py-3 text-cinza-escuro focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-royal transition"
+                    className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-lg px-4 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-royal transition"
                   />
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className=" text-cinza-escuro font-bold text-sm mb-2 flex items-center gap-2">
-                      <Mail className="w-4 h-4 text-azul-royal" />
+                    <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
+                      <Mail className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       Email
                     </label>
                     <input
                       type="email"
                       value={user.email}
                       disabled
-                      className="w-full border-2 border-cinza-claro rounded-lg px-4 py-3 text-cinza bg-fundo-cinza cursor-not-allowed"
+                      className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-lg px-4 py-3 text-cinza dark:text-gray-500 bg-fundo-cinza dark:bg-[#1a2332] cursor-not-allowed"
                     />
                   </div>
 
                   <div>
-                    <label className=" text-cinza-escuro font-bold text-sm mb-2 flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-azul-royal" />
+                    <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-sm mb-2 flex items-center gap-2">
+                      <FileText className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       CPF
                     </label>
                     <input
                       type="text"
                       value={user.cpf}
                       disabled
-                      className="w-full border-2 border-cinza-claro rounded-lg px-4 py-3 text-cinza bg-fundo-cinza cursor-not-allowed"
+                      className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-lg px-4 py-3 text-cinza dark:text-gray-500 bg-fundo-cinza dark:bg-[#1a2332] cursor-not-allowed"
                     />
                   </div>
                 </div>
 
                 <button
                   type="submit"
-                  className="w-full bg-azul-royal text-branco hover:bg-branco border hover:text-azul-royal py-3 rounded-lg font-extrabold transition flex items-center justify-center gap-2"
+                  className="w-full bg-azul-royal dark:bg-azul-claro text-branco hover:bg-branco dark:hover:bg-amarelo-claro border hover:text-azul-royal dark:hover:text-azul-royal py-3 rounded-lg font-extrabold transition flex items-center justify-center gap-2"
                 >
                   <Save className="w-5 h-5" />
                   Salvar Alterações
@@ -263,55 +263,55 @@ export default function AccountPage() {
             ) : (
               <div className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                    <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                      <User className="w-4 h-4 text-azul-royal" />
+                  <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                    <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                      <User className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       Nome
                     </p>
-                    <p className="text-cinza-escuro font-black text-lg">{censorName(user.name)}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black text-lg">{censorName(user.name)}</p>
                   </div>
-                  <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                    <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Phone className="w-4 h-4 text-azul-royal" />
+                  <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                    <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                      <Phone className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       Telefone
                     </p>
-                    <p className="text-cinza-escuro font-black text-lg">{censorPhoneShort(user.phone)}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black text-lg">{censorPhoneShort(user.phone)}</p>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                    <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Mail className="w-4 h-4 text-azul-royal" />
+                  <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                    <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                      <Mail className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       Email
                     </p>
-                    <p className="text-cinza-escuro font-black">{user.email}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.email}</p>
                   </div>
-                  <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                    <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                      <FileText className="w-4 h-4 text-azul-royal" />
+                  <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                    <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                      <FileText className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       CPF
                     </p>
-                    <p className="text-cinza-escuro font-black">{user.cpf}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.cpf}</p>
                   </div>
                 </div>
 
                 {user.birthDate && (
-                  <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                    <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                      <Calendar className="w-4 h-4 text-azul-royal" />
+                  <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                    <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                      <Calendar className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                       Data de Nascimento
                     </p>
-                    <p className="text-cinza-escuro font-black">{user.birthDate}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.birthDate}</p>
                   </div>
                 )}
 
-                <div className="bg-fundo-cinza p-4 rounded-lg border border-cinza-claro">
-                  <p className="text-cinza font-semibold text-sm flex items-center gap-2 mb-1">
-                    <Calendar className="w-4 h-4 text-azul-royal" />
+                <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
+                  <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
+                    <Calendar className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                     Membro desde
                   </p>
-                  <p className="text-cinza-escuro font-black">
+                  <p className="text-cinza-escuro dark:text-cinza-claro font-black">
                     {new Date(user.createdAt).toLocaleDateString('pt-BR')}
                   </p>
                 </div>
@@ -321,18 +321,18 @@ export default function AccountPage() {
 
           {/* Estatísticas */}
           <div className="space-y-4">
-            <div className="bg-azul-royal rounded-2xl shadow-lg p-6 text-branco">
+            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
-                <p className="text-branco font-semibold text-sm">Livros Adquiridas</p>
+                <p className="text-branco dark:text-azul-claro font-semibold text-sm">Livros Adquiridas</p>
               </div>
               <p className="text-4xl font-black">{totalLivros}</p>
             </div>
 
-            <div className="bg-azul-royal rounded-2xl shadow-lg p-6 text-branco">
+            <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-claro border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
-                <p className="text-branco font-semibold text-sm">Rifas Participadas</p>
+                <p className="text-branco dark:text-azul-claro font-semibold text-sm">Rifas Participadas</p>
               </div>
               <p className="text-4xl font-black">{purchases.length}</p>
             </div>
@@ -340,9 +340,9 @@ export default function AccountPage() {
         </div>
 
         {/* Histórico de Compras */}
-        <div className="bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro max-w-6xl mx-auto mt-8">
-          <h2 className="text-2xl font-black text-cinza-escuro mb-8 flex items-center gap-2">
-            <ShoppingBag className="w-6 h-6 text-azul-royal" />
+        <div className="bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-gray-700 max-w-6xl mx-auto mt-8">
+          <h2 className="text-2xl font-black text-cinza-escuro dark:text-cinza-claro mb-8 flex items-center gap-2">
+            <ShoppingBag className="w-6 h-6 text-azul-royal dark:text-azul-claro" />
             Histórico de Compras
           </h2>
 
@@ -350,25 +350,25 @@ export default function AccountPage() {
             <div className="space-y-3">
               {purchases.map((purchase) => (
                 <Link key={purchase.id} href={`/compra/${purchase.id}`}>
-                  <div className="bg-linear-to-r from-fundo-cinza to-emerald-50 hover:from-emerald-50 hover:to-teal-50 p-6 rounded-lg border border-cinza-claro cursor-pointer transition transform hover:scale-102 hover:border-azul-royal">
+                  <div className="bg-linear-to-r from-fundo-cinza to-emerald-50 dark:from-[#1a2332] dark:to-[#1a2f45] hover:from-emerald-50 hover:to-teal-50 dark:hover:from-[#1a2f45] dark:hover:to-[#1a3858] p-6 rounded-lg border border-cinza-claro dark:border-gray-700 cursor-pointer transition transform hover:scale-102 hover:border-azul-royal dark:hover:border-azul-claro">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
-                        <p className="font-black text-cinza-escuro text-lg mb-2">
+                        <p className="font-black text-cinza-escuro dark:text-cinza-claro text-lg mb-2">
                           {purchase.raffle?.title || 'Rifa'}
                         </p>
-                        <p className="text-cinza text-sm flex items-center gap-2">
-                          <Ticket className="w-4 h-4 text-azul-royal" />
+                        <p className="text-cinza dark:text-gray-400 text-sm flex items-center gap-2">
+                          <Ticket className="w-4 h-4 text-azul-royal dark:text-azul-claro" />
                           {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-black text-azul-royal text-lg mb-2">
+                        <p className="font-black text-azul-royal dark:text-azul-claro text-lg mb-2">
                           R$ {formatDecimal(Number(purchase.amount))}
                         </p>
                         <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
                           purchase.status === 'confirmed' 
-                            ? 'bg-verde-pastel text-verde-menta' 
-                            : 'bg-cinza-claro text-cinza-escuro'
+                            ? 'bg-verde-pastel text-verde-menta dark:bg-green-900/30 dark:text-green-400' 
+                            : 'bg-cinza-claro text-cinza-escuro dark:bg-gray-700 dark:text-gray-300'
                         }`}>
                           {purchase.status === 'confirmed' ? 'Confirmada' : 'Pendente'}
                         </span>
@@ -380,11 +380,11 @@ export default function AccountPage() {
             </div>
           ) : (
             <div className="text-center py-12">
-              <ShoppingBag className="w-16 h-16 text-cinza-claro mx-auto mb-4" />
-              <p className="text-cinza text-lg mb-6">Você ainda não participou de nenhuma lote</p>
+              <ShoppingBag className="w-16 h-16 text-cinza-claro dark:text-gray-600 mx-auto mb-4" />
+              <p className="text-cinza dark:text-gray-400 text-lg mb-6">Você ainda não participou de nenhuma lote</p>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 bg-azul-royal text-branco px-8 py-3 rounded-full font-bold hover:bg-branco border hover:text-azul-royal transition transform hover:scale-105"
+                className="inline-flex items-center gap-2 bg-azul-royal dark:bg-azul-claro text-branco px-8 py-3 rounded-full font-bold hover:bg-branco dark:hover:bg-amarelo-claro border hover:text-azul-royal dark:hover:text-azul-royal transition transform hover:scale-105"
               >
                 <Ticket className="w-5 h-5" />
                 Explorar Lotes
