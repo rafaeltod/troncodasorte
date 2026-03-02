@@ -1055,17 +1055,17 @@ export default function RaffleDetailPage() {
             )}
             {/* caixinhas dos "termos"?? */}
             <ol className='w-full flex flex-wrap gap-2 mt-5 align-top'>
-              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro dark:text-azul-royal flex items-center gap-1">
                 <Lock className="w-3 h-3" />
                 <p>Conexão segura (HTTPS)</p>
               </li>
               
-              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1 dark:text-azul-royal">
                 <Shield className="w-3 h-3" />
                 <p>Proteção LGPD</p>
               </li>
 
-              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1">
+              <li className="rounded-full py-1 px-3 text-branco bg-cinza dark:bg-cinza-claro flex items-center gap-1 dark:text-azul-royal">
                 <CreditCard className="w-3 h-3" />
                 <p>Pagamento confiavel</p>
               </li>
