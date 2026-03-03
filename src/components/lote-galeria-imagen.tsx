@@ -65,7 +65,6 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
   if (!current) return null
 
   return (
-  return (
     <div className="flex flex-col gap-2">
       {/* Imagem */}
       <div className="relative bg-branco rounded-2xl shadow-lg overflow-hidden border border-gray-200">
