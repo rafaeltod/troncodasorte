@@ -25,6 +25,7 @@ interface CheckoutFlowProps {
   isOpen: boolean
   selectedQuantity: number
   cupom?: CupomData
+  progressiveDiscountPct?: number
 }
 
 type CheckoutStep = 'phone' | 'register' | 'confirm' | 'payment'
@@ -42,6 +43,7 @@ export function CheckoutFlow({
   isOpen,
   selectedQuantity,
   cupom,
+  progressiveDiscountPct = 0,
 }: CheckoutFlowProps) {
   const router = useRouter()
   const { user, refetch } = useAuth()
@@ -75,18 +77,22 @@ export function CheckoutFlow({
 
   const numericLivroPrice = Number(livroPrice)
   const totalQuantity = selectedQuantity + extraQuantity
-  const originalTotal = totalQuantity * numericLivroPrice
+  const originalTotal = Math.round(totalQuantity * numericLivroPrice * 100) / 100
 
+  // Desconto progressivo
+  const progressiveDiscountAmount = Math.round(originalTotal * (progressiveDiscountPct / 100) * 100) / 100
   // Calcular desconto do cupom
-  let descontoTotal = 0
+  let descontoTotal = progressiveDiscountAmount
   if (cupom) {
+    const baseAfterProgressive = originalTotal - progressiveDiscountAmount
     if (cupom.tipoDesconto === 'percentual') {
-      descontoTotal = originalTotal * (cupom.discount / 100)
+      descontoTotal += Math.round(baseAfterProgressive * (cupom.discount / 100) * 100) / 100
     } else {
-      descontoTotal = Math.min(cupom.discount, originalTotal)
+      descontoTotal += Math.min(cupom.discount, baseAfterProgressive)
     }
+    descontoTotal = Math.round(descontoTotal * 100) / 100
   }
-  const totalPrice = originalTotal - descontoTotal
+  const totalPrice = Math.round((originalTotal - descontoTotal) * 100) / 100
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -278,7 +284,25 @@ export function CheckoutFlow({
             <p className="text-sm text-cinza-escuro">Quantidade:</p>
             <p className="font-bold text-cinza">{selectedQuantity}x</p>
           </div>
-          <div className="pt-2 flex justify-between items-center">
+          {descontoTotal > 0 && (
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-sm text-cinza-escuro">Subtotal:</p>
+              <p className="font-bold text-cinza line-through">R$ {formatDecimal(originalTotal)}</p>
+            </div>
+          )}
+          {progressiveDiscountPct > 0 && (
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-sm text-verde-agua font-semibold">Desconto progressivo ({progressiveDiscountPct}%):</p>
+              <p className="font-bold text-verde-agua">-R$ {formatDecimal(progressiveDiscountAmount)}</p>
+            </div>
+          )}
+          {cupom && descontoTotal > progressiveDiscountAmount && (
+            <div className="flex justify-between items-center mb-1">
+              <p className="text-sm text-azul-royal font-semibold">Cupom {cupom.code}:</p>
+              <p className="font-bold text-azul-royal">-R$ {formatDecimal(descontoTotal - progressiveDiscountAmount)}</p>
+            </div>
+          )}
+          <div className="pt-2 border-t border-cinza-claro flex justify-between items-center">
             <p className="text-cinza-escuro">Total:</p>
             <p className="text-2xl font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</p>
           </div>
@@ -490,7 +514,13 @@ export function CheckoutFlow({
                 <strong>Livros:</strong> {totalQuantity}x
               </p>
               <p className="border-t border-azul-pastel pt-2">
+                {descontoTotal > 0 && (
+                  <span className="block text-cinza line-through text-sm">R$ {formatDecimal(originalTotal)}</span>
+                )}
                 <strong>Total:</strong> <span className="text-[22px] font-black text-azul-royal">R$ {formatDecimal(totalPrice)}</span>
+                {progressiveDiscountPct > 0 && (
+                  <span className="block text-xs text-verde-agua font-semibold mt-0.5">Desconto progressivo -{progressiveDiscountPct}% aplicado</span>
+                )}
               </p>
             </div>
           </div>

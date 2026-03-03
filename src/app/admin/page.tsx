@@ -138,63 +138,65 @@ export default function AdminDashboardPage() {
 
   return (
     <AdminRoute>
-      <div className="min-h-screen bg-fundo-cinza py-12">
+      <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
         <div className={mainConfig}>
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-5xl font-black text-cinza-escuro mb-3">
+            <h1 className="text-5xl font-black text-cinza-escuro dark:text-amarelo-claro mb-3">
               Painel do Admin
             </h1>
-            <p className="text-lg text-cinza mb-6">
+            <p className="text-lg text-cinza dark:text-gray-400 mb-6">
               Gerencie todas os seus lotes em um só lugar
             </p>
 
-            <Link
-              href="/criar-lote"
-              className="inline-flex items-center gap-2 bg-azul-royal text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco hover:text-azul-royal border shadow-lg"
-            >
-              <Plus size={20} /> Criar Novo Lote
-            </Link>
-            <Link
-              href="/admin/cupons"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition transform hover:scale-105 shadow-lg ml-3"
-            >
-              <Tag size={20} /> Gerenciar Cupons
-            </Link>
+            <div className="flex flex-col sm:flex-row items-start gap-3">
+              <Link
+                href="/criar-lote"
+                className="inline-flex items-center gap-2 bg-azul-royal dark:bg-azul-claro text-branco px-6 py-3 rounded-full font-bold transition transform hover:bg-branco dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal border shadow-lg"
+              >
+                <Plus size={20} /> Criar Novo Lote
+              </Link>
+              <Link
+                href="/admin/cupons"
+                className="inline-flex items-center gap-2 bg-blue-600 dark:bg-blue-500 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 dark:hover:bg-blue-400 transition transform hover:scale-105 shadow-lg"
+              >
+                <Tag size={20} /> Gerenciar Cupons
+              </Link>
+            </div>
           </div>
 
           {/* Stats */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
+            <div className="bg-branco dark:bg-[#232F3E] p-6 rounded-xl shadow-lg border-2 border-cinza-claro dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-cinza font-bold">Total de Lotes</h3>
-                <Award className="text-azul-royal" size={24} />
+                <h3 className="text-cinza dark:text-gray-400 font-bold">Total de Lotes</h3>
+                <Award className="text-azul-royal dark:text-gray-400" size={24} />
               </div>
-              <p className="text-3xl font-black text-cinza-escuro">{stats.total}</p>
+              <p className="text-3xl font-black text-cinza-escuro dark:text-cinza-claro">{stats.total}</p>
             </div>
 
-            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
+            <div className="bg-branco dark:bg-[#232F3E] p-6 rounded-xl shadow-lg border-2 border-cinza-claro dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-cinza font-bold">Lotes Abertos</h3>
-                <TrendingUp className="text-cinza" size={24} />
+                <h3 className="text-cinza dark:text-gray-400 font-bold">Lotes Abertos</h3>
+                <TrendingUp className="text-cinza dark:text-gray-400" size={24} />
               </div>
-              <p className="text-3xl font-black text-cinza">{stats.open}</p>
+              <p className="text-3xl font-black text-cinza dark:text-cinza-claro">{stats.open}</p>
             </div>
 
-            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
+            <div className="bg-branco dark:bg-[#232F3E] p-6 rounded-xl shadow-lg border-2 border-cinza-claro dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-cinza font-bold">Livros Vendidos</h3>
-                <Users className="text-cinza" size={24} />
+                <h3 className="text-cinza dark:text-gray-400 font-bold">Livros Vendidos</h3>
+                <Users className="text-cinza dark:text-gray-400" size={24} />
               </div>
-              <p className="text-3xl font-black text-cinza">{stats.totalSold}</p>
+              <p className="text-3xl font-black text-cinza dark:text-cinza-claro">{stats.totalSold}</p>
             </div>
 
-            <div className="bg-branco p-6 rounded-xl shadow-lg border-2 border-cinza-claro">
+            <div className="bg-branco dark:bg-[#232F3E] p-6 rounded-xl shadow-lg border-2 border-cinza-claro dark:border-gray-700">
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-cinza font-bold">Receita Total</h3>
-                <DollarSign className="text-cinza" size={24} />
+                <h3 className="text-cinza dark:text-gray-400 font-bold">Receita Total</h3>
+                <DollarSign className="text-cinza dark:text-gray-400" size={24} />
               </div>
-              <p className="text-3xl font-black text-cinza">{formatCurrency(stats.totalRevenue)}</p>
+              <p className="text-3xl font-black text-cinza dark:text-cinza-claro">{formatCurrency(stats.totalRevenue)}</p>
             </div>
           </div>
 
@@ -211,8 +213,8 @@ export default function AdminDashboardPage() {
                 onClick={() => setFilter(f.id as any)}
                 className={`px-3 py-1 md:px-6 md:py-2 cursor-pointer rounded-full font-bold transition ${
                   filter === f.id
-                    ? 'bg-azul-claro text-branco'
-                    : 'bg-branco text-azul-claro border-2 border-azul-claro hover:bg-azul-pastel'
+                    ? 'bg-azul-claro text-branco dark:bg-amarelo-claro dark:text-azul-royal'
+                    : 'bg-branco dark:bg-amarelo-pastel text-azul-claro dark:text-azul-royal border-2 border-azul-claro dark:border-amarelo-claro hover:bg-azul-pastel dark:hover:bg-amarelo-claro'
                 }`}
               >
                 {f.label}
@@ -226,24 +228,24 @@ export default function AdminDashboardPage() {
               <div className="text-xl font-bold text-cinza dark:text-cinza-claro">Carregando...</div>
             </div>
           ) : filteredLotes.length > 0 ? (
-            <div className="bg-branco rounded-xl shadow-lg overflow-hidden border-2 border-cinza-claro">
+            <div className="bg-branco dark:bg-[#232F3E] rounded-xl shadow-lg overflow-hidden border-2 border-cinza-claro dark:border-gray-700">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-fundo-cinza border-b-2 border-cinza-claro">
+                  <thead className="bg-fundo-cinza dark:bg-[#1a2332] border-b-2 border-cinza-claro dark:border-gray-700">
                     <tr>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Lote</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Status</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Prêmio</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Livros</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Participantes</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Receita</th>
-                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro">Ganhador</th>
-                      <th className="px-6 py-4 text-right text-sm font-black text-cinza-escuro">Ações</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Lote</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Status</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Prêmio</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Livros</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Participantes</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Receita</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Ganhador</th>
+                      <th className="px-6 py-4 text-right text-sm font-black text-cinza-escuro dark:text-cinza-claro">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-cinza-claro">
+                  <tbody className="divide-y divide-cinza-claro dark:divide-gray-700">
                     {filteredLotes.map((lote) => (
-                      <tr key={lote.id} className="hover:bg-fundo-cinza transition">
+                      <tr key={lote.id} className="hover:bg-fundo-cinza dark:hover:bg-[#1a2332] transition">
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
                             {lote.image && (
@@ -254,8 +256,8 @@ export default function AdminDashboardPage() {
                               />
                             )}
                             <div>
-                              <p className="font-bold text-cinza">{lote.title}</p>
-                              <p className="text-sm text-fundo-cinza0">
+                              <p className="font-bold text-cinza dark:text-cinza-claro">{lote.title}</p>
+                              <p className="text-sm text-fundo-cinza0 dark:text-gray-500">
                                 {new Date(lote.createdAt).toLocaleDateString('pt-BR')}
                               </p>
                             </div>
@@ -263,18 +265,18 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-6 py-4">{getStatusBadge(lote.status)}</td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-azul-royal">
+                          <span className="font-bold text-azul-royal dark:text-azul-claro">
                             {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : 'Item'}
                           </span>
                         </td>
                         <td className="px-6 py-4">
                           <div className="text-sm">
-                            <p className="font-bold text-cinza">
+                            <p className="font-bold text-cinza dark:text-cinza-claro">
                               {lote.soldLivros}/{lote.totalLivros}
                             </p>
-                            <div className="w-20 h-2 bg-cinza-claro rounded-full mt-1">
+                            <div className="w-20 h-2 bg-cinza-claro dark:bg-gray-700 rounded-full mt-1">
                               <div
-                                className="h-full bg-amarelo-gold rounded-full"
+                                className="h-full bg-amarelo-gold dark:bg-yellow-500 rounded-full"
                                 style={{
                                   width: `${(lote.soldLivros / lote.totalLivros) * 100}%`,
                                 }}
@@ -283,10 +285,10 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-azul-claro">{lote.participants}</span>
+                          <span className="font-bold text-azul-claro dark:text-azul-claro">{lote.participants}</span>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-cinza">
+                          <span className="font-bold text-cinza dark:text-cinza-claro">
                             {formatCurrency(lote.soldLivros * lote.livroPrice)}
                           </span>
                         </td>
@@ -335,16 +337,16 @@ export default function AdminDashboardPage() {
               </div>
             </div>
           ) : (
-            <div className="text-center py-16 bg-branco rounded-2xl border-2 border-dashed border-cinza-claro shadow-lg">
-              <h3 className="text-2xl font-bold text-cinza mb-2">
+            <div className="text-center py-16 bg-branco dark:bg-[#232F3E] rounded-2xl border-2 border-dashed border-cinza-claro dark:border-gray-700 shadow-lg">
+              <h3 className="text-2xl font-bold text-cinza dark:text-cinza-claro mb-2">
                 Nenhuma lote encontrada
               </h3>
-              <p className="text-cinza mb-6">
+              <p className="text-cinza dark:text-gray-400 mb-6">
                 Comece criando sua primeira lote!
               </p>
               <Link
                 href="/criar-lote"
-                className="inline-flex items-center gap-2 bg-azul-royal text-branco px-6 py-3 rounded-xl font-bold hover:bg-azul-claro transition"
+                className="inline-flex items-center gap-2 bg-azul-royal dark:bg-azul-claro text-branco px-6 py-3 rounded-xl font-bold hover:bg-azul-claro dark:hover:bg-amarelo-claro hover:text-azul-royal dark:hover:text-azul-royal transition"
               >
                 <Plus size={20} /> Criar Lote
               </Link>

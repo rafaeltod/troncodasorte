@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, TrendingUp, Menu, X, LogOut, Shield, Home } from 'lucide-react'
+import { Ticket, User, Trophy, TrendingUp, Menu, X, LogOut, Shield, Home, Plus } from 'lucide-react'
 import { FaAdjust } from "react-icons/fa";
 
 export function Navbar() {
@@ -106,9 +106,10 @@ export function Navbar() {
                       </Link>
                       <Link
                         href="/criar-lote"
-                        className="bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
+                        className="flex items-center gap-2 bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
                       >
-                        + Criar Lote
+                        <Plus className="w-4 h-4" />
+                        Criar Lote
                       </Link>
                     </>
                   )}
@@ -182,10 +183,11 @@ export function Navbar() {
                       </Link>
                       <Link
                         href="/criar-lote"
-                        className=" text-branco hover:text-branco/90 px-4 py-2 rounded-full font-semibold transition-colors text-left m-2"
+                        className="flex items-center gap-2 text-branco hover:text-branco/90 pr-4 ml-4 py-2 rounded-full font-semibold transition-colors text-left m-2"
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        + Criar Lote
+                        <Plus className="w-4 h-4" />
+                        Criar Lote
                       </Link>
                     </>
                   )}

@@ -65,6 +65,7 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
   if (!current) return null
 
   return (
+  return (
     <div className="flex flex-col gap-2">
       {/* Imagem */}
       <div className="relative bg-branco rounded-2xl shadow-lg overflow-hidden border border-gray-200">
@@ -95,13 +96,13 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
             {/* Setas */}
             <button
               onClick={prev}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-branco/80 hover:bg-branco text-cinza-escuro rounded-full p-2 shadow transition z-10"
+              className="absolute left-2 top-1/2 -translate-y-1/2 cursor-pointer bg-preto/80 text-branco rounded-full p-2 shadow transition z-10"
             >
               <ChevronLeft className="w-5 h-5" />
             </button>
             <button
               onClick={next}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-branco/80 hover:bg-branco text-cinza-escuro rounded-full p-2 shadow transition z-10"
+              className="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer bg-preto/80 text-branco rounded-full p-2 shadow transition z-10"
             >
               <ChevronRight className="w-5 h-5" />
             </button>

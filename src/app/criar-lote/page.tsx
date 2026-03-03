@@ -108,24 +108,24 @@ export default function CreateRafflePageContent() {
   }
 
   return (
-    <div className="min-h-screen bg-fundo-cinza py-12">
+    <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-4 mb-4">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-azul-royal">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-azul-royal dark:bg-azul-claro">
               <Plus className="w-8 h-8 text-branco" />
             </div>
             <div>
-              <h1 className="text-4xl font-black text-cinza-escuro">Criar Novo Lote</h1>
-              <p className="text-cinza">Preencha os dados para criar sua lote e ganhar!</p>
+              <h1 className="text-4xl font-black text-cinza-escuro dark:text-cinza-claro">Criar Novo Lote</h1>
+              <p className="text-cinza dark:text-gray-200">Preencha os dados para criar sua lote e ganhar!</p>
             </div>
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="bg-branco rounded-2xl shadow-lg p-8 space-y-8 border border-cinza-claro">
+        <form onSubmit={handleSubmit} className="bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 space-y-8 border border-cinza-claro dark:border-gray-700">
           {error && (
-            <div className="bg-vermelho border-l-4 border-vermelho-vivo text-vermelho-vivo p-4 rounded-lg flex gap-3">
+            <div className="bg-vermelho-pastel dark:bg-red-900/20 border-l-4 border-vermelho-vivo dark:border-red-500 text-vermelho-vivo dark:text-red-400 p-4 rounded-lg flex gap-3">
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <div>
                 <p className="font-bold">Erro</p>
@@ -135,14 +135,14 @@ export default function CreateRafflePageContent() {
           )}
 
           {success && (
-            <div className="bg-verde-pastel text-verde-menta p-4 rounded-lg">
+            <div className="bg-verde-pastel dark:bg-green-900/20 border-l-4 border-verde-menta dark:border-green-500 text-verde-menta dark:text-green-400 p-4 rounded-lg">
               <p className="font-bold">Lote criada com sucesso! Redirecionando...</p>
             </div>
           )}
 
           <div>
-            <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-azul-royal" />
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
               Título da Lote
             </label>
             <input
@@ -152,21 +152,21 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               required
               minLength={5}
-              className="w-full border-2 border-cinza-claro rounded-xl px-5 py-3 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro transition"
+              className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
               placeholder="Ex: Lote do iPhone 15 Pro"
             />
           </div>
 
           <div>
-            <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-              <FileText className="w-5 h-5 text-azul-royal" />
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
               Descrição
             </label>
             <textarea
               name="description"
               value={formData.description}
               onChange={handleInputChange}
-              className="w-full border-2 border-cinza-claro rounded-xl px-5 py-3 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro resize-none"
+              className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 resize-none"
               rows={5}
               placeholder="Descreva sua lote em detalhes... (condição, especificações, etc)"
             ></textarea>
@@ -174,10 +174,10 @@ export default function CreateRafflePageContent() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-                <DollarSign className="w-5 h-5 text-azul-royal" />
+              <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+                <DollarSign className="w-5 h-5" />
                 Valor do Prêmio em Dinheiro (R$)
-                <span className="text-sm font-normal text-fundo-cinza0">(opcional)</span>
+                <span className="text-sm font-normal text-cinza dark:text-gray-400">(opcional)</span>
               </label>
               <input
                 type="number"
@@ -186,14 +186,14 @@ export default function CreateRafflePageContent() {
                 onChange={handleInputChange}
                 step="0.01"
                 min="0"
-                className="w-full border-2 border-cinza-claro rounded-xl px-5 py-3 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro transition"
+                className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
                 placeholder="0.00 (deixe vazio se o prêmio não for em dinheiro)"
               />
-              <p className="text-sm text-fundo-cinza0 mt-1">Se o prêmio não for em dinheiro, deixe em branco. Use o título e descrição para descrever o prêmio.</p>
+              <p className="text-sm text-cinza dark:text-gray-300 mt-1">Se o prêmio não for em dinheiro, deixe em branco. Use o título e descrição para descrever o prêmio.</p>
             </div>
             <div>
-              <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-                <Ticket className="w-5 h-5 text-azul-royal" />
+              <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+                <Ticket className="w-5 h-5" />
                 Total de Livros
               </label>
               <input
@@ -203,15 +203,15 @@ export default function CreateRafflePageContent() {
                 onChange={handleInputChange}
                 required
                 min="1"
-                className="w-full border-2 border-cinza-claro rounded-xl px-5 py-3 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro transition"
+                className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
                 placeholder="100"
               />
             </div>
           </div>
 
           <div>
-            <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-              <DollarSign className="w-5 h-5 text-azul-royal" />
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <DollarSign className="w-5 h-5" />
               Preço da Livro (R$)
             </label>
             <input
@@ -221,39 +221,39 @@ export default function CreateRafflePageContent() {
               onChange={handleInputChange}
               step="0.01"
               min="0.01"
-              className="w-full border-2 border-cinza-claro rounded-xl px-5 py-3 text-cinza-escuro placeholder-cinza focus:outline-none focus:border-azul-royal focus:ring-2 focus:ring-azul-claro transition"
+              className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
               placeholder="0.50"
             />
           </div>
 
           <div>
-            <label className=" text-cinza-escuro font-bold text-lg mb-3 flex items-center gap-2">
-              <ImageIcon className="w-5 h-5 text-azul-royal" />
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <ImageIcon className="w-5 h-5" />
               Imagens da Lote (Opcional)
             </label>
             <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
           </div>
 
           <div>
-            <label className=" text-gray-900 font-bold text-lg mb-3 flex items-center gap-2">
-              <Gift className="w-5 h-5 text-emerald-600" />
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <Gift className="w-5 h-5" />
               Prêmios Aleatórios
-              <span className="text-sm font-normal text-gray-500">(opcional)</span>
+              <span className="text-sm font-normal text-cinza dark:text-gray-400">(opcional)</span>
             </label>
-            <p className="text-sm text-gray-500 mb-4">Adicione prêmios extras que serão sorteados junto com o resultado principal. Cada prêmio pode ser em dinheiro ou um item.</p>
+            <p className="text-sm text-cinza dark:text-gray-300 mb-4">Adicione prêmios extras que serão sorteados junto com o resultado principal. Cada prêmio pode ser em dinheiro ou um item.</p>
 
             {premios.length > 0 && (
               <div className="space-y-3 mb-4">
                 {premios.map((premio, index) => (
-                  <div key={index} className="bg-purple-50 border border-purple-200 rounded-xl p-4">
+                  <div key={index} className="bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-700 rounded-xl p-4">
                     <div className="flex items-center justify-between mb-3">
-                      <span className="text-sm font-bold text-purple-700">{index + 1}º Prêmio Aleatório</span>
+                      <span className="text-sm font-bold text-purple-700 dark:text-purple-300">{index + 1}º Prêmio Aleatório</span>
                       <button
                         type="button"
                         onClick={() => {
                           setPremios(prev => prev.filter((_, i) => i !== index))
                         }}
-                        className="text-red-400 hover:text-red-600 transition"
+                        className="text-red-400 dark:text-red-500 hover:text-red-600 dark:hover:text-red-400 transition"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -267,8 +267,8 @@ export default function CreateRafflePageContent() {
                         }}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition border-2 ${
                           premio.tipo === 'dinheiro'
-                            ? 'bg-emerald-100 border-emerald-400 text-emerald-700'
-                            : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                            ? 'bg-emerald-100 dark:bg-emerald-900/40 border-emerald-400 dark:border-emerald-600 text-emerald-700 dark:text-emerald-300'
+                            : 'bg-white dark:bg-[#1a2332] border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
                         }`}
                       >
                         <DollarSign className="w-4 h-4" />
@@ -281,8 +281,8 @@ export default function CreateRafflePageContent() {
                         }}
                         className={`flex-1 flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition border-2 ${
                           premio.tipo === 'item'
-                            ? 'bg-purple-100 border-purple-400 text-purple-700'
-                            : 'bg-white border-gray-200 text-gray-500 hover:border-gray-300'
+                            ? 'bg-purple-100 dark:bg-purple-900/40 border-purple-400 dark:border-purple-600 text-purple-700 dark:text-purple-300'
+                            : 'bg-white dark:bg-[#1a2332] border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 hover:border-gray-300 dark:hover:border-gray-600'
                         }`}
                       >
                         <Package className="w-4 h-4" />
@@ -301,7 +301,7 @@ export default function CreateRafflePageContent() {
                           step="0.01"
                           min="0.01"
                           placeholder="Valor em R$"
-                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-200 transition text-sm"
+                          className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-cinza-claro dark:bg-[#1a2332] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-300/50 transition text-sm"
                         />
                       </div>
                     ) : (
@@ -313,7 +313,7 @@ export default function CreateRafflePageContent() {
                             setPremios(prev => prev.map((p, i) => i === index ? { ...p, descricao: e.target.value } : p))
                           }}
                           placeholder="Ex: Fone Bluetooth, Camiseta, etc"
-                          className="w-full border-2 border-gray-200 rounded-lg px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition text-sm"
+                          className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-cinza-claro dark:bg-[#1a2332] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-purple-500 dark:focus:border-purple-600 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-300/50 transition text-sm"
                         />
                       </div>
                     )}
@@ -327,7 +327,7 @@ export default function CreateRafflePageContent() {
               onClick={() => {
                 setPremios(prev => [...prev, { tipo: 'dinheiro', descricao: '', valor: '' }])
               }}
-              className="w-full border-2 border-dashed border-purple-300 text-purple-600 hover:bg-purple-50 rounded-xl py-3 px-4 font-bold transition flex items-center justify-center gap-2"
+              className="w-full border-2 border-dashed border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-xl py-3 px-4 font-bold transition flex items-center justify-center gap-2"
             >
               <Plus className="w-4 h-4" />
               Adicionar Prêmio Aleatório
@@ -337,7 +337,7 @@ export default function CreateRafflePageContent() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-azul-royal text-branco py-4 rounded-xl font-extrabold text-lg hover:bg-azul-claro transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
+            className="w-full bg-azul-royal dark:bg-azul-claro text-branco dark:text-azul-royal py-4 rounded-xl font-extrabold text-lg hover:bg-azul-claro dark:hover:bg-amarelo-claro transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg flex items-center justify-center gap-2"
           >
             {isSubmitting ? (
               <>
@@ -351,8 +351,8 @@ export default function CreateRafflePageContent() {
             )}
           </button>
 
-          <p className="text-center text-cinza text-sm bg-azul-pastel rounded-lg p-4 flex gap-2 items-start">
-            <AlertCircle className="w-5 h-5 text-azul-royal shrink-0 mt-0.5" />
+          <p className="text-center text-cinza dark:text-gray-100 text-sm bg-azul-pastel dark:bg-azul-claro/20 rounded-lg p-4 flex gap-2 items-start">
+            <AlertCircle className="w-5 h-5 text-azul-royal dark:text-azul-claro shrink-0 mt-0.5" />
             <span><strong>Dica:</strong> Quanto mais atrativo seu prêmio e descrição, mais pessoas vão querer participar!</span>
           </p>
         </form>

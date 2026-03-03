@@ -75,7 +75,7 @@ export default function MyTicketsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-{background}">
+    <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro">
       <div className="max-w-md mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-5">
           <a href="/" className=" items-center gap-2 text-azul-royal dark:text-amarelo-claro text-1xl font-bold inline-flex transition">
@@ -93,7 +93,7 @@ export default function MyTicketsPage() {
           </p>
 
           {error && (
-            <div className="mb-6 bg-fundo-cinza border-l-4 border-vermelho-vivo text-vermelho-vivo p-4 rounded-lg">
+            <div className="mb-6 bg-fundo-cinza dark:bg-red-900/20 border-l-4 border-vermelho-vivo dark:border-red-500 text-vermelho-vivo dark:text-red-400 p-4 rounded-lg">
               <p className="font-bold">{error}</p>
             </div>
           )}
@@ -111,7 +111,7 @@ export default function MyTicketsPage() {
                 onChange={handleInputChange}
                 placeholder="(00) 00000-0000"
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-white text-cinza-escuro font-semibold"
+                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro dark:border-gray-700 focus:border-azul-royal focus:outline-none bg-white dark:bg-[#1a2332] text-cinza-escuro dark:text-cinza-claro font-semibold"
                 required
               />
             </div>
@@ -128,7 +128,7 @@ export default function MyTicketsPage() {
                 onChange={handleInputChange}
                 placeholder="000.000.000-00"
                 disabled={loading}
-                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro focus:border-azul-royal focus:outline-none bg-white text-cinza-escuro font-semibold"
+                className="w-full px-4 py-3 rounded-lg border-2 border-cinza-claro dark:border-gray-700 focus:border-azul-royal focus:outline-none bg-white dark:bg-[#1a2332] text-cinza-escuro dark:text-cinza-claro font-semibold"
                 required
               />
             </div>
@@ -142,8 +142,8 @@ export default function MyTicketsPage() {
             </button>
           </form>
 
-          <div className="bg-azul-pastel rounded-lg p-4 mt-6">
-            <p className="text-sm text-azul-royal font-semibold">
+          <div className="bg-azul-pastel dark:bg-azul-claro/20 rounded-lg p-4 mt-6">
+            <p className="text-sm text-azul-royal dark:text-azul-claro font-semibold">
               Seus dados são protegidos e usados apenas para localizar suas
               compras.
             </p>
