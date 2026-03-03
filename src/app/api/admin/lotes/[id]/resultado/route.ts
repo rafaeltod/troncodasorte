@@ -30,12 +30,27 @@ export async function POST(
 
     const { id } = await params
     const body = await req.json()
-    const { drawnNumber } = body
+    const { drawnNumber, concursoCorrespondente } = body
 
     // Validar o número informado
     if (!drawnNumber || typeof drawnNumber !== 'string') {
       return NextResponse.json(
         { error: 'Número do sorteio é obrigatório' },
+        { status: 400 }
+      )
+    }
+
+    // Validar concurso correspondente
+    if (!concursoCorrespondente || typeof concursoCorrespondente !== 'string') {
+      return NextResponse.json(
+        { error: 'Sorteio correspondente é obrigatório' },
+        { status: 400 }
+      )
+    }
+
+    if (!concursoCorrespondente.trim().toUpperCase().startsWith('CONCURSO')) {
+      return NextResponse.json(
+        { error: 'Sorteio deve começar com "Concurso"' },
         { status: 400 }
       )
     }
@@ -249,10 +264,11 @@ export async function POST(
            "drawnNumber" = $3, 
            "winnerNumber" = $4,
            "premiosAleatorios" = $5,
+           "concursoCorrespondente" = $6,
            "updatedAt" = NOW()
        WHERE id = $1
-       RETURNING id, title, status, winner, "drawnNumber", "winnerNumber", "premiosAleatorios"`,
-      [id, winnerData.userId, cleanNumber, winnerNumber, premiosAleatorios.length > 0 ? JSON.stringify(premiosAleatorios) : null]
+       RETURNING id, title, status, winner, "drawnNumber", "winnerNumber", "premiosAleatorios", "concursoCorrespondente"`,
+      [id, winnerData.userId, cleanNumber, winnerNumber, premiosAleatorios.length > 0 ? JSON.stringify(premiosAleatorios) : null, concursoCorrespondente.trim()]
     )
 
     return NextResponse.json({
@@ -262,6 +278,7 @@ export async function POST(
         drawnNumber: cleanNumber,
         winnerNumber,
         incrementos: attempts,
+        concursoCorrespondente: concursoCorrespondente.trim(),
         winner: {
           userId: winnerData.userId,
           name: winnerData.userName,
