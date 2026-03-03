@@ -48,9 +48,19 @@ export async function GET(req: NextRequest) {
            FROM livros 
            WHERE "raffleId" = r.id AND status = 'confirmed'),
           0
-        ) as participants
+        ) as participants,
+        CASE WHEN r.winner IS NOT NULL THEN
+          json_build_object(
+            'name', wu.name,
+            'cpf', wu.cpf,
+            'phone', wu.phone,
+            'email', wu.email,
+            'winnerNumber', r."winnerNumber"
+          )
+        ELSE NULL END as "winnerInfo"
        FROM lotes r
        JOIN "user" u ON r."creatorId" = u.id
+       LEFT JOIN "user" wu ON wu.id = r.winner
        WHERE r."creatorId" = $1
        ORDER BY r."createdAt" DESC`,
       [token]
