@@ -81,7 +81,6 @@ export function RaffleImageGallery({ mainImage, images, status }: RaffleImageGal
 
   // Pointer drag
   const handleLbPointerDown = useCallback((e: React.PointerEvent) => {
-    if (e.touches !== undefined) return // handled by touch events
     lbDragging.current = true
     lbDragStart.current = { x: e.clientX, y: e.clientY }
     lbOffsetStart.current = lbOffset
