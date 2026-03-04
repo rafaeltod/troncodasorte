@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import { AdminRoute } from '@/components/admin-route'
 import { ImageUpload } from '@/components/image-upload'
+import { formatCurrencyInput, parseCurrencyInput, formatCurrency } from '@/lib/currency'
 import { ArrowLeft, Save, Trash2 } from 'lucide-react'
 import Link from 'next/link'
 
@@ -57,9 +58,9 @@ export default function EditLotePage() {
         setFormData({
           title: data.title,
           description: data.description,
-          prizeAmount: data.prizeAmount ? data.prizeAmount.toString() : '',
+          prizeAmount: data.prizeAmount ? formatCurrency(data.prizeAmount) : '',
           totalLivros: data.totalLivros.toString(),
-          livroPrice: data.livroPrice.toString(),
+          livroPrice: formatCurrency(data.livroPrice),
           status: data.status,
           // Parse images if it's a JSON string, otherwise use as is
           images: typeof data.images === 'string' ? JSON.parse(data.images) : (Array.isArray(data.images) ? data.images : []),
@@ -77,10 +78,20 @@ export default function EditLotePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    
+    // Formatar campos de moeda
+    if (name === 'prizeAmount' || name === 'livroPrice') {
+      const formatted = formatCurrencyInput(value)
+      setFormData((prev) => ({
+        ...prev,
+        [name]: formatted,
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
   }
 
   const handleImagesChange = (images: string[]) => {
@@ -105,9 +116,9 @@ export default function EditLotePage() {
         body: JSON.stringify({
           title: formData.title,
           description: formData.description,
-          prizeAmount: parseFloat(formData.prizeAmount) || 0,
+          prizeAmount: parseCurrencyInput(formData.prizeAmount) || 0,
           totalLivros: parseInt(formData.totalLivros, 10),
-          livroPrice: parseFloat(formData.livroPrice),
+          livroPrice: parseCurrencyInput(formData.livroPrice),
           status: formData.status,
           images: formData.images,
         }),
@@ -257,15 +268,14 @@ export default function EditLotePage() {
                 Valor do Prêmio em Dinheiro (R$) <span className="text-sm font-normal text-fundo-cinza0">(opcional)</span>
               </label>
               <input
-                type="number"
+                type="text"
                 id="prizeAmount"
                 name="prizeAmount"
                 value={formData.prizeAmount}
                 onChange={handleInputChange}
-                step="0.01"
-                min="0"
                 className="w-full px-4 py-3 border-2 text-cinza border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
-                placeholder="0.00 (deixe vazio se não for em dinheiro)"
+                placeholder="0,00 (deixe vazio se não for em dinheiro)"
+                inputMode="numeric"
               />
               <p className="text-sm text-fundo-cinza0 mt-1">Se o prêmio não for em dinheiro, deixe em branco ou zero.</p>
             </div>
@@ -299,16 +309,15 @@ export default function EditLotePage() {
                 Preço por Livro (R$)
               </label>
               <input
-                type="number"
+                type="text"
                 id="livroPrice"
                 name="livroPrice"
                 value={formData.livroPrice}
                 onChange={handleInputChange}
-                step="0.01"
-                min="0.01"
                 className="w-full px-4 py-3 text-cinza border-2 border-fundo-cinza rounded-xl focus:border-azul-royal focus:outline-none font-medium"
                 required
                 disabled={lote.soldLivros > 0}
+                inputMode="numeric"
               />
               {lote.soldLivros > 0 && (
                 <p className="text-sm text-cinza mt-2">

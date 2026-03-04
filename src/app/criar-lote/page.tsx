@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { ImageUpload } from '@/components/image-upload'
+import { formatCurrencyInput, parseCurrencyInput } from '@/lib/currency'
 import { Plus, FileText, DollarSign, Ticket, Image as ImageIcon, AlertCircle, Gift, Package, Trash2 } from 'lucide-react'
 
 interface PremioConfig {
@@ -21,7 +22,7 @@ export default function CreateRafflePageContent() {
     description: '',
     prizeAmount: '',
     totalLivros: '',
-    livroPrice: '0.50',
+    livroPrice: '0,50',
     images: [] as string[],
   })
   const [premios, setPremios] = useState<PremioConfig[]>([])
@@ -52,10 +53,20 @@ export default function CreateRafflePageContent() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    
+    // Formatar campos de moeda
+    if (name === 'prizeAmount' || name === 'livroPrice') {
+      const formatted = formatCurrencyInput(value)
+      setFormData((prev) => ({
+        ...prev,
+        [name]: formatted,
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
   }
 
   const handleImagesChange = (images: string[]) => {
@@ -80,11 +91,14 @@ export default function CreateRafflePageContent() {
         credentials: 'include',
         body: JSON.stringify({
           ...formData,
-          prizeAmount: formData.prizeAmount ? parseFloat(formData.prizeAmount) : 0,
+          prizeAmount: formData.prizeAmount ? parseCurrencyInput(formData.prizeAmount) : 0,
           totalLivros: parseInt(formData.totalLivros),
-          livroPrice: parseFloat(formData.livroPrice),
+          livroPrice: parseCurrencyInput(formData.livroPrice),
           qtdPremiosAleatorios: premios.length,
-          premiosConfig: premios.length > 0 ? premios : undefined,
+          premiosConfig: premios.length > 0 ? premios.map(p => ({
+            ...p,
+            valor: p.tipo === 'dinheiro' ? parseCurrencyInput(p.valor).toString() : p.valor
+          })) : undefined,
         }),
       })
 
@@ -180,14 +194,13 @@ export default function CreateRafflePageContent() {
                 <span className="text-sm font-normal text-cinza dark:text-gray-400">(opcional)</span>
               </label>
               <input
-                type="number"
+                type="text"
                 name="prizeAmount"
                 value={formData.prizeAmount}
                 onChange={handleInputChange}
-                step="0.01"
-                min="0"
                 className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
-                placeholder="0.00 (deixe vazio se o prêmio não for em dinheiro)"
+                placeholder="0,00 (deixe vazio se o prêmio não for em dinheiro)"
+                inputMode="numeric"
               />
               <p className="text-sm text-cinza dark:text-gray-300 mt-1">Se o prêmio não for em dinheiro, deixe em branco. Use o título e descrição para descrever o prêmio.</p>
             </div>
@@ -215,14 +228,13 @@ export default function CreateRafflePageContent() {
               Preço da Livro (R$)
             </label>
             <input
-              type="number"
+              type="text"
               name="livroPrice"
               value={formData.livroPrice}
               onChange={handleInputChange}
-              step="0.01"
-              min="0.01"
               className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
-              placeholder="0.50"
+              placeholder="0,50"
+              inputMode="numeric"
             />
           </div>
 
@@ -293,14 +305,14 @@ export default function CreateRafflePageContent() {
                     {premio.tipo === 'dinheiro' ? (
                       <div>
                         <input
-                          type="number"
+                          type="text"
                           value={premio.valor}
                           onChange={(e) => {
-                            setPremios(prev => prev.map((p, i) => i === index ? { ...p, valor: e.target.value } : p))
+                            const formatted = formatCurrencyInput(e.target.value)
+                            setPremios(prev => prev.map((p, i) => i === index ? { ...p, valor: formatted } : p))
                           }}
-                          step="0.01"
-                          min="0.01"
                           placeholder="Valor em R$"
+                          inputMode="numeric"
                           className="w-full border-2 border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-gray-900 dark:text-cinza-claro dark:bg-[#1a2332] placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:border-emerald-500 dark:focus:border-emerald-600 focus:ring-2 focus:ring-emerald-200 dark:focus:ring-emerald-300/50 transition text-sm"
                         />
                       </div>
