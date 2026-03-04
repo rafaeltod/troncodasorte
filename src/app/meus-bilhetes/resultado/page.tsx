@@ -443,7 +443,7 @@ export default function TicketsResultPage() {
                                       Número sorteado:{' '}
                                       <span className="font-mono font-bold bg-amarelo-gold text-branco rounded px-2 py-0.5">{winnerNum}</span>
                                     </p>
-                                    <p className="text-1xl text-cinza mt-1"><a href='#' className='text-cinza-escuro underline hover:text-amarelo-gold'>Entre em contato</a> para resgatar seu prêmio!</p>
+                                    <p className="text-1xl text-cinza mt-1">Nossa equipe entrará em contato para resgatar seu prêmio!</p>
                                   </div>
                                 </div>
                               )}
@@ -466,7 +466,7 @@ export default function TicketsResultPage() {
                                         )
                                       })}
                                     </div>
-                                    <p className="text-1xl text-cinza dark:text-gray-400 mt-1"><a href='#' className='text-cinza-escuro dark:text-cinza-claro underline hover:text-verde-menta dark:hover:text-green-400'>Entre em contato</a> para resgatar seu prêmio!</p>
+                                    <p className="text-1xl text-cinza dark:text-gray-400 mt-1">Nossa equipe entrará em contato para resgatar seu prêmio!</p>
                                   </div>
                                 </div>
                               )}
