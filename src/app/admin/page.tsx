@@ -8,6 +8,14 @@ import { formatCurrency } from '@/lib/formatters'
 import { Plus, Edit, Trash2, Eye, Users, TrendingUp, DollarSign, Award, Tag } from 'lucide-react'
 import { mainConfig } from '../../lib/layout-config'
 
+interface WinnerInfo {
+  name: string
+  cpf: string
+  phone: string
+  email: string
+  winnerNumber: string
+}
+
 interface Lote {
   id: string
   title: string
@@ -20,6 +28,21 @@ interface Lote {
   image?: string
   createdAt: string
   participants: number
+  winnerInfo?: WinnerInfo | null
+}
+
+const formatCPF = (cpf: string | null | undefined) => {
+  if (!cpf) return '—'
+  const cleaned = cpf.replace(/\D/g, '')
+  if (cleaned.length !== 11) return cpf
+  return `${cleaned.slice(0, 3)}.${cleaned.slice(3, 6)}.${cleaned.slice(6, 9)}-${cleaned.slice(9)}`
+}
+
+const formatPhone = (phone: string | null | undefined) => {
+  if (!phone) return '—'
+  const cleaned = phone.replace(/\D/g, '')
+  if (cleaned.length !== 11) return phone
+  return `(${cleaned.slice(0, 2)})${cleaned.slice(2, 7)}-${cleaned.slice(7)}`
 }
 
 export default function AdminDashboardPage() {
@@ -216,6 +239,7 @@ export default function AdminDashboardPage() {
                       <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Livros</th>
                       <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Participantes</th>
                       <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Receita</th>
+                      <th className="px-6 py-4 text-left text-sm font-black text-cinza-escuro dark:text-cinza-claro">Ganhador</th>
                       <th className="px-6 py-4 text-right text-sm font-black text-cinza-escuro dark:text-cinza-claro">Ações</th>
                     </tr>
                   </thead>
@@ -242,7 +266,7 @@ export default function AdminDashboardPage() {
                         <td className="px-6 py-4">{getStatusBadge(lote.status)}</td>
                         <td className="px-6 py-4">
                           <span className="font-bold text-azul-royal dark:text-azul-claro">
-                            {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : '—'}
+                            {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : 'Item'}
                           </span>
                         </td>
                         <td className="px-6 py-4">
@@ -267,6 +291,19 @@ export default function AdminDashboardPage() {
                           <span className="font-bold text-cinza dark:text-cinza-claro">
                             {formatCurrency(lote.soldLivros * lote.livroPrice)}
                           </span>
+                        </td>
+                        <td className="px-6 py-4">
+                          {lote.winnerInfo ? (
+                            <div className="text-sm min-w-[180px]">
+                              <p className="font-bold text-cinza-escuro">{lote.winnerInfo.name}</p>
+                              <p className="text-xs text-cinza font-semibold mt-0.5">{formatCPF(lote.winnerInfo.cpf)}</p>
+                              <p className="text-xs text-cinza font-semibold">{formatPhone(lote.winnerInfo.phone)}</p>
+                              <p className="text-xs text-cinza font-semibold">{lote.winnerInfo.email || '—'}</p>
+                              <p className="text-xs text-cinza font-semibold">Bilhete: {lote.winnerInfo.winnerNumber || '—'}</p>
+                            </div>
+                          ) : (
+                            <span className="text-cinza text-sm">—</span>
+                          )}
                         </td>
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
