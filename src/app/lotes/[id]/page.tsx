@@ -77,7 +77,7 @@ function TopCompradores({ buyers, loading, error }: { buyers: TopBuyer[]; loadin
               </div>
               <div>
                 <div className="font-black text-[19px] text-cinza-escuro">{censorName(buyer.name)}</div>
-                <div className="text-cinza">{buyer.totalLivros} {buyer.totalLivros === 1 ? 'livro' : 'livros'}</div>
+                <div className="text-cinza">{buyer.totalLivros.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {buyer.totalLivros === 1 ? 'livro' : 'livros'}</div>
               </div>
             </div>
             <div className="text-right">
