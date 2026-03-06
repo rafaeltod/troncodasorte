@@ -433,7 +433,7 @@ export default function RaffleDetailPage() {
             <h1 className="text-2xl md:text-2xl font-black text-cinza-escuro dark:text-amarelo-gold">{raffle.title}</h1>
 
             {raffle.description && (
-              <p className="text-cinza-escuro mb-6 text-lg leading-relaxed">{raffle.description}</p>
+              <p className="text-cinza-escuro dark:text-amarelo-claro mb-6 text-lg leading-relaxed">{raffle.description}</p>
             )}
 
             <div className="mb-4">
@@ -462,7 +462,7 @@ export default function RaffleDetailPage() {
               </div>
               <div>
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm font-bold text-cinza-escuro">Progresso de Vendas</span>
+                  <span className="text-sm font-bold text-cinza-escuro dark:text-amarelo-claro">Progresso de Vendas</span>
                   <span className="text-sm font-bold text-azul-royal">
                     {Math.round(progress)}%
                   </span>
@@ -702,7 +702,7 @@ export default function RaffleDetailPage() {
                     {!showCupomInput ? (
                       <button
                         onClick={() => setShowCupomInput(true)}
-                        className="text-lx text-azul-royal font-semibold hover:underline cursor-pointer flex items-center gap-1"
+                        className="text-lx text-azul-royal dark:text-amarelo-gold font-semibold hover:underline cursor-pointer flex items-center gap-1"
                       >
                         <Tag className="w-4 h-4" />
                         Tem um cupom de desconto?
@@ -714,7 +714,7 @@ export default function RaffleDetailPage() {
                           value={cupomInputCode}
                           onChange={(e) => setCupomInputCode(e.target.value.toUpperCase())}
                           placeholder="Digite o código"
-                          className="flex-1 border text-cinza border-azul-royal rounded-lg px-3 py-2 text-lx font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
+                          className="flex-1 border text-cinza border-azul-royal dark:border-amarelo-gold dark:text-amarelo-claro rounded-lg px-3 py-2 text-lx font-mono uppercase focus:outline-none focus:ring-2 focus:ring-azul-royal"
                         />
                         <button
                           onClick={() => {
