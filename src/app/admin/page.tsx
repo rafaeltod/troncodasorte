@@ -265,7 +265,7 @@ export default function AdminDashboardPage() {
                         </td>
                         <td className="px-6 py-4">{getStatusBadge(lote.status)}</td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-azul-royal dark:text-azul-claro">
+                          <span className="font-bold text-azul-royal dark:text-azul-pastel">
                             {lote.prizeAmount > 0 ? formatCurrency(lote.prizeAmount) : 'Item'}
                           </span>
                         </td>
@@ -285,7 +285,7 @@ export default function AdminDashboardPage() {
                           </div>
                         </td>
                         <td className="px-6 py-4">
-                          <span className="font-bold text-azul-claro dark:text-azul-claro">{lote.participants}</span>
+                          <span className="font-bold text-azul-claro dark:text-azul-pastel">{lote.participants}</span>
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-bold text-cinza dark:text-cinza-claro">
@@ -295,11 +295,11 @@ export default function AdminDashboardPage() {
                         <td className="px-6 py-4">
                           {lote.winnerInfo ? (
                             <div className="text-sm min-w-[180px]">
-                              <p className="font-bold text-cinza-escuro">{lote.winnerInfo.name}</p>
-                              <p className="text-xs text-cinza font-semibold mt-0.5">{formatCPF(lote.winnerInfo.cpf)}</p>
-                              <p className="text-xs text-cinza font-semibold">{formatPhone(lote.winnerInfo.phone)}</p>
-                              <p className="text-xs text-cinza font-semibold">{lote.winnerInfo.email || '—'}</p>
-                              <p className="text-xs text-cinza font-semibold">Bilhete: {lote.winnerInfo.winnerNumber || '—'}</p>
+                              <p className="font-bold text-cinza-escuro dark:text-amarelo-claro">{lote.winnerInfo.name}</p>
+                              <p className="text-xs text-cinza dark:text-azul-pastel font-semibold mt-0.5">{formatCPF(lote.winnerInfo.cpf)}</p>
+                              <p className="text-xs text-cinza dark:text-azul-pastel font-semibold">{formatPhone(lote.winnerInfo.phone)}</p>
+                              <p className="text-xs text-cinza dark:text-azul-pastel font-semibold">{lote.winnerInfo.email || '—'}</p>
+                              <p className="text-xs text-cinza dark:text-azul-pastel font-semibold">Bilhete: {lote.winnerInfo.winnerNumber || '—'}</p>
                             </div>
                           ) : (
                             <span className="text-cinza text-sm">—</span>
@@ -309,7 +309,7 @@ export default function AdminDashboardPage() {
                           <div className="flex items-center justify-end gap-2">
                             <Link
                               href={`/lotes/${lote.id}`}
-                              className="p-2 text-azul-claro hover:bg-azul-pastel rounded-lg transition"
+                              className="p-2 text-azul-claro hover:bg-azul-pastel dark:text-amarelo-claro dark:hover:text-amarelo-gold dark:hover:bg-amarelo-pastel rounded-lg transition"
                               title="Ver lote"
                             >
                               <Eye size={18} />
