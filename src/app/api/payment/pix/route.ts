@@ -51,9 +51,17 @@ export async function POST(req: NextRequest) {
       console.log('[Payment] Tentando chamar Mercado Pago...')
       // Integração real com Mercado Pago
       try {
-        const payerEmail = token 
-          ? `user_${token}@example.com`
-          : `anonymous@example.com`
+        // Buscar email real do usuário pelo userId (token = userId)
+        let payerEmail = 'comprador@troncodasorte.com.br'
+        if (token) {
+          const userRow = await queryOne<{ email: string }>(
+            'SELECT email FROM "user" WHERE id = $1',
+            [token]
+          )
+          if (userRow?.email) {
+            payerEmail = userRow.email
+          }
+        }
 
         const requestPayload = {
           transaction_amount: validatedAmount,
@@ -88,6 +96,15 @@ export async function POST(req: NextRequest) {
 
         console.log('[Payment] Status do Mercado Pago:', mpResponse.status)
         console.log('[Payment] Resposta completa:', JSON.stringify(data, null, 2))
+
+        if (!mpResponse.ok) {
+          const mpError = data?.message || data?.error || `HTTP ${mpResponse.status}`
+          console.error('[Payment] ❌ Mercado Pago retornou erro:', mpError, data)
+          return NextResponse.json(
+            { error: `Erro no Mercado Pago: ${mpError}` },
+            { status: 502 }
+          )
+        }
 
         // Tentar múltiplos caminhos possíveis para o QR code do Mercado Pago
         let qrCodeUrl = data.point_of_interaction?.qr_code?.in_app_url
