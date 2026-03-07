@@ -29,6 +29,7 @@ interface Lote {
   createdAt: string
   participants: number
   winnerInfo?: WinnerInfo | null
+  cliente: string
 }
 
 const formatCPF = (cpf: string | null | undefined) => {
@@ -308,7 +309,7 @@ export default function AdminDashboardPage() {
                         <td className="px-6 py-4">
                           <div className="flex items-center justify-end gap-2">
                             <Link
-                              href={`/lotes/${lote.id}`}
+                              href={`/${lote.cliente || 'troncodasorte'}/lotes/${lote.id}`}
                               className="p-2 text-azul-claro hover:bg-azul-pastel dark:text-amarelo-claro dark:hover:text-amarelo-gold dark:hover:bg-amarelo-pastel rounded-lg transition"
                               title="Ver lote"
                             >

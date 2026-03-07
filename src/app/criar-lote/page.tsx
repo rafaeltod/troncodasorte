@@ -25,6 +25,7 @@ export default function CreateRafflePageContent() {
     totalLivros: '',
     livroPrice: '0,50',
     images: [] as string[],
+    cliente: 'troncodasorte',
   })
   const [premios, setPremios] = useState<PremioConfig[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -171,6 +172,23 @@ export default function CreateRafflePageContent() {
               className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
               placeholder="Ex: Lote do iPhone 15 Pro"
             />
+          </div>
+
+          <div>
+            <label className=" text-cinza-escuro dark:text-cinza-claro font-bold text-lg mb-3 flex items-center gap-2">
+              <FileText className="w-5 h-5" />
+              Cliente (slug)
+            </label>
+            <input
+              type="text"
+              name="cliente"
+              value={formData.cliente}
+              onChange={handleInputChange}
+              required
+              className="w-full border-2 border-cinza-claro dark:border-gray-700 rounded-xl px-5 py-3 text-cinza-escuro dark:text-cinza-claro dark:bg-[#1a2332] placeholder-cinza dark:placeholder-gray-500 focus:outline-none focus:border-azul-royal dark:focus:border-azul-claro focus:ring-2 focus:ring-azul-claro dark:focus:ring-azul-claro/50 transition"
+              placeholder="troncodasorte"
+            />
+            <p className="text-sm text-cinza dark:text-gray-300 mt-1">Slug do cliente a que este lote pertence. Ex: troncodasorte, tupperwaredasorte</p>
           </div>
 
           <div>

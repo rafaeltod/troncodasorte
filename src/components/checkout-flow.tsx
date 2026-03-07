@@ -26,6 +26,7 @@ interface CheckoutFlowProps {
   selectedQuantity: number
   cupom?: CupomData
   progressiveDiscountPct?: number
+  cliente?: string
 }
 
 type CheckoutStep = 'phone' | 'register' | 'confirm' | 'payment'
@@ -44,6 +45,7 @@ export function CheckoutFlow({
   selectedQuantity,
   cupom,
   progressiveDiscountPct = 0,
+  cliente,
 }: CheckoutFlowProps) {
   const router = useRouter()
   const { user, refetch } = useAuth()
@@ -575,7 +577,7 @@ export function CheckoutFlow({
             }))
             
             // Redirecionar para visualizar bilhetes confirmados
-            router.push('/meus-bilhetes/resultado')
+            router.push(cliente ? `/${cliente}/meus-bilhetes/resultado` : '/meus-bilhetes/resultado')
           }
         }}
       />

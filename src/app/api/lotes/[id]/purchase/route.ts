@@ -149,10 +149,10 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
     // Salvamos o phone para rastrear compras anônimas
     // Cada transação de compra é um novo registro - usuários podem comprar múltiplas vezes
     const purchase = await queryOne(
-      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, "cupomId", "descontoAplicado", status, "createdAt", "updatedAt")
-       VALUES (gen_random_uuid(), $1, $2, $3, $4, '', $5, $6, $7, 'pending', NOW(), NOW())
+      `INSERT INTO livros (id, "userId", "raffleId", livros, amount, numbers, phone, "cupomId", "descontoAplicado", status, cliente, "createdAt", "updatedAt")
+       VALUES (gen_random_uuid(), $1, $2, $3, $4, '', $5, $6, $7, 'pending', $8, NOW(), NOW())
        RETURNING id, "raffleId", "userId", livros, amount, status`,
-      [userId, id, livros, amount, phone, cupomId || null, descontoAplicado || 0],
+      [userId, id, livros, amount, phone, cupomId || null, descontoAplicado || 0, lote.cliente || 'troncodasorte'],
     );
 
     if (!purchase) {

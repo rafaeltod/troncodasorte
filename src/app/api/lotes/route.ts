@@ -49,8 +49,8 @@ export async function POST(req: NextRequest) {
       : null
 
     const raffle = await queryOne(
-      `INSERT INTO lotes (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "qtdPremiosAleatorios", "premiosConfig", "createdAt", "updatedAt")
-       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, $9, $10, NOW(), NOW())
+      `INSERT INTO lotes (title, description, "prizeAmount", "totalLivros", "livroPrice", "creatorId", status, image, images, "qtdPremiosAleatorios", "premiosConfig", cliente, "createdAt", "updatedAt")
+       VALUES ($1, $2, $3, $4, $5, $6, 'open', $7, $8, $9, $10, $11, NOW(), NOW())
        RETURNING *`,
       [
         validatedData.title,
@@ -63,6 +63,7 @@ export async function POST(req: NextRequest) {
         validatedData.images || [],
         validatedData.qtdPremiosAleatorios || 0,
         premiosConfigJson,
+        body.cliente || 'troncodasorte',
       ]
     )
 
@@ -116,13 +117,16 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    const cliente = req.nextUrl.searchParams.get('cliente')
     const raffles = await queryMany(
       `SELECT r.*, json_build_object('name', u.name, 'email', u.email) as creator
        FROM lotes r
        JOIN "user" u ON r."creatorId" = u.id
-       ORDER BY r."createdAt" DESC`
+       ${cliente ? 'WHERE r.cliente = $1' : ''}
+       ORDER BY r."createdAt" DESC`,
+      cliente ? [cliente] : []
     )
 
     return NextResponse.json(raffles)

@@ -15,6 +15,7 @@ interface RaffleCardProps {
   soldLivros: number | string
   livroPrice: number | string
   status: string
+  cliente?: string
 }
 
 export function RaffleCard({
@@ -27,12 +28,13 @@ export function RaffleCard({
   soldLivros,
   livroPrice,
   status,
+  cliente,
 }: RaffleCardProps) {
   const percentageSold = (Number(soldLivros) / Number(totalLivros)) * 100
   const remainingQuotas = Number(totalLivros) - Number(soldLivros)
 
   return (
-    <Link href={`/lotes/${id}`} className="block">
+    <Link href={cliente ? `/${cliente}/lotes/${id}` : `/lotes/${id}`} className="block">
       <div className=" rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 dark:bg-[#232F3E]">
         {/* Image */}
         <div className="relative h-48 overflow-hidden">

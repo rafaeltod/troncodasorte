@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useParams } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
@@ -11,6 +11,8 @@ import { Ticket, User, TrendingUp, Menu, X, LogOut, Shield, Home, Plus, Moon, Su
 
 export function Navbar() {
   const router = useRouter()
+  const params = useParams()
+  const cliente = typeof params?.cliente === 'string' ? params.cliente : null
   const { user, logout } = useAuth()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [isDarkTheme, setIsDarkTheme] = useState(false)
@@ -40,7 +42,7 @@ export function Navbar() {
   const handleLogout = async () => {
     logout()
     setMobileMenuOpen(false)
-    router.push('/')
+    router.push(cliente ? `/${cliente}` : '/')
   }
 
   const handleToggleTheme = () => {
@@ -54,7 +56,7 @@ export function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link 
-            href="/"
+            href={cliente ? `/${cliente}` : '/'}
             className="flex items-center gap-3 hover:opacity-80 transition-opacity"
           >
             <Image 
@@ -84,7 +86,7 @@ export function Navbar() {
             </button>
             <nav className="hidden md:flex items-center gap-6">
               <Link
-                href="/"
+                href={cliente ? `/${cliente}` : '/'}
                 className="hover:text-emerald-100 transition-colors"
               >
                 Lotes
@@ -92,7 +94,7 @@ export function Navbar() {
               {user ? (
                 <>
                   <Link
-                    href="/account"
+                    href={cliente ? `/${cliente}/account` : '/account'}
                     className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
                   >
                     <User className="w-4 h-4" />
@@ -118,7 +120,7 @@ export function Navbar() {
                   )}
                   {user.isVendedor && !user.isAdmin && (
                     <Link
-                      href="/vendedor"
+                      href={cliente ? `/${cliente}/vendedor` : '/vendedor'}
                       className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
                     >
                       <TrendingUp className="w-4 h-4" />
@@ -135,7 +137,7 @@ export function Navbar() {
                 </>
               ) : (
                 <Link
-                  href="/meus-bilhetes"
+                  href={cliente ? `/${cliente}/meus-bilhetes` : '/meus-bilhetes'}
                   className="flex items-center gap-2 bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-colors"
                 >
                   <Ticket className="w-4 h-4" />
@@ -158,7 +160,7 @@ export function Navbar() {
           <nav className="md:hidden py-4 border-t border-white/20">
             <div className="flex flex-col gap-3">
               <Link
-                href="/"
+                href={cliente ? `/${cliente}` : '/'}
                 className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                 onClick={() => setMobileMenuOpen(false)}
               >
@@ -168,7 +170,7 @@ export function Navbar() {
               {user ? (
                 <>
                   <Link
-                    href="/account"
+                    href={cliente ? `/${cliente}/account` : '/account'}
                     className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
                     onClick={() => setMobileMenuOpen(false)}>
                     <User className="w-4 h-4" />
@@ -196,7 +198,7 @@ export function Navbar() {
                   )}
                   {user.isVendedor && !user.isAdmin && (
                     <Link
-                      href="/vendedor"
+                      href={cliente ? `/${cliente}/vendedor` : '/vendedor'}
                       className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg font-semibold transition-colors text-left m-2"
                       onClick={() => setMobileMenuOpen(false)}
                     >
@@ -214,7 +216,7 @@ export function Navbar() {
                 </>
               ) : (
                 <Link
-                  href="/meus-bilhetes"
+                  href={cliente ? `/${cliente}/meus-bilhetes` : '/meus-bilhetes'}
                   className="flex items-center gap-2 px-4 py-2 bg-white/20 rounded-lg transition-colors"
                   onClick={() => setMobileMenuOpen(false)}
                 >
