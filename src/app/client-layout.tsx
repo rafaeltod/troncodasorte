@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { Navbar } from "@/components/navbar";
+import { Footer } from "@/components/footer";
 import { AuthProvider } from "@/context/auth-context";
 import { useAuth } from "@/context/auth-context";
 
@@ -25,6 +26,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
     <>
       {!isAuthRoute && <Navbar />}
       {children}
+      <Footer />
     </>
   )
 }
