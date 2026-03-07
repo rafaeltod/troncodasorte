@@ -7,8 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, Trophy, TrendingUp, Menu, X, LogOut, Shield, Home, Plus } from 'lucide-react'
-import { FaAdjust } from "react-icons/fa";
+import { Ticket, User, TrendingUp, Menu, X, LogOut, Shield, Home, Plus, Moon, Sun } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -73,11 +72,15 @@ export function Navbar() {
           <div className="flex items-center gap-4 ml-auto">
             <button
               onClick={handleToggleTheme}
-              aria-label={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              aria-label="Alternar tema"
               title={isDarkTheme ? 'Ativar tema claro' : 'Ativar tema escuro'}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              className="cursor-pointer p-2 rounded-full bg-azul-royal dark:bg-azul-royal border border-white/40 transition-all hover:scale-110"
             >
-              <FaAdjust />
+              {isDarkTheme ? (
+                <Sun className="w-5 h-5 text-amarelo-pastel" />
+              ) : (
+                <Moon className="w-5 h-5 text-branco" />
+              )}
             </button>
             <nav className="hidden md:flex items-center gap-6">
               <Link
