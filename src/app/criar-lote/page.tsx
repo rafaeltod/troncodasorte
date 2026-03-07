@@ -283,7 +283,7 @@ export default function CreateRafflePageContent() {
               <ImageIcon className="w-5 h-5" />
               Imagens da Lote (Opcional)
             </label>
-            <ImageUpload onImagesChange={handleImagesChange} maxImages={3} />
+            <ImageUpload onImagesChange={handleImagesChange} maxImages={20} />
           </div>
 
           <div>
