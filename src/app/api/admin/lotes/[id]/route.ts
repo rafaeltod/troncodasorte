@@ -109,91 +109,88 @@ export async function PUT(
       if (loteData && loteData.totalLivros > 0) {
         const soldPct = (loteData.soldLivros / loteData.totalLivros) * 100
 
-        // Verificar se algum prêmio precisa de sorteio automático (sem winner, porcentagem já atingida)
-        const needsDraw = premiosConfig.some(
-          (p: any) => !p.winner && !p.drawnNumber && (p.porcentagemSorteio ?? 0) <= soldPct
+        // Buscar números vendidos antecipadamente para excluí-los do drawnNumber
+        const allSoldRows = await queryMany(
+          `SELECT l.id, l."userId", l.numbers, u.name as "userName", u.email as "userEmail"
+           FROM livros l
+           LEFT JOIN "user" u ON l."userId" = u.id
+           WHERE l."raffleId" = $1 AND l.status = 'confirmed' AND l."statusPago" = true AND l.numbers IS NOT NULL`,
+          [id]
         )
 
-        if (needsDraw) {
-          // Buscar todos os números vendidos nesse lote
-          const soldRows = await queryMany(
-            `SELECT l.id, l."userId", l.numbers, u.name as "userName", u.email as "userEmail"
-             FROM livros l
-             LEFT JOIN "user" u ON l."userId" = u.id
-             WHERE l."raffleId" = $1 AND l.status = 'confirmed' AND l."statusPago" = true AND l.numbers IS NOT NULL`,
-            [id]
-          )
-
-          const numberToPurchase = new Map<string, { purchaseId: string; userId: string; userName: string; userEmail: string }>()
-          for (const row of soldRows) {
-            const nums = row.numbers.split(',').map((n: string) => n.trim())
-            for (const num of nums) {
-              if (num) numberToPurchase.set(num, { purchaseId: row.id, userId: row.userId, userName: row.userName, userEmail: row.userEmail })
-            }
+        const numberToPurchase = new Map<string, { purchaseId: string; userId: string; userName: string; userEmail: string }>()
+        for (const row of allSoldRows) {
+          const nums = row.numbers.split(',').map((n: string) => n.trim())
+          for (const num of nums) {
+            if (num) numberToPurchase.set(num, { purchaseId: row.id, userId: row.userId, userName: row.userName, userEmail: row.userEmail })
           }
+        }
+        const soldSet = new Set(Array.from(numberToPurchase.keys()))
 
-          const soldSet = new Set(Array.from(numberToPurchase.keys()))
-          const usedDrawnNumbers = new Set<string>()
+        // Passo 1: atribuir drawnNumber para prêmios com 0% que ainda não têm (mesmo sem vendas)
+        const usedDrawnNumbers = new Set<string>(
+          premiosConfig.filter((p: any) => p.drawnNumber).map((p: any) => p.drawnNumber)
+        )
+
+        function pickRandomNumber(excludeSet: Set<string>): string {
+          let candidate: string
+          let tries = 0
+          do {
+            const n = Math.floor(Math.random() * 999999) + 1
+            candidate = String(n).padStart(6, '0')
+            tries++
+            if (tries > 2000000) break
+          } while (excludeSet.has(candidate) || usedDrawnNumbers.has(candidate))
+          return candidate
+        }
+
+        // Atribuir drawnNumber para prêmios com 0% que ainda não têm — excluindo números vendidos
+        // drawnNumber é o bilhete vencedor: quem comprar exatamente esse número ganha
+        let mapped = premiosConfig.map((p: any) => {
+          if (p.winner || p.drawnNumber) return p
+          if ((p.porcentagemSorteio ?? 0) !== 0) return p
+          const drawnNumber = pickRandomNumber(soldSet)
+          usedDrawnNumbers.add(drawnNumber)
+          return { ...p, drawnNumber, number: drawnNumber }
+        })
+
+        // Passo 2a: atribuir drawnNumber para prêmios com porcentagem > 0% já atingida
+        // Não depende de allSoldRows — só precisa do soldSet para evitar números comprados
+        mapped = mapped.map((p: any) => {
+          if (p.winner || p.drawnNumber) return p
+          if ((p.porcentagemSorteio ?? 0) === 0) return p // tratado no passo 1
+          if ((p.porcentagemSorteio ?? 0) > soldPct) return p // limiar ainda não atingido
+          const dn = pickRandomNumber(soldSet)
+          usedDrawnNumbers.add(dn)
+          return { ...p, drawnNumber: dn, number: dn }
+        })
+
+        // Passo 2b: verificar se algum bilhete sorteado foi comprado (atribuir winner)
+        if (allSoldRows.length > 0) {
           const usedWinnerNumbers = new Set<string>()
-          // Reservar drawnNumbers e winnerNumbers já atribuídos
-          for (const p of premiosConfig) {
-            if (p.drawnNumber) usedDrawnNumbers.add(p.drawnNumber)
-            if (p.number && soldSet.has(p.number)) usedWinnerNumbers.add(p.number)
+          for (const p of mapped) {
+            if (p.number && soldSet.has(p.number) && p.winner) usedWinnerNumbers.add(p.number)
           }
 
-          function pickUnsoldNumber(): string {
-            let candidate: string
-            let tries = 0
-            do {
-              const n = Math.floor(Math.random() * 999999) + 1
-              candidate = String(n).padStart(6, '0')
-              tries++
-              if (tries > 2000000) break
-            } while (soldSet.has(candidate) || usedDrawnNumbers.has(candidate))
-            return candidate
-          }
-
-          finalPremiosConfig = premiosConfig.map((p: any) => {
-            // Se já tem winner ou porcentagem não atingida, manter como está
-            if (p.winner || p.drawnNumber || (p.porcentagemSorteio ?? 0) > soldPct) return p
-
-            const drawnNumber = pickUnsoldNumber()
-            usedDrawnNumbers.add(drawnNumber)
-
-            // Incrementar a partir do drawnNumber até encontrar um número vendido não usado
-            let currentNum = parseInt(drawnNumber, 10)
-            let winnerNumber: string | null = null
-            let winnerData: { purchaseId: string; userId: string; userName: string; userEmail: string } | null = null
-            let attempts = 0
-            while (attempts < 1000000) {
-              const formatted = String(currentNum).padStart(6, '0')
-              if (numberToPurchase.has(formatted) && !usedWinnerNumbers.has(formatted)) {
-                winnerNumber = formatted
-                winnerData = numberToPurchase.get(formatted)!
-                break
-              }
-              currentNum++
-              if (currentNum > 999999) currentNum = 1
-              attempts++
+          mapped = mapped.map((p: any) => {
+            if (p.winner || !p.drawnNumber) return p
+            const winnerData = numberToPurchase.get(p.drawnNumber)
+            if (!winnerData || usedWinnerNumbers.has(p.drawnNumber)) return p
+            usedWinnerNumbers.add(p.drawnNumber)
+            return {
+              ...p,
+              number: p.drawnNumber,
+              winner: {
+                userId: winnerData.userId,
+                name: winnerData.userName,
+                email: winnerData.userEmail,
+                purchaseId: winnerData.purchaseId,
+              },
             }
-
-            if (winnerNumber && winnerData) {
-              usedWinnerNumbers.add(winnerNumber)
-              return {
-                ...p,
-                drawnNumber,
-                number: winnerNumber,
-                winner: {
-                  userId: winnerData.userId,
-                  name: winnerData.userName,
-                  email: winnerData.userEmail,
-                  purchaseId: winnerData.purchaseId,
-                },
-              }
-            }
-            return p
           })
         }
+
+        finalPremiosConfig = mapped
       }
     }
 

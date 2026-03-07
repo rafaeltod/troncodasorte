@@ -84,75 +84,35 @@ export async function autoDrawPremiosAleatorios(raffleId: string): Promise<void>
     const updated = premiosConfig.map((p: any) => {
       if (p.winner) return p
 
-      // Prêmio já teve drawnNumber sorteado na criação (0%) — só atribuir winner agora
+      // Prêmio já foi sorteado — verifica se o bilhete exato foi comprado
       if (p.drawnNumber) {
-        let currentNum = parseInt(p.drawnNumber, 10)
-        let winnerNumber: string | null = null
-        let winnerData: { purchaseId: string; userId: string; userName: string; userEmail: string } | null = null
-        let attempts = 0
-        while (attempts < 1000000) {
-          const formatted = String(currentNum).padStart(6, '0')
-          if (numberToPurchase.has(formatted) && !usedWinnerNumbers.has(formatted)) {
-            winnerNumber = formatted
-            winnerData = numberToPurchase.get(formatted)!
-            break
-          }
-          currentNum++
-          if (currentNum > 999999) currentNum = 1
-          attempts++
-        }
-        if (!winnerNumber || !winnerData) return p
-        usedWinnerNumbers.add(winnerNumber)
+        const data = numberToPurchase.get(p.drawnNumber)
+        if (!data || usedWinnerNumbers.has(p.drawnNumber)) return p
+        usedWinnerNumbers.add(p.drawnNumber)
         changed = true
         return {
           ...p,
-          number: winnerNumber,
+          number: p.drawnNumber,
           winner: {
-            userId: winnerData.userId,
-            name: winnerData.userName,
-            email: winnerData.userEmail,
-            purchaseId: winnerData.purchaseId,
+            userId: data.userId,
+            name: data.userName,
+            email: data.userEmail,
+            purchaseId: data.purchaseId,
           },
         }
       }
 
       if ((p.porcentagemSorteio ?? 0) > soldPct) return p
 
+      // Sortear bilhete não-comprado; quem comprar exatamente esse bilhete ganha
       const drawnNumber = pickUnsoldNumber()
       usedDrawnNumbers.add(drawnNumber)
-
-      let currentNum = parseInt(drawnNumber, 10)
-      let winnerNumber: string | null = null
-      let winnerData: { purchaseId: string; userId: string; userName: string; userEmail: string } | null = null
-      let attempts = 0
-      while (attempts < 1000000) {
-        const formatted = String(currentNum).padStart(6, '0')
-        if (numberToPurchase.has(formatted) && !usedWinnerNumbers.has(formatted)) {
-          winnerNumber = formatted
-          winnerData = numberToPurchase.get(formatted)!
-          break
-        }
-        currentNum++
-        if (currentNum > 999999) currentNum = 1
-        attempts++
+      changed = true
+      return {
+        ...p,
+        drawnNumber,
+        number: drawnNumber,
       }
-
-      if (winnerNumber && winnerData) {
-        usedWinnerNumbers.add(winnerNumber)
-        changed = true
-        return {
-          ...p,
-          drawnNumber,
-          number: winnerNumber,
-          winner: {
-            userId: winnerData.userId,
-            name: winnerData.userName,
-            email: winnerData.userEmail,
-            purchaseId: winnerData.purchaseId,
-          },
-        }
-      }
-      return p
     })
 
     if (changed) {

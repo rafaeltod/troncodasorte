@@ -80,7 +80,7 @@ export async function POST(req: NextRequest) {
           drawnNumber = String(n).padStart(6, '0')
         } while (usedDrawnNumbers.has(drawnNumber))
         usedDrawnNumbers.add(drawnNumber)
-        return { ...p, drawnNumber }
+        return { ...p, drawnNumber, number: drawnNumber }
       })
       await queryOne(
         `UPDATE lotes SET "premiosConfig" = $1, "updatedAt" = NOW() WHERE id = $2`,

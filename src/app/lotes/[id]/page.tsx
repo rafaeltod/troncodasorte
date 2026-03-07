@@ -119,15 +119,12 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
           return (
             <div key={i} className="bg-fundo-cinza dark:bg-amarelo-pastel border-cinza-claro dark:border-cinza-claro/50 hover:bg-cinza-claro dark:hover:bg-amarelo-claro rounded-lg px-3 py-4 flex flex-col flex-wrap max-w-screen gap-2">
 
-              {p.drawnNumber && p.drawnNumber !== p.number && (
-                  <p className="text-1xl text-cinza mt-1">Sorteado: {p.drawnNumber}</p>
-                )}
-                {(owner || p.winner?.name) ? (
+              {(owner || p.winner?.name) ? (
                   <p className="text-[20px] font-semibold text-amarelo-gold mt-1">
                     🏆 {owner ? shortName(owner) : shortName(p.winner.name)}
                   </p>
                 ) : (
-                  <p className="text-[20px] font-semibold text-cinza mt-1">Disponivel</p>
+                  <p className="text-[20px] font-semibold text-cinza">Disponivel</p>
                 )}
             <div className='flex gap-2'>
               {raffle.status === 'drawn' && (
@@ -146,9 +143,14 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
                     {p.descricao}
                   </span>
                 )}
-                {typeof p.porcentagemSorteio === 'number' && (
+                {typeof p.porcentagemSorteio === 'number' && p.porcentagemSorteio > 0 && (
                   <span className={`inline-flex items-center gap-1 ${(owner || p.winner?.name) ? 'bg-amarelo-gold' : 'bg-azul-royal'} text-branco text-xs font-bold px-2 py-1 rounded-lg w-fit`}>
                     após {p.porcentagemSorteio}% vendidos
+                  </span>
+                )}
+                {p.drawnNumber && (
+                  <span className={`inline-flex items-center gap-1 ${(owner || p.winner?.name) ? 'bg-amarelo-gold' : 'bg-azul-royal'} text-branco text-xs font-bold px-2 py-1 rounded-lg w-fit`}>
+                    Bilhete: {p.drawnNumber}
                   </span>
                 )}
               </div> 
