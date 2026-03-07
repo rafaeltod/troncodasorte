@@ -5,32 +5,35 @@ import { ArrowLeft } from 'lucide-react'
 
 export default function TermosPage() {
   return (
-    <div className="min-h-screen bg-fundo-cinza">
+    <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro transition-colors">
       <div className="max-w-4xl mx-auto px-4 py-12">
         {/* Header */}
-        <Link href="/" className="items-center gap-2 text-azul-royal font-semibold mb-8 inline-flex transition">
+        <Link
+          href="/"
+          className="items-center gap-2 text-azul-royal dark:text-amarelo-claro font-semibold mb-8 inline-flex transition"
+        >
           <ArrowLeft className="w-4 h-4" />
           Voltar
         </Link>
 
-        <div className="bg-branco rounded-2xl shadow-lg p-8">
-          <h1 className="text-4xl font-black text-cinza-escuro mb-8">Termos e Condições de Uso</h1>
+        <div className="bg-branco dark:bg-[#232F3E] rounded-2xl shadow-lg p-8 border border-cinza-claro dark:border-gray-700 transition-colors">
+          <h1 className="text-4xl font-black text-cinza-escuro dark:text-cinza-claro mb-8">Termos e Condições de Uso</h1>
 
-          <div className="space-y-6 text-cinza text-base leading-relaxed">
+          <div className="space-y-6 text-cinza dark:text-gray-300 text-base leading-relaxed">
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">1. Aceitação dos Termos</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">1. Aceitação dos Termos</h2>
               <p>
                 Por acessar e usar o Tronco da Sorte, você concorda em cumprir estes Termos e Condições. Se você não concordar com qualquer disposição destes termos, por favor, não use o serviço.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">2. Descrição do Serviço</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">2. Descrição do Serviço</h2>
               <p>
-                Tronco da Sorte é uma plataforma online que permite que usuários participem de sorteios e rifas. O serviço inclui:
+                Tronco da Sorte é uma plataforma online que permite que usuários participem de sorteios. O serviço inclui:
               </p>
               <ul className="list-disc pl-6 mt-3 space-y-2">
-                <li>Criação e participação em rifas online</li>
+                <li>Criação e participação em sorteios online</li>
                 <li>Gerenciamento de compras e livros</li>
                 <li>Registro de resultados e vencedores</li>
                 <li>Histórico de transações</li>
@@ -38,7 +41,7 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">3. Registro de Usuário</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">3. Registro de Usuário</h2>
               <p>
                 Para usar o Tronco da Sorte, você deve criar uma conta fornecendo informações precisas e completas, incluindo:
               </p>
@@ -55,7 +58,7 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">4. Conduta do Usuário</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">4. Conduta do Usuário</h2>
               <p>Você concorda em não:</p>
               <ul className="list-disc pl-6 mt-3 space-y-2">
                 <li>Usar informações falsas ou enganosas</li>
@@ -67,14 +70,14 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">5. Direitos de Propriedade Intelectual</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">5. Direitos de Propriedade Intelectual</h2>
               <p>
                 Todo o conteúdo da plataforma, incluindo texto, imagens, logotipos e design, é protegido por direitos autorais e outros direitos de propriedade intelectual. Você não pode reproduzir ou distribuir este conteúdo sem permissão explícita.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">6. Limitação de Responsabilidade</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">6. Limitação de Responsabilidade</h2>
               <p>
                 O Tronco da Sorte é fornecido "no estado em que se encontra", sem garantias de qualquer tipo. Não somos responsáveis por:
               </p>
@@ -87,31 +90,31 @@ export default function TermosPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">7. Indenização</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">7. Indenização</h2>
               <p>
                 Você concorda em indenizar, defender e manter-nos indemnes de qualquer reclamação, dano, perda ou gasto (incluindo honorários legais) resultantes do seu uso da plataforma ou violação destes Termos.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">8. Modificações dos Termos</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">8. Modificações dos Termos</h2>
               <p>
                 Reservamos o direito de modificar estes Termos a qualquer momento. Mudanças significativas serão notificadas por email. Seu uso continuado da plataforma após taismudanças constitui sua aceitação dos novos termos.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold text-cinza-escuro mb-4">9. Contato</h2>
+              <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">9. Contato</h2>
               <p>
                 Se tiver dúvidas sobre estes Termos, entre em contato conosco através do email de suporte disponível na plataforma.
               </p>
             </section>
 
-            <section className="bg-azul-pastel border-l-4 border-azul-royal p-6 rounded">
-              <p className="text-sm text-cinza-escuro">
+            <section className="bg-azul-pastel dark:bg-azul-royal/20 border-l-4 border-azul-royal dark:border-azul-claro p-6 rounded transition-colors">
+              <p className="text-sm text-cinza-escuro dark:text-cinza-claro">
                 <strong>Última atualização:</strong> {new Date().toLocaleDateString('pt-BR')}
               </p>
-              <p className="text-sm text-cinza-escuro mt-2">
+              <p className="text-sm text-cinza-escuro dark:text-cinza-claro mt-2">
                 Estes Termos e Condições são um documento legal vinculativo entre você e o Tronco da Sorte.
               </p>
             </section>

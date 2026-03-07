@@ -14,11 +14,11 @@ import { BsWhatsapp } from 'react-icons/bs'
 export function Footer() {
 
   return (
-    <footer className={`${mainConfig} flex justify-between items-center bg-branco dark:bg-azul-royal text-cinza text-1xl dark:text0branco lg:px-12 pt-8 pb-8 flex-wrap`}>
+    <footer className={`${mainConfig} flex justify-between items-center bg-branco dark:bg-cinza-escuro text-cinza text-1xl dark:text-branco lg:px-12 pt-8 pb-8 flex-wrap`}>
         <p>Copyright © 2026, Tronco da sorte, Todos os direitos reservados.</p>
         <ol className='flex gap-4'>
-            <li><Link href="/" className='flex items-center text-1xl gap-1 hover:text-azul-claro'><Instagram className='w-[15px] h-[15px]'/>Instagram</Link></li>
-            <li><Link href="/" className='flex items-center text-1xl gap-1 hover:text-azul-claro'><BsWhatsapp className='w-[15px] h-[15px]' />Whatsapp</Link></li>
+            <li><Link href="/" className='flex dark:text-branco items-center text-1xl gap-1 hover:text-azul-claro'><Instagram className='w-[15px] h-[15px]'/>Instagram</Link></li>
+            <li><Link href="/" className='flex dark:text-branco items-center text-1xl gap-1 hover:text-azul-claro'><BsWhatsapp className='w-[15px] h-[15px]' />Whatsapp</Link></li>
         </ol>
       
     </footer>
