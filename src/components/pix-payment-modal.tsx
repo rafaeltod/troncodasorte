@@ -332,6 +332,31 @@ export function PixPaymentModal({
               >
                 {timeRemaining === 0 ? "Tempo expirado" : "Aguardando"}
               </button>
+
+              {/* Botão de DEBUG para desenvolvimento */}
+              {process.env.NODE_ENV === 'development' && (
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (!confirm('Confirmar pagamento manualmente? (apenas para testes)')) return
+                    try {
+                      const res = await fetch(`/api/payment/confirm-manual?purchaseId=${purchaseId}`)
+                      const data = await res.json()
+                      if (data.success) {
+                        alert(`✅ Pagamento confirmado!\nNúmeros: ${data.numbers}`)
+                        onPaymentConfirmed?.()
+                      } else {
+                        alert(`❌ Erro: ${data.error}`)
+                      }
+                    } catch (err) {
+                      alert(`❌ Erro ao confirmar: ${err}`)
+                    }
+                  }}
+                  className="w-full mt-2 bg-yellow-500 hover:bg-yellow-600 text-white py-2 rounded-lg font-semibold text-sm transition"
+                >
+                  🔧 [DEV] Confirmar Pagamento Manualmente
+                </button>
+              )}
             </>
           )}
         </div>

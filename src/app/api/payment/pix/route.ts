@@ -66,6 +66,10 @@ export async function POST(req: NextRequest) {
               last_name: 'Tronco da Sorte',
             },
             external_reference: purchaseId,
+            metadata: {
+              purchase_id: purchaseId,
+              raffle_id: raffleId,
+            },
             notification_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://troncodasorte.com.br'}/api/payment/webhook`,
           }),
         })
@@ -80,7 +84,10 @@ export async function POST(req: NextRequest) {
         console.log('[Payment] ✅ Pagamento criado no Mercado Pago:', {
           id: payment.id,
           status: payment.status,
+          external_reference: payment.external_reference,
+          metadata: payment.metadata,
           hasQRCode: !!payment.point_of_interaction?.transaction_data?.qr_code,
+          notification_url: payment.notification_url,
         })
 
         // Extrair dados do PIX

@@ -59,11 +59,15 @@ export async function POST(req: NextRequest) {
 
       const payment = await paymentResponse.json();
 
-      console.log("[MP Webhook] Detalhes do pagamento:", {
+      console.log("[MP Webhook] Detalhes completos do pagamento:", {
         id: payment.id,
         status: payment.status,
+        status_detail: payment.status_detail,
         transaction_amount: payment.transaction_amount,
+        external_reference: payment.external_reference,
         metadata: payment.metadata,
+        date_created: payment.date_created,
+        date_approved: payment.date_approved,
       });
 
       // Extrair purchaseId dos metadata com múltiplas tentativas
@@ -72,10 +76,13 @@ export async function POST(req: NextRequest) {
         payment.metadata?.purchaseId ||       // camelCase (fallback)
         payment.external_reference;           // último recurso
 
+      console.log("[MP Webhook] purchaseId extraído:", purchaseId);
+
       if (!purchaseId) {
-        console.warn("[MP Webhook] purchaseId não encontrado nos metadados:", 
-          JSON.stringify(payment.metadata, null, 2)
-        );
+        console.error("[MP Webhook] ❌ purchaseId não encontrado!", {
+          metadata: JSON.stringify(payment.metadata, null, 2),
+          external_reference: payment.external_reference,
+        });
         return NextResponse.json(
           { error: "purchaseId não encontrado" },
           { status: 400 },
