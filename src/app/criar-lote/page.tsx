@@ -85,29 +85,49 @@ export default function CreateRafflePageContent() {
     setSuccess(false)
 
     try {
+      const payload = {
+        ...formData,
+        prizeAmount: formData.prizeAmount ? parseCurrencyInput(formData.prizeAmount) : 0,
+        totalLivros: parseInt(formData.totalLivros),
+        livroPrice: parseCurrencyInput(formData.livroPrice),
+        qtdPremiosAleatorios: premios.length,
+        premiosConfig: premios.length > 0 ? premios.map(p => ({
+          ...p,
+          valor: p.tipo === 'dinheiro' ? parseCurrencyInput(p.valor).toString() : p.valor,
+          porcentagemSorteio: p.porcentagemSorteio,
+        })) : undefined,
+      }
+
+      // Log do tamanho do payload
+      const payloadString = JSON.stringify(payload)
+      const payloadSizeKB = new Blob([payloadString]).size / 1024
+      console.log(`Payload size: ${payloadSizeKB.toFixed(2)} KB`)
+      console.log(`Images count: ${payload.images.length}`)
+      console.log(`Description length: ${payload.description.length} chars`)
+
       const response = await fetch('/api/lotes', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          ...formData,
-          prizeAmount: formData.prizeAmount ? parseCurrencyInput(formData.prizeAmount) : 0,
-          totalLivros: parseInt(formData.totalLivros),
-          livroPrice: parseCurrencyInput(formData.livroPrice),
-          qtdPremiosAleatorios: premios.length,
-          premiosConfig: premios.length > 0 ? premios.map(p => ({
-            ...p,
-            valor: p.tipo === 'dinheiro' ? parseCurrencyInput(p.valor).toString() : p.valor,
-            porcentagemSorteio: p.porcentagemSorteio,
-          })) : undefined,
-        }),
+        body: payloadString,
       })
 
       if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || `Erro ao criar lote (${response.status})`)
+        // Tratar erro 413 especificamente
+        if (response.status === 413) {
+          throw new Error('Requisição muito grande. Reduza o número de imagens ou o tamanho da descrição.')
+        }
+        
+        // Tentar parsear JSON, mas pode ser HTML em caso de erro do servidor
+        const contentType = response.headers.get('content-type')
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = await response.json()
+          throw new Error(errorData.error || `Erro ao criar lote (${response.status})`)
+        } else {
+          throw new Error(`Erro ao criar lote: ${response.status} ${response.statusText}`)
+        }
       }
 
       const data = await response.json()
@@ -263,7 +283,7 @@ export default function CreateRafflePageContent() {
               <ImageIcon className="w-5 h-5" />
               Imagens da Lote (Opcional)
             </label>
-            <ImageUpload onImagesChange={handleImagesChange} maxImages={5} />
+            <ImageUpload onImagesChange={handleImagesChange} maxImages={3} />
           </div>
 
           <div>

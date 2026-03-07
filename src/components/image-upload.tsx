@@ -28,10 +28,10 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
       return
     }
 
-    // Verificar tamanho do arquivo (máximo 5MB)
-    const fileSizeMB = file.size / (1024 * 1024)
-    if (fileSizeMB > 5) {
-      alert(`Imagem muito grande (${fileSizeMB.toFixed(2)}MB). Máximo: 5MB`)
+    // Verificar tamanho do arquivo (máximo 500KB)
+    const fileSizeKB = file.size / 1024
+    if (fileSizeKB > 500) {
+      alert(`Imagem muito grande (${fileSizeKB.toFixed(0)}KB). Máximo: 500KB. Comprima a imagem antes de fazer upload.`)
       return
     }
 
@@ -96,7 +96,7 @@ export function ImageUpload({ onImagesChange, maxImages = 20, initialImages = []
           </div>
         </div>
         <p className="text-cinza dark:text-gray-300 text-sm mt-2">
-          Máximo de {maxImages} imagens. Limite: 5MB por imagem. Formatos: JPG, PNG, GIF
+          Máximo de {maxImages} imagens. Limite: 500KB por imagem. Formatos: JPG, PNG, GIF
         </p>
       </div>
 

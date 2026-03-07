@@ -29,10 +29,10 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Validar tamanho máximo (5MB)
-    if (file.size > 5 * 1024 * 1024) {
+    // Validar tamanho máximo (500KB)
+    if (file.size > 500 * 1024) {
       return NextResponse.json(
-        { error: 'Imagem muito grande. Máximo 5MB' },
+        { error: 'Imagem muito grande. Máximo 500KB. Comprima a imagem antes de fazer upload.' },
         { status: 400 }
       )
     }

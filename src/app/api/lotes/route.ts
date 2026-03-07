@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from 'next/server'
 import { queryOne, queryMany } from '@/lib/db'
 import { createRaffleSchema } from '@/lib/validations'
 
+// Configuração do Route Segment para aumentar limite de body
+export const maxDuration = 60 // segundos
+export const dynamic = 'force-dynamic'
+
 export async function POST(req: NextRequest) {
   try {
     // Pega o userId do cookie autenticado
@@ -14,7 +18,17 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const body = await req.json()
+    // Tentar parsear o body com tratamento de erro
+    let body
+    try {
+      body = await req.json()
+    } catch (jsonError) {
+      console.error('[CREATE RAFFLE] Error parsing JSON:', jsonError)
+      return NextResponse.json(
+        { error: 'Erro ao processar requisição. Verifique se os dados estão corretos.' },
+        { status: 400 }
+      )
+    }
 
     // Log do body para debug
     console.log('[CREATE RAFFLE] Body received:', {
