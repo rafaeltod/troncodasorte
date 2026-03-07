@@ -560,7 +560,10 @@ export default function RaffleDetailPage() {
                           : 'bg-azul-pastel text-azul-royal'
                       }`}
                     >
-                      +{min} Livros
+                      <span className="flex flex-col md:flex-row md:items-center md:gap-1 leading-tight">
+                        <span>+{min}</span>
+                        <span>Livros</span>
+                      </span>
                       <span className={`py-1 px-2 rounded-lg text-1xl ${
                         active ? 'bg-branco text-azul-royal font-bold' : 'bg-azul-royal text-branco'
                       }`}>
