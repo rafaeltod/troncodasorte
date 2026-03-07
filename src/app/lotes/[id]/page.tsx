@@ -1162,61 +1162,129 @@ export default function RaffleDetailPage() {
 
         {/* Regulamento */}
         <div className="mt-16 bg-branco rounded-2xl shadow-lg p-8 border border-cinza-claro">
-      <h2 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
-        Regulamento
-      </h2>
+          <h2 className="text-2xl font-black text-cinza mb-6 flex items-center gap-2">
+            Regulamento da Campanha
+          </h2>
 
-      <div className="space-y-4">
-        <AccordionItem title="Termos e Condições">
-          <div className="text-cinza leading-relaxed space-y-3">
-            <p>
-              Esta lote é organizada de acordo com os regulamentos da Lei nº 9.504/1997 e da Resolução do Tribunal Superior Eleitoral (TSE). 
-              Todos os participantes devem aceitar os Termos e Condições da plataforma Tronco da Sorte.
-            </p>
+          <div className="space-y-4">
+            <AccordionItem title="Organização e Autorização">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p>
+                  Organizador: FM Agenciamento Publicitário & Intermediação de Negócios LTDA, inscrita no CNPJ nº 30.999.856/0001-83, possui o TERMO DE AUTORIZAÇÃO LTP-PRC- 2025/02507 da LOTERIA DO ESTADO DA PARAÍBA (LOTEP) para a exploração da atividade lotérica, baseada na Lei Estadual nº 12.703/2023. Este regulamento estabelece os critérios para a distribuição de prêmios no âmbito do sorteio. Cada participante terá a oportunidade de ganhar conforme os prêmios divulgados no site Os números premiados serão anunciados previamente e estarão disponíveis para consulta dos participantes. É imprescindível que o participante guarde seu bilhete após a compra, pois será necessário apresentá-lo para reivindicar o prêmio em caso de vitória.</p>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Elegibilidade e Participação">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <ul className="list-disc list-inside space-y-2 ml-2">
+                  <li>A participação está aberta exclusivamente a pessoas físicas maiores de 18 anos.</li>
+                  <li>Funcionários da empresa organizadora, familiares diretos e indivíduos envolvidos na administração do sorteio são inelegíveis.</li>
+                  <li>É necessário registro na plataforma e aquisição de bilhetes para entrar no sorteio.</li>
+                </ul>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Processo de Resgate de Prêmios">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p>
+                  Para reivindicar um dos prêmios disponíveis, os ganhadores deverão submeter a documentação necessária, incluindo identidade (RG) e Cadastro de Pessoas Físicas (CPF), além do recibo do bilhete lotérico vencedor. A apresentação e validação desses documentos são passos cruciais para efetivar o resgate do prêmio. Importante salientar que os ganhadores possuem um prazo de <span className="font-semibold">90 dias</span>, a contar da data de anúncio do resultado, para completar esse processo.
+                </p>
+                <p className="font-semibold">Prazos de Entrega:</p>
+                <ul className="list-disc list-inside space-y-2 ml-2">
+                  <li>Prêmios em espécie serão depositados nas contas dos vencedores dentro de um prazo máximo de <span className="font-semibold">5 dias úteis</span> após a validação da documentação.</li>
+                  <li>Para os prêmios físicos, a entrega será realizada em até <span className="font-semibold">10 dias úteis</span>, facilitando o processo para que o ganhador receba o prêmio sem complicações.</li>
+                </ul>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Despesas e Impostos">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p>
+                  A FM Agenciamento Publicitário &amp; Intermediação de Negócios LTDA organizará todas as despesas necessárias para a entrega dos prêmios, assegurando aos ganhadores o recebimento do prêmio líquido, já deduzidos todos os impostos aplicáveis.
+                </p>
+                <p>
+                  Todos os prêmios descritos neste regulamento serão entregues líquidos de imposto de renda.
+                </p>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Procedimento de Sorteio">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p>
+                  Os sorteios serão realizados com base na extração da Loteria Federal do dia descrito nesta campanha, na hora e local divulgados pela Caixa Econômica Federal. Este processo será executado seguindo um protocolo estrito para assegurar transparência, integridade e imparcialidade.
+                </p>
+                <p>
+                  O evento ocorrerá no dia anunciado no site, permitindo aos participantes e interessados acompanharem a extração dos números de maneira virtual.
+                </p>
+                <p>
+                  <span className="font-semibold">Transmissão Ao Vivo:</span> Para garantir a máxima transparência e permitir a participação ampla do público, o sorteio será transmitido ao vivo através dos canais oficiais Caixa. Isso possibilita que todos os interessados, independentemente de sua localização, possam acompanhar cada etapa do sorteio em tempo real.
+                </p>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Forma de Apuração do Sorteio">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p className="font-semibold">LOTERIA FEDERAL</p>
+                <p>
+                  Para identificar o bilhete sorteado, ao menos um Número da Sorte impresso no título deverá coincidir com o número formado pela combinação dos três últimos algarismos do primeiro e do segundo prêmio da extração da Loteria Federal, conforme exemplo apresentado abaixo:
+                </p>
+                <div className="bg-fundo-cinza rounded-lg p-3 font-mono text-sm space-y-1">
+                  <p className="font-semibold text-cinza-escuro">Exemplo:</p>
+                  <p>1º Prêmio: 12345 → <span className="font-bold text-azul-royal">345</span></p>
+                  <p>2º Prêmio: 98746 → <span className="font-bold text-azul-royal">746</span></p>
+                  <p className="mt-2 font-bold text-cinza-escuro">Bilhete ganhador: 345.746</p>
+                </div>
+                <p className="font-semibold">Regra de Aproximação:</p>
+                <p>
+                  Caso a combinação contemplada, apurada pela forma descrita, não tenha sido distribuída a um participante, será aplicada a seguinte regra de aproximação: será contemplado o participante que possuir o próximo Número da Sorte imediatamente superior ao efetivamente apurado, na forma acima, até que seja identificado um participante contemplado em cada uma das premiações desta modalidade.
+                </p>
+                <p>
+                  Para garantir total transparência e facilidade de compreensão, a apuração do ganhador seguirá o seguinte procedimento:
+                </p>
+                <p className="font-semibold">Procedimento passo a passo:</p>
+                <ol className="list-decimal list-inside space-y-2 ml-2">
+                  <li>Primeiro, é verificado o Número Ganhador divulgado pela loteria base (ou método oficial adotado). Esse é o número que inicia a busca pelo vencedor.</li>
+                  <li>Se alguém tiver exatamente esse número, pronto: essa pessoa é a ganhadora.</li>
+                  <li>Se ninguém tiver esse número, começamos uma busca para cima, sempre procurando o próximo número imediatamente superior.</li>
+                  <li>Caso a busca chegue ao último número da lista, o 999.999, e ainda não exista ganhador, o sistema não para. Ele simplesmente dá uma volta e retorna para o número 000.000, continuando a verificação para cima até encontrar alguém que tenha adquirido aquele número.</li>
+                  <li>Assim que um número válido e vendido for encontrado, seu titular será declarado o vencedor.</li>
+                </ol>
+                <div className="bg-fundo-cinza rounded-lg p-3 font-mono text-sm space-y-1">
+                  <p className="font-semibold text-cinza-escuro">Exemplo de aproximação:</p>
+                  <p>Número sorteado: <span className="font-bold text-azul-royal">345.746</span></p>
+                  <p>Se ninguém tiver esse número, verificamos o <span className="font-bold">345.747</span>.</p>
+                  <p>Se ainda não houver comprador, verificamos o <span className="font-bold">345.748</span>, e assim por diante.</p>
+                </div>
+              </div>
+            </AccordionItem>
+
+            <AccordionItem title="Prêmios">
+              <div className="text-cinza leading-relaxed space-y-3">
+                <p className="font-semibold">Prêmio Principal (Loteria Federal):</p>
+                <div className="bg-amarelo-pastel rounded-lg p-3">
+                  <p className="text-amarelo-gold font-black text-lg">1x PORSCHE MACAN 0KM</p>
+                </div>
+                <p className="font-semibold mt-2">Bilhetes Premiados (Instantânea):</p>
+                <p>Não há bilhetes premiados.</p>
+              </div>
+            </AccordionItem>
+
+            <div className="bg-azul-pastel rounded-lg p-4 mt-4">
+              <p className="text-sm text-azul-royal font-semibold">
+                <strong>Aviso Legal:</strong> A participação nesta campanha constitui aceitação automática de todos os termos,
+                condições e regulamentos estabelecidos. Para mais informações, consulte a{' '}
+                <a href="/termos" className="text-azul-claro hover:text-azul-royal font-bold">
+                  Política de Termos
+                </a>{' '}
+                e{' '}
+                <a href="/privacidade" className="text-azul-claro hover:text-azul-royal font-bold">
+                  Privacidade
+                </a>
+                .
+              </p>
+            </div>
           </div>
-        </AccordionItem>
-
-        <AccordionItem title="Responsabilidade Legal">
-          <div className="text-cinza leading-relaxed space-y-3">
-            <p className="font-semibold">O organizador desta lote é responsável por:</p>
-            <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Manter registros completos de todas as transações</li>
-              <li>Realizar o sorteio de forma justa e transparente</li>
-              <li>Cumprir todas as obrigações legais e fiscais</li>
-              <li>Proteger os dados pessoais dos participantes</li>
-              <li>Entregar o prêmio ao vencedor conforme regulamentado</li>
-            </ul>
-          </div>
-        </AccordionItem>
-
-        <AccordionItem title="Transparência e Sorteio">
-          <div className="text-cinza leading-relaxed space-y-3">
-            <p className="font-semibold">O sorteio será realizado de forma pública e auditável. Todos os participantes serão notificados sobre:</p>
-            <ul className="list-disc list-inside space-y-2 ml-2">
-              <li>Data e horário exato do sorteio</li>
-              <li>Método de seleção do vencedor</li>
-              <li>Resultado do sorteio em tempo real</li>
-              <li>Dados do vencedor (apenas primeira letra do nome)</li>
-            </ul>
-          </div>
-        </AccordionItem>
-
-        <div className="bg-azul-pastel rounded-lg p-4 mt-4">
-          <p className="text-sm text-azul-royal font-semibold">
-            <strong>Aviso Legal:</strong> A participação nesta lote constitui aceitação automática de todos os termos, 
-            condições e regulamentos estabelecidos. Para mais informações, consulte a{' '}
-            <a href="/termos" className="text-azul-claro hover:text-azul-royal font-bold">
-              Política de Termos
-            </a>{' '}
-            e{' '}
-            <a href="/privacidade" className="text-azul-claro hover:text-azul-royal font-bold">
-              Privacidade
-            </a>
-            .
-          </p>
         </div>
-      </div>
-    </div>
       </main>
     </div>
   )
