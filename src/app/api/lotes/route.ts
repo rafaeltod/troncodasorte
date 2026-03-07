@@ -66,6 +66,29 @@ export async function POST(req: NextRequest) {
       ]
     )
 
+    // Sortear imediatamente prêmios com porcentagemSorteio === 0
+    const hasPrizeToDraw0 = premiosConfigWithNumbers.some(
+      (p: any) => (p.porcentagemSorteio ?? 0) === 0
+    )
+    if (hasPrizeToDraw0) {
+      const usedDrawnNumbers = new Set<string>()
+      const premiosComDraw = premiosConfigWithNumbers.map((p: any) => {
+        if ((p.porcentagemSorteio ?? 0) !== 0) return p
+        let drawnNumber: string
+        do {
+          const n = Math.floor(Math.random() * 999999) + 1
+          drawnNumber = String(n).padStart(6, '0')
+        } while (usedDrawnNumbers.has(drawnNumber))
+        usedDrawnNumbers.add(drawnNumber)
+        return { ...p, drawnNumber }
+      })
+      await queryOne(
+        `UPDATE lotes SET "premiosConfig" = $1, "updatedAt" = NOW() WHERE id = $2`,
+        [JSON.stringify(premiosComDraw), raffle.id]
+      )
+      raffle.premiosConfig = premiosComDraw
+    }
+
     return NextResponse.json(raffle, { status: 201 })
   } catch (error) {
     console.error('Error creating raffle:', error)

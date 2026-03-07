@@ -47,6 +47,7 @@ interface Premio {
   tipo: "dinheiro" | "item";
   valor?: number;
   descricao?: string;
+  porcentagemSorteio?: number;
 }
 
 export default function PurchaseDetailPage({
@@ -63,6 +64,7 @@ export default function PurchaseDetailPage({
   const [error, setError] = useState("");
   const [referrer, setReferrer] = useState<string | null>(null);
   const [premios, setPremios] = useState<Premio[]>([]);
+  const [soldPct, setSoldPct] = useState<number>(100);
   const [winnerNumber, setWinnerNumber] = useState<string | null>(null);
 
   useEffect(() => {
@@ -171,6 +173,11 @@ export default function PurchaseDetailPage({
             const parsed = typeof raw === "string" ? JSON.parse(raw) : raw;
             if (Array.isArray(parsed)) setPremios(parsed);
           }
+          const sp =
+            data.soldLivros && data.totalLivros
+              ? (data.soldLivros / data.totalLivros) * 100
+              : 100;
+          setSoldPct(sp);
           if (data.winnerNumber) {
             setWinnerNumber(data.winnerNumber);
           }
@@ -384,13 +391,17 @@ export default function PurchaseDetailPage({
                 </h3>
                 {/* Alerta de bilhetes premiados */}
                 {(() => {
+                  const activePremios = premios.filter(
+                    (p) => (p.porcentagemSorteio ?? 0) <= soldPct
+                  );
                   const premioMap = new Map(
-                    premios.map((p) => [p.number, p])
+                    activePremios.map((p) => [p.number, p])
                   );
                   const ganhadores = purchase.numbers.filter((n) =>
                     premioMap.has(n)
                   );
-                  if (premios.length > 0 && ganhadores.length === 0) {
+                  if (activePremios.length === 0) return null;
+                  if (activePremios.length > 0 && ganhadores.length === 0) {
                     return (
                       <div className="mb-4 bg-cinza-claro dark:bg-[#1a2332] rounded-xl p-5 flex items-center gap-3">
                         <p className="font-bold text-cinza-escuro dark:text-cinza-claro">
@@ -434,7 +445,12 @@ export default function PurchaseDetailPage({
                 <div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-1">
                   {purchase.numbers.map((number, index) => {
                     const isMain = winnerNumber === number;
-                    const premio = !isMain ? premios.find((p) => p.number === number) : null;
+                    const activePremiosGrid = premios.filter(
+                      (p) => (p.porcentagemSorteio ?? 0) <= soldPct
+                    );
+                    const premio = !isMain
+                      ? activePremiosGrid.find((p) => p.number === number)
+                      : null;
                     return isMain ? (
                       <div
                         key={index}

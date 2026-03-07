@@ -19,6 +19,7 @@ export const createRaffleSchema = z.object({
     tipo: z.enum(['dinheiro', 'item']),
     descricao: z.string().optional().default(''),
     valor: z.string().optional().default(''),
+    porcentagemSorteio: z.number().min(0).max(100).optional().default(0),
   })).optional(),
 })
 

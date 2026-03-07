@@ -66,7 +66,7 @@ export async function POST(
 
     // Verificar se o lote existe
     const lote = await queryOne(
-      `SELECT id, status, winner, "qtdPremiosAleatorios", "premiosConfig" FROM lotes WHERE id = $1`,
+      `SELECT id, status, winner, "qtdPremiosAleatorios", "premiosConfig", "totalLivros" FROM lotes WHERE id = $1`,
       [id]
     )
 
@@ -189,10 +189,10 @@ export async function POST(
     }
 
     // Resolver prêmios aleatórios usando números pré-sorteados na criação
-    let premiosAleatorios: { posicao: number; number: string; drawnNumber: string; tipo?: string; descricao?: string; valor?: string; winner: { userId: string; name: string; email: string; purchaseId: string } }[] = []
+    let premiosAleatorios: { posicao: number; number: string; drawnNumber: string; tipo?: string; descricao?: string; valor?: string; porcentagemSorteio?: number; winner: { userId: string; name: string; email: string; purchaseId: string } }[] = []
 
     // Parse premiosConfig (prize config with pre-drawn numbers from creation)
-    let premiosConfig: { tipo: string; descricao: string; valor: string; number: string }[] = []
+    let premiosConfig: { tipo: string; descricao: string; valor: string; number: string; porcentagemSorteio?: number }[] = []
     if (lote.premiosConfig) {
       try {
         premiosConfig = typeof lote.premiosConfig === 'string'
@@ -204,16 +204,34 @@ export async function POST(
     }
 
     if (premiosConfig.length > 0) {
-      // Para cada prêmio, buscar o bilhete correspondente ao número pré-sorteado
-      // Usa a mesma lógica de incremento do prêmio principal
+      // Construir set de números vendidos
+      const soldSet = new Set(Array.from(numberToPurchase.keys()))
+
+      // Função para sortear um número NÃO comprado e NÃO ainda usado como drawnNumber
+      const usedDrawnNumbers = new Set<string>()
+      usedDrawnNumbers.add(winnerNumber!) // reservar o número vencedor principal
+
+      function pickUnsoldNumber(): string {
+        let candidate: string
+        let tries = 0
+        do {
+          const n = Math.floor(Math.random() * 999999) + 1 // 000001–999999
+          candidate = String(n).padStart(6, '0')
+          tries++
+          if (tries > 2000000) break // segurança
+        } while (soldSet.has(candidate) || usedDrawnNumbers.has(candidate))
+        return candidate
+      }
+
       const usedWinnerNumbers = new Set<string>()
       usedWinnerNumbers.add(winnerNumber!) // excluir o vencedor principal
 
       for (let i = 0; i < premiosConfig.length; i++) {
         const config = premiosConfig[i]
-        const premioDrawnNumber = config.number
 
-        if (!premioDrawnNumber) continue
+        // Sortear um número não comprado como número de referência do prêmio
+        const premioDrawnNumber = pickUnsoldNumber()
+        usedDrawnNumbers.add(premioDrawnNumber)
 
         let currentNum = parseInt(premioDrawnNumber, 10)
         let premioWinnerNumber: string | null = null
@@ -245,6 +263,7 @@ export async function POST(
             tipo: config.tipo || undefined,
             descricao: config.descricao || undefined,
             valor: config.valor || undefined,
+            porcentagemSorteio: config.porcentagemSorteio,
             winner: {
               userId: premioWinnerData.userId,
               name: premioWinnerData.userName,

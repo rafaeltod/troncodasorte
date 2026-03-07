@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryOne, queryMany } from "@/lib/db";
+import { autoDrawPremiosAleatorios } from "@/lib/premios-draw";
 
 const MERCADO_PAGO_ACCESS_TOKEN = process.env.MERCADO_PAGO_ACCESS_TOKEN;
 
@@ -185,6 +186,7 @@ export async function POST(req: NextRequest) {
           [updatedPurchase.livros, updatedPurchase.raffleId],
         );
         console.log("[MP Webhook] ✅ Livros da rifa atualizadas");
+        await autoDrawPremiosAleatorios(updatedPurchase.raffleId);
 
         // Atualizar top buyer agora que a compra foi confirmada
         if (updatedPurchase.userId) {

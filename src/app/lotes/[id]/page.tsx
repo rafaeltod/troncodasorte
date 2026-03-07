@@ -109,9 +109,10 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
 
   return (
     <section className="bg-branco dark:bg-cinza-cards rounded-lg p-2 md:p-4 mt-5">
-      <div className="flex items-center gap-2 font-bold mb-3 ">
+      <div className="flex items-center gap-2 font-bold mb-1 ">
         <h1 className="text-azul-royal dark:text-amarelo-claro text-2xl">Bilhetes premiados</h1>
       </div>
+      <p className="text-sm text-cinza dark:text-gray-400 mb-3">Esses prêmios serão sorteados após a porcentagem de vendas correspondente ser atingida</p>
       <div className="space-y-2">
         {premios.map((p: any, i: number) => {
           const owner = raffle.status !== 'drawn' && findOwner(p.number)
@@ -129,10 +130,12 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
                   <p className="text-[20px] font-semibold text-cinza mt-1">Disponivel</p>
                 )}
             <div className='flex gap-2'>
-              <p className={`font-mono h-9 w-20 pt-1 flex items-center justify-center rounded-lg font-bold text-branco text-1xl whitespace-nowrap ${(owner || p.winner?.name) ? 'bg-amarelo-gold' : 'bg-azul-royal'}`}>
-                {p.number}
-              </p>
-              <div className="flex gap-2"> 
+              {raffle.status === 'drawn' && (
+                <p className={`font-mono h-9 w-20 pt-1 flex items-center justify-center rounded-lg font-bold text-branco text-1xl whitespace-nowrap ${(owner || p.winner?.name) ? 'bg-amarelo-gold' : 'bg-azul-royal'}`}>
+                  {p.number}
+                </p>
+              )}
+              <div className="flex flex-wrap gap-2"> 
                 {p.tipo === 'dinheiro' && p.valor && (
                   <span className={`inline-flex items-center gap-1 ${(owner || p.winner?.name) ? 'bg-amarelo-pastel text-amarelo-gold border-amarelo-gold' : 'bg-azul-pastel text-azul-royal'} text-1xl font-bold px-2 py-1 border rounded-lg w-fit`}>
                     R$ {Number(p.valor).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
@@ -141,6 +144,11 @@ function BilhetesPremiados({ raffle }: { raffle: RaffleDetail }) {
                 {p.tipo === 'item' && p.descricao && (
                   <span className={`inline-flex items-center gap-1 ${(owner || p.winner?.name) ? 'bg-amarelo-pastel text-amarelo-gold border-amarelo-gold' : 'bg-azul-pastel text-azul-royal'} text-1xl font-bold border px-2 py-1 rounded-lg w-fit`}>
                     {p.descricao}
+                  </span>
+                )}
+                {typeof p.porcentagemSorteio === 'number' && (
+                  <span className={`inline-flex items-center gap-1 ${(owner || p.winner?.name) ? 'bg-amarelo-gold' : 'bg-azul-royal'} text-branco text-xs font-bold px-2 py-1 rounded-lg w-fit`}>
+                    após {p.porcentagemSorteio}% vendidos
                   </span>
                 )}
               </div> 

@@ -11,6 +11,7 @@ interface PremioConfig {
   tipo: 'dinheiro' | 'item'
   descricao: string
   valor: string
+  porcentagemSorteio: number
 }
 
 export default function CreateRafflePageContent() {
@@ -97,7 +98,8 @@ export default function CreateRafflePageContent() {
           qtdPremiosAleatorios: premios.length,
           premiosConfig: premios.length > 0 ? premios.map(p => ({
             ...p,
-            valor: p.tipo === 'dinheiro' ? parseCurrencyInput(p.valor).toString() : p.valor
+            valor: p.tipo === 'dinheiro' ? parseCurrencyInput(p.valor).toString() : p.valor,
+            porcentagemSorteio: p.porcentagemSorteio,
           })) : undefined,
         }),
       })
@@ -329,6 +331,42 @@ export default function CreateRafflePageContent() {
                         />
                       </div>
                     )}
+
+                    {/* Porcentagem de ativação */}
+                    <div className="mt-3">
+                      <label className="block text-xs font-bold text-gray-600 dark:text-gray-400 mb-1">
+                        Porcentagem de ativação:
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="range"
+                          min={0}
+                          max={100}
+                          step={1}
+                          value={premio.porcentagemSorteio}
+                          onChange={(e) => setPremios(prev => prev.map((p, i) => i === index ? { ...p, porcentagemSorteio: Number(e.target.value) } : p))}
+                          className="flex-1 accent-purple-600"
+                        />
+                        <div className="flex items-center gap-0.5">
+                          <input
+                            type="number"
+                            min={0}
+                            max={100}
+                            value={premio.porcentagemSorteio}
+                            onChange={(e) => {
+                              const v = Math.min(100, Math.max(0, Number(e.target.value)))
+                              setPremios(prev => prev.map((p, i) => i === index ? { ...p, porcentagemSorteio: v } : p))
+                            }}
+                            className="w-14 border-2 border-purple-300 dark:border-purple-700 rounded-lg px-2 py-1 text-sm font-bold text-purple-700 dark:text-purple-300 text-center focus:outline-none focus:border-purple-500 dark:bg-[#1a2332]"
+                          />
+                          <span className="text-sm font-bold text-purple-700 dark:text-purple-300">%</span>
+                        </div>
+                      </div>
+                      <div className="flex justify-between text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                        <span>0% (desde o início)</span>
+                        <span>100% (lote cheio)</span>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -337,7 +375,7 @@ export default function CreateRafflePageContent() {
             <button
               type="button"
               onClick={() => {
-                setPremios(prev => [...prev, { tipo: 'dinheiro', descricao: '', valor: '' }])
+                setPremios(prev => [...prev, { tipo: 'dinheiro', descricao: '', valor: '', porcentagemSorteio: 0 }])
               }}
               className="w-full border-2 border-dashed border-purple-300 dark:border-purple-700 text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 rounded-xl py-3 px-4 font-bold transition flex items-center justify-center gap-2"
             >

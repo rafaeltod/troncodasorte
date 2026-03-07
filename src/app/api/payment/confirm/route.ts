@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryOne, queryMany } from "@/lib/db";
+import { autoDrawPremiosAleatorios } from "@/lib/premios-draw";
 
 interface ConfirmPaymentRequest {
   purchaseId: string;
@@ -82,6 +83,7 @@ export async function POST(req: NextRequest) {
        WHERE id = $2`,
       [livros, raffleId],
     );
+    await autoDrawPremiosAleatorios(raffleId);
 
     console.log("[Payment Confirm] ✅ Pagamento confirmado:", {
       purchaseId,

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { queryOne, queryMany } from "@/lib/db";
+import { autoDrawPremiosAleatorios } from "@/lib/premios-draw";
 
 /**
  * Simula o webhook do Mercado Pago confirmando pagamentos
@@ -81,6 +82,7 @@ export async function POST(req: NextRequest) {
         [purchase.livros, purchase.raffleId],
       );
       console.log("[Webhook Sim] ✅ Livros da rifa atualizadas");
+      await autoDrawPremiosAleatorios(purchase.raffleId);
 
       // Atualizar top buyer
       if (purchase.userId) {
