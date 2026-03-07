@@ -537,7 +537,7 @@ export default function RaffleDetailPage() {
                     <>
                       <div className="fixed inset-0 z-10" onClick={() => setShowDescontoInfo(false)} />
                       <div className="absolute right-0 top-6 z-20 w-69 bg-cinza-escuro dark:bg-cinza-cards text-branco text-sm rounded-xl shadow-xl px-4 py-3">
-                        Quanto mais livros forem vendidos, maior será o desconto.
+                        Quanto mais livros forem comprados, maior será o desconto.
                       </div>
                     </>
                   )}
