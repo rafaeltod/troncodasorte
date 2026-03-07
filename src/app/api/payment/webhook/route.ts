@@ -33,14 +33,14 @@ export async function POST(req: NextRequest) {
     console.log("[MP Webhook] Análise do evento:", {
       topic,
       isPaymentEvent,
-      paymentId,✅ É evento de pagamento! ID: ${paymentId}`);
+      paymentId,
+    });
+
+    if (isPaymentEvent && paymentId) {
+      console.log(`[MP Webhook] ✅ É evento de pagamento! ID: ${paymentId}`);
 
       // Buscar detalhes do pagamento no Mercado Pago
       console.log(`[MP Webhook] Buscando detalhes do pagamento no Mercado Pago...`);
-    if (isPaymentEvent && paymentId) {
-      console.log(`[MP Webhook] Processando pagamento: ${paymentId}`);
-
-      // Buscar detalhes do pagamento no Mercado Pago
       const paymentResponse = await fetch(
         `https://api.mercadopago.com/v1/payments/${paymentId}`,
         {
