@@ -30,10 +30,10 @@ export default function TermosPage() {
             <section>
               <h2 className="text-2xl font-bold text-cinza-escuro dark:text-cinza-claro mb-4">2. Descrição do Serviço</h2>
               <p>
-                Tronco da Sorte é uma plataforma online que permite que usuários participem de sorteios e rifas. O serviço inclui:
+                Tronco da Sorte é uma plataforma online que permite que usuários participem de sorteios. O serviço inclui:
               </p>
               <ul className="list-disc pl-6 mt-3 space-y-2">
-                <li>Criação e participação em rifas online</li>
+                <li>Criação e participação em sorteios online</li>
                 <li>Gerenciamento de compras e livros</li>
                 <li>Registro de resultados e vencedores</li>
                 <li>Histórico de transações</li>
