@@ -590,7 +590,7 @@ export default function RaffleDetailPage() {
                         >
                           <div>
                             {quantity} {quantity === 1 ? 'livro' : 'livros'}
-                            <p className="text-xs ">Livros + Ebook</p>
+                            <p className="text-xs ">Títulos + Ebook</p>
                           </div>
                           <span className='bg-azul-pastel font-[15px] w-25 text-azul-royal px-2 py-1 rounded-lg flex items-center justify-center'>
                             R$ {(quantity * Number(raffle.livroPrice)).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
