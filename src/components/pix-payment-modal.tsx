@@ -333,8 +333,8 @@ export function PixPaymentModal({
                 {timeRemaining === 0 ? "Tempo expirado" : "Aguardando"}
               </button>
 
-              {/* Botão de DEBUG para desenvolvimento */}
-              {process.env.NODE_ENV === 'development' && (
+              {/* Botão de DEBUG - sempre visível em modo de teste */}
+              {(process.env.NODE_ENV === 'development' || true) && (
                 <button
                   type="button"
                   onClick={async () => {

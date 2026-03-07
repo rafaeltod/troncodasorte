@@ -10,10 +10,14 @@ export async function POST(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const body = await req.json().catch(() => ({}));
 
-    console.log("[MP Webhook] Recebido evento:", {
-      query: Object.fromEntries(searchParams),
-      body,
+    console.log("[MP Webhook] ===== WEBHOOK CHAMADO =====");
+    console.log("[MP Webhook] Timestamp:", new Date().toISOString());
+    console.log("[MP Webhook] Headers:", {
+      'content-type': req.headers.get('content-type'),
+      'user-agent': req.headers.get('user-agent'),
     });
+    console.log("[MP Webhook] Query params:", Object.fromEntries(searchParams));
+    console.log("[MP Webhook] Body:", JSON.stringify(body, null, 2));
 
     // O Mercado Pago envia o tipo de evento via query param "topic" ou no body "action"
     // action pode ser: "payment.created", "payment.updated", etc.
@@ -29,9 +33,10 @@ export async function POST(req: NextRequest) {
     console.log("[MP Webhook] Análise do evento:", {
       topic,
       isPaymentEvent,
-      paymentId,
-    });
+      paymentId,✅ É evento de pagamento! ID: ${paymentId}`);
 
+      // Buscar detalhes do pagamento no Mercado Pago
+      console.log(`[MP Webhook] Buscando detalhes do pagamento no Mercado Pago...`);
     if (isPaymentEvent && paymentId) {
       console.log(`[MP Webhook] Processando pagamento: ${paymentId}`);
 
