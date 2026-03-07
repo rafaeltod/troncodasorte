@@ -162,30 +162,22 @@ export function PixPaymentModal({
           console.log("[PixPaymentModal] QR Code já vem do backend");
         } else if (!data.qrCode && (data.content || data.pixKey)) {
           const payload = data.content || data.pixKey;
-          const isEmail = /\S+@\S+\.\S+/.test(payload);
-          const FORCE_QR = process.env.NEXT_PUBLIC_FORCE_QR === "true";
-
-          if (isEmail && !FORCE_QR) {
-            console.log(
-              "[PixPaymentModal] Payload é email, não gerando QR automaticamente",
+          
+          try {
+            console.log("[PixPaymentModal] Gerando QR code localmente com payload:", payload.substring(0, 50) + "...");
+            const svgString = await QRCode.toString(payload, {
+              type: "svg",
+              width: 300,
+            });
+            data.qrCode =
+              "data:image/svg+xml;utf8," + encodeURIComponent(svgString);
+            console.log("[PixPaymentModal] ✅ QR code gerado com sucesso!");
+          } catch (err) {
+            console.error(
+              "[PixPaymentModal] Erro ao gerar QR localmente:",
+              err,
             );
             data.qrCode = null;
-          } else {
-            try {
-              console.log("[PixPaymentModal] Gerando QR code localmente");
-              const svgString = await QRCode.toString(payload, {
-                type: "svg",
-                width: 300,
-              });
-              data.qrCode =
-                "data:image/svg+xml;utf8," + encodeURIComponent(svgString);
-            } catch (err) {
-              console.error(
-                "[PixPaymentModal] Erro ao gerar QR localmente:",
-                err,
-              );
-              data.qrCode = null;
-            }
           }
         }
 
