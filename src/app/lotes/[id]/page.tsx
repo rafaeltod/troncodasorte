@@ -1258,17 +1258,6 @@ export default function RaffleDetailPage() {
               </div>
             </AccordionItem>
 
-            <AccordionItem title="Prêmios">
-              <div className="text-cinza leading-relaxed space-y-3">
-                <p className="font-semibold">Prêmio Principal (Loteria Federal):</p>
-                <div className="bg-amarelo-pastel rounded-lg p-3">
-                  <p className="text-amarelo-gold font-black text-lg">1x PORSCHE MACAN 0KM</p>
-                </div>
-                <p className="font-semibold mt-2">Bilhetes Premiados (Instantânea):</p>
-                <p>Não há bilhetes premiados.</p>
-              </div>
-            </AccordionItem>
-
             <div className="bg-azul-pastel rounded-lg p-4 mt-4">
               <p className="text-sm text-azul-royal font-semibold">
                 <strong>Aviso Legal:</strong> A participação nesta campanha constitui aceitação automática de todos os termos,
