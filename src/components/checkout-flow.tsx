@@ -534,7 +534,13 @@ export function CheckoutFlow({
                 )}
               </p>
             </div>
-          {/* Checkbox de Ter mos */}
+          </div>
+
+          <p className="text-1xl text-cinza">
+            Ao clicar em "Concluir Reserva", você será direcionado para o pagamento via PIX.
+          </p>
+
+          {/* Checkbox de Termos */}
           <div className="bg-azul-pastel/20 border border-azul-royal/30 rounded-lg p-4">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
@@ -581,13 +587,7 @@ export function CheckoutFlow({
             </button>
             <button
               onClick={handleConfirmAndProceed}
-              disabled={loading || !acceptedTerms text-cinza bg-cinza-claro hover:bg-cinza hover:text-branco cursor-pointer py-3 rounded-full font-bold transition disabled:opacity-50"
-            >
-              Voltar
-            </button>
-            <button
-              onClick={handleConfirmAndProceed}
-              disabled={loading}
+              disabled={loading || !acceptedTerms}
               className="flex-1 bg-azul-royal hover:bg-branco hover:text-azul-royal hover:border-2 hover:border-azul-royal cursor-pointer text-branco py-3 rounded-full font-black transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {loading ? 'Processando...' : 'Concluir Reserva'}

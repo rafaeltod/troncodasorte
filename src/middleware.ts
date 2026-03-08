@@ -16,10 +16,9 @@ export function middleware(request: NextRequest) {
   const clientePublicSubPaths = new Set(['lotes', 'meus-bilhetes', 'compra', 'privacidade', 'termos', 'top-compradores'])
 
   const isPublicRoute = (() => {
-    // Raiz: redirecionar para /troncodasorte (não é pública para usuários comuns)
+    // Raiz: redirecionar para /troncodasorte
     if (pathname === '/') return false
-    // Rotas de auth: apenas /auth/register é pública
-    if (pathname === '/auth/register') return true
+    // Rotas de auth: São privadas (apenas para admin/staff)
     if (pathname.startsWith('/auth/')) return false
     // Rotas legadas que ainda existem
     if (clientePublicSubPaths.has(firstSegment)) return true
@@ -32,18 +31,18 @@ export function middleware(request: NextRequest) {
   })()
 
   // Redirecionamento especial para raiz
-  if (pathname === '/' && token) {
+  if (pathname === '/' && !token) {
     return NextResponse.redirect(new URL('/troncodasorte', request.url))
   }
 
-  // Bloquear /auth/login para usuários já logados
-  if (pathname === '/auth/login' && token) {
+  // Bloquear /auth/* para usuários não logados (é área administrativa)
+  if (pathname.startsWith('/auth/') && !token) {
     return NextResponse.redirect(new URL('/troncodasorte', request.url))
   }
 
-  // Se não tem token e está tentando acessar rota protegida, redireciona para registro
+  // Se não tem token e está tentando acessar rota protegida (admin, dashboard), bloquear
   if (!token && !isPublicRoute) {
-    return NextResponse.redirect(new URL('/auth/register', request.url))
+    return NextResponse.redirect(new URL('/troncodasorte', request.url))
   }
 
   const response = NextResponse.next()
