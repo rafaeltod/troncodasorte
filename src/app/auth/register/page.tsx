@@ -153,12 +153,12 @@ export default function RegisterPage() {
         throw new Error(data.error || 'Erro ao criar conta')
       }
 
-      // Atualizar context imediatamente
-      await refetch()
+      // NÃO atualizar context (não logar automaticamente)
+      // await refetch()
 
-      setSuccess('Conta criada com sucesso!')
-      await new Promise(resolve => setTimeout(resolve, 300))
-      router.push('/')
+      setSuccess('Conta criada com sucesso! Redirecionando para o login...')
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      router.push('/auth/login')
     } catch (err) {
       console.error('[RegisterPage] Error:', err)
       setError(err instanceof Error ? err.message : 'Erro ao criar conta')

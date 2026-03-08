@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
 import { formatDecimal } from '@/lib/formatters'
-import { censorName, censorPhoneShort } from '@/lib/formatters'
+import { censorName, censorPhoneShort, censorCPF, censorEmail } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -31,6 +31,45 @@ interface Purchase {
     title: string
     prizeAmount: number
   }
+}
+
+// Interface para agrupar compras por lote
+interface RaffleGroup {
+  raffleId: string
+  raffleTitle: string
+  purchases: Purchase[]
+  totalSpent: number
+  totalLivros: number
+  lastPurchaseDate: string
+}
+
+// Função para agrupar compras por lote
+function groupPurchasesByRaffle(purchases: Purchase[]): RaffleGroup[] {
+  const groups: { [key: string]: RaffleGroup } = {}
+
+  purchases.forEach(purchase => {
+    if (!groups[purchase.raffleId]) {
+      groups[purchase.raffleId] = {
+        raffleId: purchase.raffleId,
+        raffleTitle: purchase.raffle?.title || 'Lote',
+        purchases: [],
+        totalSpent: 0,
+        totalLivros: 0,
+        lastPurchaseDate: purchase.createdAt,
+      }
+    }
+    groups[purchase.raffleId].purchases.push(purchase)
+    groups[purchase.raffleId].totalSpent += Number(purchase.amount)
+    groups[purchase.raffleId].totalLivros += purchase.livros
+    // Atualizar data se for mais recente
+    if (new Date(purchase.createdAt) > new Date(groups[purchase.raffleId].lastPurchaseDate)) {
+      groups[purchase.raffleId].lastPurchaseDate = purchase.createdAt
+    }
+  })
+
+  return Object.values(groups).sort((a, b) => 
+    new Date(b.lastPurchaseDate).getTime() - new Date(a.lastPurchaseDate).getTime()
+  )
 }
 
 export default function AccountPage() {
@@ -134,8 +173,11 @@ export default function AccountPage() {
     return null
   }
 
-  const totalSpent = purchases.reduce((acc, p) => acc + p.amount, 0)
-  const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
+  // Filtrar apenas compras confirmadas
+  const confirmedPurchases = purchases.filter(p => p.status === 'confirmed')
+  const raffleGroups = groupPurchasesByRaffle(confirmedPurchases)
+  const totalSpent = confirmedPurchases.reduce((acc, p) => acc + p.amount, 0)
+  const totalLivros = confirmedPurchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
     <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
@@ -287,14 +329,14 @@ export default function AccountPage() {
                       <Mail className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Email
                     </p>
-                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.email}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{censorEmail(user.email)}</p>
                   </div>
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
                       <FileText className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       CPF
                     </p>
-                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.cpf}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{censorCPF(user.cpf)}</p>
                   </div>
                 </div>
 
@@ -326,7 +368,7 @@ export default function AccountPage() {
             <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Livros Adquiridas</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Livros Adquiridos</p>
               </div>
               <p className="text-4xl font-black">{totalLivros}</p>
             </div>
@@ -334,9 +376,9 @@ export default function AccountPage() {
             <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Rifas Participadas</p>
-              </div>
-              <p className="text-4xl font-black">{purchases.length}</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Lotes Participados</p>
+              </div>raffleGroup
+              <p className="text-4xl font-black">{confirmedPurchases.length}</p>
             </div>
           </div>
         </div>
@@ -348,31 +390,30 @@ export default function AccountPage() {
             Histórico de Compras
           </h2>
 
-          {purchases.length > 0 ? (
+          {raffleGroups.length > 0 ? (
             <div className="space-y-3">
-              {purchases.map((purchase) => (
-                <Link key={purchase.id} href={`/${cliente}/compra/${purchase.id}`}>
+              {raffleGroups.map((group) => (
+                <Link key={group.raffleId} href={`/${cliente}/lotes/${group.raffleId}`}>
                   <div className="bg-linear-to-r from-fundo-cinza to-emerald-50 dark:from-[#1a2332] dark:to-[#1a2f45] hover:from-emerald-50 hover:to-teal-50 dark:hover:from-[#1a2f45] dark:hover:to-[#1a3858] p-6 rounded-lg border border-cinza-claro dark:border-gray-700 cursor-pointer transition transform hover:scale-102 hover:border-azul-royal dark:hover:border-azul-claro">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <p className="font-black text-cinza-escuro dark:text-cinza-claro text-lg mb-2">
-                          {purchase.raffle?.title || 'Rifa'}
+                          {group.raffleTitle}
                         </p>
-                        <p className="text-cinza dark:text-gray-400 text-sm flex items-center gap-2">
+                        <p className="text-cinza dark:text-gray-400 text-sm flex items-center gap-2 mb-1">
                           <Ticket className="w-4 h-4 text-azul-royal dark:text-azul-pastel" />
-                          {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
+                          {group.totalLivros} livro{group.totalLivros !== 1 ? 's' : ''} em {group.purchases.length} compra{group.purchases.length !== 1 ? 's' : ''}
+                        </p>
+                        <p className="text-cinza dark:text-gray-400 text-xs">
+                          Última compra: {new Date(group.lastPurchaseDate).toLocaleDateString('pt-BR')}
                         </p>
                       </div>
                       <div className="text-right">
                         <p className="font-black text-azul-royal dark:text-azul-pastel text-lg mb-2">
-                          R$ {formatDecimal(Number(purchase.amount))}
+                          R$ {formatDecimal(group.totalSpent)}
                         </p>
-                        <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold ${
-                          purchase.status === 'confirmed' 
-                            ? 'bg-verde-pastel text-verde-menta dark:bg-green-900/30 dark:text-green-400' 
-                            : 'bg-cinza-claro text-cinza-escuro dark:bg-gray-700 dark:text-gray-300'
-                        }`}>
-                          {purchase.status === 'confirmed' ? 'Confirmada' : 'Pendente'}
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-verde-pastel text-verde-menta dark:bg-green-900/30 dark:text-green-400">
+                          Confirmado
                         </span>
                       </div>
                     </div>

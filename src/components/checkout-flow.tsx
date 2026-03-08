@@ -67,6 +67,9 @@ export function CheckoutFlow({
   // Payment state
   const [mpLoading, setMpLoading] = useState(false)
 
+  // Termos e condições
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+
   // Upsell
   const [selectedExtras, setSelectedExtras] = useState<number[]>([])
   const upsellPresets = [10, 50, 100, 200]
@@ -189,6 +192,11 @@ export function CheckoutFlow({
     setError('')
 
     if (!validateRegistration()) {
+      return
+    }
+
+    if (!acceptedTerms) {
+      setError('Você precisa aceitar os Termos de Uso e Política de Privacidade')
       return
     }
 
@@ -463,6 +471,40 @@ export function CheckoutFlow({
             />
           </div>
 
+          {/* Checkbox de Termos no Registro */}
+          <div className="bg-azul-pastel/20 border border-azul-royal/30 rounded-lg p-4">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                className="mt-1 w-5 h-5 rounded border-azul-royal text-azul-royal focus:ring-azul-royal cursor-pointer"
+              />
+              <span className="text-sm text-cinza-escuro">
+                Li e aceito os{' '}
+                <a
+                  href={cliente ? `/${cliente}/termos` : '/termos'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-azul-royal font-bold hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Termos de Uso
+                </a>
+                {' '}e a{' '}
+                <a
+                  href={cliente ? `/${cliente}/privacidade` : '/privacidade'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-azul-royal font-bold hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Política de Privacidade
+                </a>
+              </span>
+            </label>
+          </div>
+
           <div className="flex gap-3">
             <button
               onClick={() => {
@@ -476,7 +518,7 @@ export function CheckoutFlow({
             </button>
             <button
               onClick={handleRegisterAndContinue}
-              disabled={loading}
+              disabled={loading || !acceptedTerms}
               className="flex-1 bg-azul-royal text-branco py-3 rounded-lg font-black hover:bg-azul-royal/80 transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
               {loading ? 'Registrando...' : 'Continuar'}

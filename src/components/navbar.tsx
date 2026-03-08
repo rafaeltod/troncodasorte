@@ -7,7 +7,7 @@ import { useAuth } from '@/context/auth-context'
 import { censorName } from '@/lib/formatters'
 import { mainConfig } from '@/lib/layout-config'
 import Image from 'next/image'
-import { Ticket, User, TrendingUp, Menu, X, LogOut, Shield, Home, Plus, Moon, Sun } from 'lucide-react'
+import { Ticket, User, TrendingUp, Menu, X, LogOut, Shield, Home, Plus, Moon, Sun, Users } from 'lucide-react'
 
 export function Navbar() {
   const router = useRouter()
@@ -110,6 +110,13 @@ export function Navbar() {
                         Painel Admin
                       </Link>
                       <Link
+                        href="/admin/usuarios"
+                        className="flex items-center gap-2 bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded-lg font-semibold transition-colors"
+                      >
+                        <Users className="w-4 h-4" />
+                        Usuários
+                      </Link>
+                      <Link
                         href="/criar-lote"
                         className="flex items-center gap-2 bg-white text-emerald-600 hover:bg-emerald-50 px-6 py-2 rounded-lg font-semibold transition-colors"
                       >
@@ -185,6 +192,14 @@ export function Navbar() {
                       >
                         <Shield className="w-4 h-4" />
                         Painel Admin
+                      </Link>
+                      <Link
+                        href="/admin/usuarios"
+                        className="flex items-center gap-2 text-branco hover:bg-branco/90 px-4 py-2 rounded-full font-semibold transition-colors"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Users className="w-4 h-4" />
+                        Usuários
                       </Link>
                       <Link
                         href="/criar-lote"
