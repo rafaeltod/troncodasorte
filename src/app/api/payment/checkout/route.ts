@@ -59,6 +59,17 @@ export async function POST(req: NextRequest) {
         pending: `${baseUrl}/compra/${purchaseId}?payment=pending`,
       },
       notification_url: `${baseUrl}/api/payment/webhook`,
+      payment_methods: {
+        excluded_payment_types: [
+          { id: 'credit_card' },
+          { id: 'debit_card' },
+          { id: 'ticket' },
+          { id: 'atm' },
+          { id: 'prepaid_card' },
+          { id: 'digital_currency' },
+          { id: 'digital_wallet' },
+        ],
+      },
     }
 
     const mpResponse = await fetch(
