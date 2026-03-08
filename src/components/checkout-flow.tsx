@@ -1,11 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { useAuth } from '@/context/auth-context'
 import { isAdult, isValidCPF, isValidEmail, isValidPhone } from '@/lib/validations'
 import { formatCPF, formatPhone, censorName, censorPhone, formatDecimal } from '@/lib/formatters'
-import { PixPaymentModal } from './pix-payment-modal'
 import { Ticket, Phone, User, Mail, Calendar, Check, Tag } from 'lucide-react'
 
 interface CupomData {
@@ -47,7 +45,6 @@ export function CheckoutFlow({
   progressiveDiscountPct = 0,
   cliente,
 }: CheckoutFlowProps) {
-  const router = useRouter()
   const { user, refetch } = useAuth()
 
   // State for checkout flow
@@ -68,8 +65,7 @@ export function CheckoutFlow({
   })
 
   // Payment state
-  const [showPixModal, setShowPixModal] = useState(false)
-  const [purchaseId, setPurchaseId] = useState<string | null>(null)
+  const [mpLoading, setMpLoading] = useState(false)
 
   // Upsell
   const [selectedExtras, setSelectedExtras] = useState<number[]>([])
@@ -229,12 +225,13 @@ export function CheckoutFlow({
     }
   }
 
-  // Step 3: Confirm and proceed to payment
-  const handleConfirmAndProceed = async () => {
+  // Step 3: Create purchase and redirect to Mercado Pago
+  const handleMercadoPago = async () => {
     setError('')
-    setLoading(true)
+    setMpLoading(true)
 
     try {
+      // Criar a compra
       const purchaseResponse = await fetch(`/api/lotes/${raffleId}/purchase`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -253,13 +250,38 @@ export function CheckoutFlow({
         throw new Error(data.error || 'Erro ao processar compra')
       }
 
-      const data = await purchaseResponse.json()
-      setPurchaseId(data.purchaseId)
-      setShowPixModal(true)
+      const { purchaseId } = await purchaseResponse.json()
+
+      // Salvar phone+cpf para consulta de bilhetes após retorno do MP
+      const phoneValue = formData.phone.replace(/\D/g, '')
+      const cpfValue = (formData.cpf || existingCustomer?.cpf || '').replace(/\D/g, '')
+      localStorage.setItem('ticketQuery', JSON.stringify({ phone: phoneValue, cpf: cpfValue }))
+
+      // URL de retorno após pagamento aprovado
+      const successUrl = cliente
+        ? `${window.location.origin}/${cliente}/meus-bilhetes/resultado`
+        : `${window.location.origin}/meus-bilhetes/resultado`
+
+      // Criar preferência no Mercado Pago
+      const checkoutResponse = await fetch('/api/payment/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ purchaseId, raffleId, successUrl }),
+      })
+
+      if (!checkoutResponse.ok) {
+        const data = await checkoutResponse.json()
+        throw new Error(data.error || 'Erro ao criar checkout')
+      }
+
+      const { initPoint } = await checkoutResponse.json()
+
+      // Redirecionar para o Mercado Pago
+      window.location.href = initPoint
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro ao processar')
-    } finally {
-      setLoading(false)
+      setMpLoading(false)
     }
   }
 
@@ -279,7 +301,7 @@ export function CheckoutFlow({
       {currentStep !== 'confirm' && (
         <div className="rounded-xl mb-6">
           <div className="flex justify-between items-center mb-2">
-            <p className="text-sm text-cinza">Preço por cota:</p>
+            <p className="text-sm text-cinza">Preço por livro:</p>
             <p className="font-bold text-cinza-escuro">R$ {formatDecimal(numericLivroPrice)}</p>
           </div>
           <div className="flex justify-between items-center mb-2">
@@ -527,60 +549,29 @@ export function CheckoutFlow({
             </div>
           </div>
 
-          <p className="text-1xl text-cinza">
-            Ao clicar em "Concluir Reserva", você será direcionado para o pagamento via PIX.
-          </p>
-
           <div className="flex gap-3">
             <button
               onClick={() => {
                 setCurrentStep('phone')
                 setError('')
               }}
-              disabled={loading}
+              disabled={mpLoading}
               className="flex-1 text-cinza bg-cinza-claro hover:bg-cinza hover:text-branco cursor-pointer py-3 rounded-full font-bold transition disabled:opacity-50"
             >
               Voltar
             </button>
             <button
-              onClick={handleConfirmAndProceed}
-              disabled={loading}
-              className="flex-1 bg-azul-royal hover:bg-branco hover:text-azul-royal hover:border-2 hover:border-azul-royal cursor-pointer text-branco py-3 rounded-full font-black transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+              onClick={handleMercadoPago}
+              disabled={mpLoading}
+              className="flex-2 bg-azul-claro hover:bg-azul-royal cursor-pointer text-white py-3 rounded-full font-black transition disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
             >
-              {loading ? 'Processando...' : 'Concluir Reserva'}
+              {mpLoading ? 'Redirecionando...' : 'Pagar pelo Mercado Pago'}
             </button>
           </div>
         </div>
       )}
 
-      {/* PIX Payment Modal */}
-      <PixPaymentModal
-        isOpen={showPixModal}
-        onClose={() => {
-          setShowPixModal(false)
-          setPurchaseId(null)
-        }}
-        purchaseId={purchaseId || ''}
-        amount={totalPrice}
-        raffleId={raffleId}
-        onPaymentConfirmed={() => {
-          setShowPixModal(false)
-          setPurchaseId(null)
-          
-          // Sempre salvar phone+cpf para consulta de bilhetes (sem login)
-          if (purchaseId) {
-            const phoneValue = formData.phone.replace(/\D/g, '')
-            const cpfValue = (formData.cpf || existingCustomer?.cpf || '').replace(/\D/g, '')
-            localStorage.setItem('ticketQuery', JSON.stringify({
-              phone: phoneValue,
-              cpf: cpfValue,
-            }))
-            
-            // Redirecionar para visualizar bilhetes confirmados
-            router.push(cliente ? `/${cliente}/meus-bilhetes/resultado` : '/meus-bilhetes/resultado')
-          }
-        }}
-      />
+
     </div>
   )
 }

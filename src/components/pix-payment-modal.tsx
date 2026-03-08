@@ -29,6 +29,7 @@ export function PixPaymentModal({
   const [timeRemaining, setTimeRemaining] = useState(4 * 60); // 4 minutes in seconds
   const [backendAmount, setBackendAmount] = useState<number | null>(null);
   const [expired, setExpired] = useState(false);
+  const [mpRedirectLoading, setMpRedirectLoading] = useState(false);
 
   // Polling para confirmar pagamento
   const { status: purchaseStatus, retryCount } = usePurchaseStatus({
@@ -211,6 +212,30 @@ export function PixPaymentModal({
     }
   };
 
+  const handleMpRedirect = async () => {
+    setMpRedirectLoading(true);
+    try {
+      const response = await fetch("/api/payment/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ purchaseId, raffleId }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || "Erro ao redirecionar para o Mercado Pago");
+      }
+      const data = await response.json();
+      const url = data.initPoint || data.sandboxInitPoint;
+      if (!url) throw new Error("URL de pagamento não disponível");
+      window.location.href = url;
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Erro ao redirecionar");
+    } finally {
+      setMpRedirectLoading(false);
+    }
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -331,6 +356,20 @@ export function PixPaymentModal({
                 className="w-full bg-azul-royal disabled:bg-gray-300 text-branco py-3 rounded-lg font-bold transition disabled:cursor-not-allowed"
               >
                 {timeRemaining === 0 ? "Tempo expirado" : "Aguardando"}
+              </button>
+
+              <div className="flex items-center gap-3 my-1">
+                <hr className="flex-1 border-cinza-claro" />
+                <span className="text-xs text-cinza">ou</span>
+                <hr className="flex-1 border-cinza-claro" />
+              </div>
+
+              <button
+                onClick={handleMpRedirect}
+                disabled={mpRedirectLoading || timeRemaining === 0}
+                className="w-full bg-[#009ee3] hover:bg-[#0088c7] disabled:bg-gray-300 text-white py-3 rounded-lg font-bold transition disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {mpRedirectLoading ? "Redirecionando..." : "Pagar pelo Mercado Pago"}
               </button>
             </>
           )}

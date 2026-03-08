@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
           },
           body: JSON.stringify({
             transaction_amount: validatedAmount,
-            description: `Compra de ${livroCount} livro(s) - Lote #${raffleId}`,
+            description: `Livraria Fortuna`,
             payment_method_id: 'pix',
             payer: {
               email: 'comprador@troncodasorte.com.br',

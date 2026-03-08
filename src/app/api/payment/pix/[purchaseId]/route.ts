@@ -86,7 +86,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     }
 
     // Fallback: retornar dados básicos da compra
-    const pixKey = 'mercado-pago@troncodasorte.com.br'
+    const pixKey = 'LivrariaFortuna.com.br'
     const mockQRCode = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='white' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' font-size='16' fill='black'%3E${pixKey}%3C/text%3E%3C/svg%3E`
 
     return NextResponse.json({
