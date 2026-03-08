@@ -71,6 +71,9 @@ export function CheckoutFlow({
   const [showPixModal, setShowPixModal] = useState(false)
   const [purchaseId, setPurchaseId] = useState<string | null>(null)
 
+  // Termos e condições
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
+
   // Upsell
   const [selectedExtras, setSelectedExtras] = useState<number[]>([])
   const upsellPresets = [10, 50, 100, 200]
@@ -232,6 +235,12 @@ export function CheckoutFlow({
   // Step 3: Confirm and proceed to payment
   const handleConfirmAndProceed = async () => {
     setError('')
+
+    if (!acceptedTerms) {
+      setError('Você precisa aceitar os Termos de Uso e Política de Privacidade')
+      return
+    }
+
     setLoading(true)
 
     try {
@@ -525,11 +534,39 @@ export function CheckoutFlow({
                 )}
               </p>
             </div>
+          {/* Checkbox de Ter mos */}
+          <div className="bg-azul-pastel/20 border border-azul-royal/30 rounded-lg p-4">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={acceptedTerms}
+                onChange={(e) => setAcceptedTerms(e.target.checked)}
+                className="mt-1 w-5 h-5 rounded border-azul-royal text-azul-royal focus:ring-azul-royal cursor-pointer"
+              />
+              <span className="text-sm text-cinza-escuro">
+                Li e aceito os{' '}
+                <a
+                  href={cliente ? `/${cliente}/termos` : '/termos'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-azul-royal font-bold hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Termos de Uso
+                </a>
+                {' '}e a{' '}
+                <a
+                  href={cliente ? `/${cliente}/privacidade` : '/privacidade'}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-azul-royal font-bold hover:underline"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  Política de Privacidade
+                </a>
+              </span>
+            </label>
           </div>
-
-          <p className="text-1xl text-cinza">
-            Ao clicar em "Concluir Reserva", você será direcionado para o pagamento via PIX.
-          </p>
 
           <div className="flex gap-3">
             <button
@@ -539,6 +576,12 @@ export function CheckoutFlow({
               }}
               disabled={loading}
               className="flex-1 text-cinza bg-cinza-claro hover:bg-cinza hover:text-branco cursor-pointer py-3 rounded-full font-bold transition disabled:opacity-50"
+            >
+              Voltar
+            </button>
+            <button
+              onClick={handleConfirmAndProceed}
+              disabled={loading || !acceptedTerms text-cinza bg-cinza-claro hover:bg-cinza hover:text-branco cursor-pointer py-3 rounded-full font-bold transition disabled:opacity-50"
             >
               Voltar
             </button>

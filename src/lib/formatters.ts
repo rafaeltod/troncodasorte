@@ -106,6 +106,24 @@ export function censorPhoneShort(phone: string): string {
 }
 
 /**
+ * Censura o CPF mostrando apenas últimos 4 dígitos
+ * Ex: "123.456.789-00" → "***.***.***.00"
+ * Ex: "12345678900" → "***.***.*00"
+ */
+export function censorCPF(cpf: string): string {
+  // Remove formatação
+  const clean = cpf.replace(/\D/g, '')
+  
+  if (clean.length !== 11) return '***.***.***-**'
+  
+  // Últimos 2 dígitos
+  const last2 = clean.substring(clean.length - 2)
+  
+  // Formatar: ***.***.*XX-YY
+  return `***.***.*${clean.substring(7, 9)}-${last2}`
+}
+
+/**
  * Formata um número como moeda brasileira (BRL)
  * Ex: 1000 → "R$ 1.000,00"
  * Ex: 50.5 → "R$ 50,50"

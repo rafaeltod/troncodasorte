@@ -6,7 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/context/auth-context'
 import { formatDecimal } from '@/lib/formatters'
-import { censorName, censorPhoneShort } from '@/lib/formatters'
+import { censorName, censorPhoneShort, censorCPF, censorEmail } from '@/lib/formatters'
 import { User, Mail, FileText, Phone, Calendar, Ticket, ShoppingBag, Edit2, Save, X } from 'lucide-react'
 
 interface User {
@@ -132,8 +132,10 @@ export default function AccountPage() {
     return null
   }
 
-  const totalSpent = purchases.reduce((acc, p) => acc + p.amount, 0)
-  const totalLivros = purchases.reduce((acc, p) => acc + p.livros, 0)
+  // Filtrar apenas compras confirmadas
+  const confirmedPurchases = purchases.filter(p => p.status === 'confirmed')
+  const totalSpent = confirmedPurchases.reduce((acc, p) => acc + p.amount, 0)
+  const totalLivros = confirmedPurchases.reduce((acc, p) => acc + p.livros, 0)
 
   return (
     <div className="min-h-screen bg-fundo-cinza dark:bg-cinza-escuro py-12">
@@ -285,14 +287,14 @@ export default function AccountPage() {
                       <Mail className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       Email
                     </p>
-                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.email}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{censorEmail(user.email)}</p>
                   </div>
                   <div className="bg-fundo-cinza dark:bg-[#1a2332] p-4 rounded-lg border border-cinza-claro dark:border-gray-700">
                     <p className="text-cinza dark:text-gray-400 font-semibold text-sm flex items-center gap-2 mb-1">
                       <FileText className="w-4 h-4 text-azul-royal dark:text-amarelo-claro" />
                       CPF
                     </p>
-                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{user.cpf}</p>
+                    <p className="text-cinza-escuro dark:text-cinza-claro font-black">{censorCPF(user.cpf)}</p>
                   </div>
                 </div>
 
@@ -324,7 +326,7 @@ export default function AccountPage() {
             <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <Ticket className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Livros Adquiridas</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Livros Adquiridos</p>
               </div>
               <p className="text-4xl font-black">{totalLivros}</p>
             </div>
@@ -332,9 +334,9 @@ export default function AccountPage() {
             <div className="bg-azul-royal dark:bg-azul-claro/20 rounded-2xl shadow-lg p-6 text-branco dark:text-azul-pastel border dark:border-azul-claro/30">
               <div className="flex items-center gap-3 mb-2">
                 <ShoppingBag className="w-5 h-5" />
-                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Rifas Participadas</p>
+                <p className="text-branco dark:text-azul-pastel font-semibold text-sm">Lotes Participados</p>
               </div>
-              <p className="text-4xl font-black">{purchases.length}</p>
+              <p className="text-4xl font-black">{confirmedPurchases.length}</p>
             </div>
           </div>
         </div>
@@ -346,19 +348,19 @@ export default function AccountPage() {
             Histórico de Compras
           </h2>
 
-          {purchases.length > 0 ? (
+          {confirmedPurchases.length > 0 ? (
             <div className="space-y-3">
-              {purchases.map((purchase) => (
+              {confirmedPurchases.map((purchase) => (
                 <Link key={purchase.id} href={`/compra/${purchase.id}`}>
                   <div className="bg-linear-to-r from-fundo-cinza to-emerald-50 dark:from-[#1a2332] dark:to-[#1a2f45] hover:from-emerald-50 hover:to-teal-50 dark:hover:from-[#1a2f45] dark:hover:to-[#1a3858] p-6 rounded-lg border border-cinza-claro dark:border-gray-700 cursor-pointer transition transform hover:scale-102 hover:border-azul-royal dark:hover:border-azul-claro">
                     <div className="flex justify-between items-start">
                       <div className="flex-1">
                         <p className="font-black text-cinza-escuro dark:text-cinza-claro text-lg mb-2">
-                          {purchase.raffle?.title || 'Rifa'}
+                          {purchase.raffle?.title || 'Lote'}
                         </p>
                         <p className="text-cinza dark:text-gray-400 text-sm flex items-center gap-2">
                           <Ticket className="w-4 h-4 text-azul-royal dark:text-azul-pastel" />
-                          {purchase.livros} cota{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
+                          {purchase.livros} livro{purchase.livros !== 1 ? 's' : ''} • {new Date(purchase.createdAt).toLocaleDateString('pt-BR')}
                         </p>
                       </div>
                       <div className="text-right">
